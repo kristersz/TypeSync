@@ -1,14 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using TypeSync.Extensions;
-using TypeSync.Models;
+using TypeSync.SyntaxWalkers;
 
 namespace TypeSync
 {
@@ -18,7 +14,7 @@ namespace TypeSync
         {
             try
             {
-                var viewModelText = @"..\..\Source\MyViewModel.cs";
+                var viewModelText = @"..\..\Source\ViewModels.cs";
                 var viewModelPath = File.ReadAllText(viewModelText);
 
                 var tree = CSharpSyntaxTree.ParseText(viewModelPath).WithFilePath(viewModelText);
@@ -35,48 +31,42 @@ namespace TypeSync
                     }
                 }
 
+                var classWalker = new ClassWalker();             
+
                 var root = tree.GetRoot();
 
-                var classDeclarationSyntax = root.DescendantNodes().OfType<ClassDeclarationSyntax>().First();
-                var propertySyntaxes = classDeclarationSyntax.DescendantNodes().OfType<PropertyDeclarationSyntax>().ToList();
+                classWalker.Visit(root);
 
-                var className = classDeclarationSyntax.Identifier.Text;
-                var properties = new List<Property>();
+                var classNodes = classWalker.Classes;
 
-                Console.WriteLine("Class name: " + className);
-
-                foreach (var propSyntax in propertySyntaxes)
+                foreach (var classNode in classNodes)
                 {
-                    var newProp = new Property()
-                    {
-                        Name = propSyntax.Identifier.Text,
-                        Type = propSyntax.Type.ToString()
-                    };
+                    var className = classNode.Identifier.Text;
 
-                    properties.Add(newProp);
+                    Console.WriteLine("Discovered class [{0}]", className);
 
-                    Console.WriteLine("Property {0} of type {1}", newProp.Name, newProp.Type);
-                }
+                    var propertyWalker = new PropertyWalker();
 
-                var sb = new StringBuilder();
+                    propertyWalker.Visit(classNode);
 
-                // imports
-                sb.AppendLine();
+                    var properties = propertyWalker.Properties;
 
-                // class declaration
-                sb.AppendLine("export class " + className + " {");
+                    Console.WriteLine("With properties:");
 
-                // properties
-                foreach (var property in properties)
-                {
-                    sb.AppendLine("\t" + property.Name.PascalToCamelCase() + ": " + TypeConverter.ConvertCSharpTypeToTypeScript(property.Type) + ";");
-                }
+                    properties.ForEach(p => Console.WriteLine("[name: {0}; type: {1}]", p.Name, p.Type));
 
-                sb.AppendLine("}");
-                sb.AppendLine();
+                    var generator = new TypeScriptGenerator();
+                    var outputter = new TypeScriptOutputter();
 
-                // write to file
-                File.WriteAllText(@"C:\Dev\temp\" + className.PascalToKebabCase() + ".model.ts", sb.ToString());
+                    var contents = generator.Generate(className, properties);
+
+                    Console.WriteLine("Contents generated");
+
+                    outputter.Output(@"C:\Dev\temp\", className, contents);
+
+                    Console.WriteLine("Contents outputted");
+                    Console.WriteLine();
+                }             
             }
             catch (Exception ex)
             {

@@ -156,8 +156,12 @@
     <Compile Include="Models\Property.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Source\MyViewModel.cs" />
+    <Compile Include="Source\ViewModels.cs" />
+    <Compile Include="SyntaxWalkers\ClassWalker.cs" />
+    <Compile Include="SyntaxWalkers\PropertyWalker.cs" />
     <Compile Include="TypeConverter.cs" />
+    <Compile Include="TypeScriptGenerator.cs" />
+    <Compile Include="TypeScriptOutputter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

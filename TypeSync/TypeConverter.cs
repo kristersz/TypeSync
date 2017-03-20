@@ -10,11 +10,12 @@ namespace TypeSync
     {
         private static IDictionary<string, string> typeDictionary = new Dictionary<string, string>()
         {
+            { "string", "string" },
+            { "short", "number" },
             { "int", "number" },
             { "long", "number" },
-            { "short", "number" },
-            { "string", "string" },
             { "bool", "boolean" },
+            { "DateTime", "Date"}
         };
 
         public static string ConvertCSharpTypeToTypeScript(string type)
