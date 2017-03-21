@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
+using TypeSync.SyntaxRewriters;
 using TypeSync.SyntaxWalkers;
 
 namespace TypeSync
@@ -14,11 +15,13 @@ namespace TypeSync
         {
             try
             {
-                var viewModelText = @"..\..\Source\ViewModels.cs";
-                var viewModelPath = File.ReadAllText(viewModelText);
+                // parse the syntax tree from a .cs file
+                var viewModelPath = @"..\..\Source\ViewModels.cs";
+                var viewModelText = File.ReadAllText(viewModelPath);
 
-                var tree = CSharpSyntaxTree.ParseText(viewModelPath).WithFilePath(viewModelText);
+                var tree = CSharpSyntaxTree.ParseText(viewModelText).WithFilePath(viewModelPath);
 
+                // check for any syntax errors
                 var errors = tree.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error);
 
                 if (errors.Any())
@@ -31,14 +34,27 @@ namespace TypeSync
                     }
                 }
 
-                var classWalker = new ClassWalker();             
-
                 var root = tree.GetRoot();
+
+                // rewrite System types with aliases
+                var aliasRewriter = new PropertyTypeAliasRewriter();
+                var rewriteResult = aliasRewriter.Visit(root);
+
+                if (root != rewriteResult)
+                {
+                    root = rewriteResult;
+
+                    File.WriteAllText(viewModelPath, root.ToFullString());
+                    Console.WriteLine("Some property types were replaced with aliases");
+                }
+
+                var classWalker = new ClassWalker();              
 
                 classWalker.Visit(root);
 
                 var classNodes = classWalker.Classes;
 
+                // process each class declaration in the syntax tree
                 foreach (var classNode in classNodes)
                 {
                     var className = classNode.Identifier.Text;
@@ -47,6 +63,7 @@ namespace TypeSync
 
                     var propertyWalker = new PropertyWalker();
 
+                    // collect the properties
                     propertyWalker.Visit(classNode);
 
                     var properties = propertyWalker.Properties;
@@ -55,6 +72,7 @@ namespace TypeSync
 
                     properties.ForEach(p => Console.WriteLine("[name: {0}; type: {1}]", p.Name, p.Type));
 
+                    // generate the TypeScript code and output to file
                     var generator = new TypeScriptGenerator();
                     var outputter = new TypeScriptOutputter();
 

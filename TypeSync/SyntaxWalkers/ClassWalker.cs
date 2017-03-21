@@ -8,10 +8,6 @@ namespace TypeSync.SyntaxWalkers
     {
         public readonly List<ClassDeclarationSyntax> Classes = new List<ClassDeclarationSyntax>();
 
-        public ClassWalker()
-        {
-        }
-
         public override void VisitClassDeclaration(ClassDeclarationSyntax node)
         {
             Classes.Add(node);

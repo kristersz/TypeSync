@@ -9,6 +9,13 @@ namespace TypeSync.Source
         public string LastName { get; set; }
         public string[] Addresses { get; set; }
         public DateTime DateOfBirth { get; set; }
+
+        private int _someField;
+        public int SomeProperty
+        {
+            get { return _someField; }
+            set { _someField = value; }
+        }
     }
 
     public class Address

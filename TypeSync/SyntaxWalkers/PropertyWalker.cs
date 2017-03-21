@@ -9,10 +9,6 @@ namespace TypeSync.SyntaxWalkers
     {
         public readonly List<Property> Properties = new List<Property>();
 
-        public PropertyWalker()
-        {
-        }
-
         public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
         {
             Properties.Add(new Property()
@@ -20,8 +16,6 @@ namespace TypeSync.SyntaxWalkers
                 Name = node.Identifier.Text,
                 Type = node.Type.ToString()
             });
-
-            base.VisitPropertyDeclaration(node);
         }
     }
 }
