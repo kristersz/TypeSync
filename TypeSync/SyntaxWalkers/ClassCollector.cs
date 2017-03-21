@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace TypeSync.SyntaxWalkers
 {
-    public class ClassWalker : CSharpSyntaxWalker
+    public class ClassCollector : CSharpSyntaxWalker
     {
         public readonly List<ClassDeclarationSyntax> Classes = new List<ClassDeclarationSyntax>();
 

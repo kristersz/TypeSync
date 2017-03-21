@@ -158,8 +158,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\ViewModels.cs" />
     <Compile Include="SyntaxRewriters\PropertyTypeAliasRewriter.cs" />
-    <Compile Include="SyntaxWalkers\ClassWalker.cs" />
-    <Compile Include="SyntaxWalkers\PropertyWalker.cs" />
+    <Compile Include="SyntaxWalkers\ClassCollector.cs" />
+    <Compile Include="SyntaxWalkers\PropertyCollector.cs" />
     <Compile Include="TypeConverter.cs" />
     <Compile Include="TypeScriptGenerator.cs" />
     <Compile Include="TypeScriptOutputter.cs" />

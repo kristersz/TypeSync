@@ -48,11 +48,11 @@ namespace TypeSync
                     Console.WriteLine("Some property types were replaced with aliases");
                 }
 
-                var classWalker = new ClassWalker();              
+                var classCollector = new ClassCollector();              
 
-                classWalker.Visit(root);
+                classCollector.Visit(root);
 
-                var classNodes = classWalker.Classes;
+                var classNodes = classCollector.Classes;
 
                 // process each class declaration in the syntax tree
                 foreach (var classNode in classNodes)
@@ -61,12 +61,12 @@ namespace TypeSync
 
                     Console.WriteLine("Discovered class [{0}]", className);
 
-                    var propertyWalker = new PropertyWalker();
+                    var propertyCollector = new PropertyCollector();
 
                     // collect the properties
-                    propertyWalker.Visit(classNode);
+                    propertyCollector.Visit(classNode);
 
-                    var properties = propertyWalker.Properties;
+                    var properties = propertyCollector.Properties;
 
                     Console.WriteLine("With properties:");
 

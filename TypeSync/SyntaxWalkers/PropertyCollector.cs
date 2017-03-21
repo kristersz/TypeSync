@@ -5,7 +5,7 @@ using TypeSync.Models;
 
 namespace TypeSync.SyntaxWalkers
 {
-    public class PropertyWalker : CSharpSyntaxWalker
+    public class PropertyCollector : CSharpSyntaxWalker
     {
         public readonly List<Property> Properties = new List<Property>();
 
