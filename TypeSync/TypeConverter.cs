@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using TypeSync.Constants;
 using TypeSync.Enums;
 
 namespace TypeSync
@@ -89,31 +90,31 @@ namespace TypeSync
             switch (type)
             {
                 case TypeScriptType.Any:
-                    return "any";
+                    return TypeScriptTypeLiteral.Any;
                 case TypeScriptType.Boolean:
-                    return "boolean";
+                    return TypeScriptTypeLiteral.Boolean;
                 case TypeScriptType.Number:
-                    return "number";
+                    return TypeScriptTypeLiteral.Number;
                 case TypeScriptType.String:
-                    return "string";
+                    return TypeScriptTypeLiteral.String;
                 case TypeScriptType.Array:
-                    return "[]";
+                    return TypeScriptTypeLiteral.Array;
                 case TypeScriptType.Tuple:
-                    return "[]";
+                    return TypeScriptTypeLiteral.Tuple;
                 case TypeScriptType.Enum:
-                    return "enum";
+                    return TypeScriptTypeLiteral.Enum;
                 case TypeScriptType.Void:
-                    return "void";
+                    return TypeScriptTypeLiteral.Void;
                 case TypeScriptType.Null:
-                    return "null";
+                    return TypeScriptTypeLiteral.Null;
                 case TypeScriptType.Undefined:
-                    return "undefined";
+                    return TypeScriptTypeLiteral.Undefined;
                 case TypeScriptType.Never:
-                    return "never";
+                    return TypeScriptTypeLiteral.Never;
                 case TypeScriptType.Date:
-                    return "Date";
+                    return TypeScriptTypeLiteral.Date;
                 default:
-                    return "any";
+                    return TypeScriptTypeLiteral.Any;
             }
         }
     }

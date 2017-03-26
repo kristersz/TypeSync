@@ -170,6 +170,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analyzers\DTOAnalyzer.cs" />
+    <Compile Include="Constants\TypeScriptTypeLiteral.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\CSharp\CSharpClassModel.cs" />
     <Compile Include="Models\CSharp\CSharpPropertyModel.cs" />

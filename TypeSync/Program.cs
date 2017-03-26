@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using TypeSync.Analyzers;
 using TypeSync.SyntaxRewriters;
 
 [assembly: XmlConfigurator(Watch = true)]
@@ -68,9 +69,10 @@ namespace TypeSync
 
                 // generate the TypeScript code and output to file
                 var outputter = new TypeScriptOutputter();
-                var generator = new TypeScriptGenerator(tree, semanticModel);
+                var generator = new TypeScriptGenerator();
+                var analyzer = new DTOAnalyzer(tree, semanticModel);
 
-                var classModels = generator.AnalyzeDTOs();
+                var classModels = analyzer.AnalyzeDTOs();
 
                 foreach (var classModel in classModels)
                 {
