@@ -1,21 +1,16 @@
 ﻿using System.Collections.Generic;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using TypeSync.Models;
 
 namespace TypeSync.SyntaxWalkers
 {
     public class PropertyCollector : CSharpSyntaxWalker
     {
-        public readonly List<Property> Properties = new List<Property>();
+        public readonly List<PropertyDeclarationSyntax> Properties = new List<PropertyDeclarationSyntax>();
 
         public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
         {
-            Properties.Add(new Property()
-            {
-                Name = node.Identifier.Text,
-                Type = node.Type.ToString()
-            });
+            Properties.Add(node);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace TypeSync.Source
 {
@@ -8,6 +9,7 @@ namespace TypeSync.Source
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string[] Addresses { get; set; }
+        public List<string> Nicknames { get; set; }
         public DateTime DateOfBirth { get; set; }
 
         private int _someField;
