@@ -1,20 +1,26 @@
 using System;
 using System.IO;
 using System.Linq;
+using log4net;
+using log4net.Config;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Symbols;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using TypeSync.Models;
 using TypeSync.SyntaxRewriters;
-using TypeSync.SyntaxWalkers;
+
+[assembly: XmlConfigurator(Watch = true)]
 
 namespace TypeSync
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        private static readonly ILog log = LogManager.GetLogger(typeof(Program));
+
+        public static void Main(string[] args)
         {
+            log.Info("Entering TypeSync");
+
             try
             {
                 // parse the syntax tree from a .cs file
@@ -28,18 +34,18 @@ namespace TypeSync
 
                 if (errors.Any())
                 {
-                    Console.WriteLine("Syntax contains errors: ");
+                    log.Warn("Syntax contains errors: ");
 
                     foreach (var error in errors)
                     {
-                        Console.WriteLine(error.ToString());
+                        log.Warn(error.ToString());
                     }
                 }
 
                 var root = tree.GetRoot();
 
                 var mscorlib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
-                var compilation = CSharpCompilation.Create("MyCompilation", syntaxTrees: new[] { tree }, references: new[] { mscorlib });             
+                var compilation = CSharpCompilation.Create("MyCompilation", syntaxTrees: new[] { tree }, references: new[] { mscorlib });
 
                 // note that we must specify the tree for which we want the model.
                 // each tree has its own semantic model
@@ -57,7 +63,7 @@ namespace TypeSync
                     root = rewriteResult;
 
                     File.WriteAllText(viewModelPath, root.ToFullString());
-                    Console.WriteLine("Some property types were replaced with aliases");
+                    log.Debug("Some property types were replaced with aliases");
                 }
 
                 // generate the TypeScript code and output to file
@@ -68,22 +74,23 @@ namespace TypeSync
 
                 foreach (var classModel in classModels)
                 {
-                    Console.WriteLine("Class {0}", classModel.Name);
+                    log.DebugFormat("Class {0}", classModel.Name);
 
                     var contents = generator.Generate(classModel);
 
-                    Console.WriteLine("Contents generated");
+                    log.Debug("Contents generated");
 
                     outputter.Output(@"C:\Dev\temp\", classModel.Name, contents);
 
-                    Console.WriteLine("Contents outputted");
-                    Console.WriteLine();
-                }               
+                    log.Debug("Contents outputted");
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Exception thrown: " + ex.Message);
-            }           
+                log.ErrorFormat("Exception thrown: " + ex.Message);
+            }
+
+            log.Info("Exiting TypeSync");
         }     
     }
 }

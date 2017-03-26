@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using log4net;
 using Microsoft.CodeAnalysis;
 using TypeSync.Extensions;
 using TypeSync.Models.CSharp;
@@ -10,6 +10,8 @@ namespace TypeSync
 {
     public class TypeScriptGenerator
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(TypeScriptGenerator));
+
         private SyntaxTree _syntaxTree;
         private SemanticModel _semanticModel;
 
@@ -21,6 +23,8 @@ namespace TypeSync
 
         public List<CSharpClassModel> AnalyzeDTOs()
         {
+            log.Info("DTO analysis started");
+
             var classModels = new List<CSharpClassModel>();
 
             var root = _syntaxTree.GetRoot();
@@ -71,11 +75,15 @@ namespace TypeSync
                 classModels.Add(classModel);
             }
 
+            log.Info("DTO analysis finished");
+
             return classModels;
         }
 
         public string Generate(CSharpClassModel classModel)
         {
+            log.Info("DTO generation started");
+
             var sb = new StringBuilder();
 
             // imports
@@ -103,6 +111,8 @@ namespace TypeSync
 
             sb.AppendLine("}");
             sb.AppendLine();
+
+            log.Info("DTO generation finished");
 
             return sb.ToString();
         }
