@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using log4net;
 using Microsoft.CodeAnalysis;
+using TypeSync.Constants;
 using TypeSync.Extensions;
 using TypeSync.Models.CSharp;
 
@@ -37,7 +38,7 @@ namespace TypeSync
                     var elementTsType = TypeConverter.ConvertCSharpTypeToTypeScript(property.ElementType);
                     var elementTypeLiteral = TypeConverter.ConvertTypeScriptTypeToLiteral(elementTsType);
 
-                    typeLiteral = elementTypeLiteral + typeLiteral;
+                    typeLiteral = elementTypeLiteral + TypeScriptTypeLiteral.Array;
                 }
 
                 sb.AppendLine("\t" + property.Name.PascalToCamelCase() + ": " + typeLiteral + ";");

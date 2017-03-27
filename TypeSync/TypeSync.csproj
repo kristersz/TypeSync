@@ -179,7 +179,6 @@
     <Compile Include="Models\TypeScript\TypeScriptPropertyModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Source\ViewModels.cs" />
     <Compile Include="SyntaxRewriters\PropertyTypeAliasRewriter.cs" />
     <Compile Include="SyntaxWalkers\ClassCollector.cs" />
     <Compile Include="SyntaxWalkers\PropertyCollector.cs" />
