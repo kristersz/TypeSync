@@ -1,8 +1,8 @@
 ﻿using Microsoft.CodeAnalysis;
-using TypeSync.Constants;
-using TypeSync.Enums;
+using TypeSync.Core.Constants;
+using TypeSync.Core.Enums;
 
-namespace TypeSync
+namespace TypeSync.Core
 {
     public static class TypeConverter
     {

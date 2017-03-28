@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TypeSync.Models.CSharp
+namespace TypeSync.Core.Models.CSharp
 {
     public class CSharpClassModel
     {

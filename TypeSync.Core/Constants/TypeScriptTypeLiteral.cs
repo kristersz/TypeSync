@@ -1,4 +1,4 @@
-﻿namespace TypeSync.Constants
+﻿namespace TypeSync.Core.Constants
 {
     public static class TypeScriptTypeLiteral
     {

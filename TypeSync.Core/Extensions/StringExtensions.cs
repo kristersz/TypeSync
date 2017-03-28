@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace TypeSync.Extensions
+namespace TypeSync.Core.Extensions
 {
     public static class StringExtensions
     {

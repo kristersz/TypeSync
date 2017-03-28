@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using log4net;
 using Microsoft.CodeAnalysis;
-using TypeSync.Models.CSharp;
-using TypeSync.SyntaxWalkers;
+using TypeSync.Core.Models.CSharp;
+using TypeSync.Core.SyntaxWalkers;
 
-namespace TypeSync.Analyzers
+namespace TypeSync.Core.Analyzers
 {
     public class DTOAnalyzer
     {

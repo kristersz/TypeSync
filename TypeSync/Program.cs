@@ -2,7 +2,8 @@ using System;
 using log4net;
 using log4net.Config;
 using Microsoft.CodeAnalysis.MSBuild;
-using TypeSync.Analyzers;
+using TypeSync.Core;
+using TypeSync.Core.Analyzers;
 
 [assembly: XmlConfigurator(Watch = true)]
 

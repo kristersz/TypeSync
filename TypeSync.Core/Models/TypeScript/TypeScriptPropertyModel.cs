@@ -1,6 +1,6 @@
-﻿using TypeSync.Enums;
+﻿using TypeSync.Core.Enums;
 
-namespace TypeSync.Models.TypeScript
+namespace TypeSync.Core.Models.TypeScript
 {
     public class TypeScriptPropertyModel
     {

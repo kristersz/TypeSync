@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace TypeSync.SyntaxWalkers
+namespace TypeSync.Core.SyntaxWalkers
 {
     public class PropertyCollector : CSharpSyntaxWalker
     {

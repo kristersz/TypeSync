@@ -1,11 +1,11 @@
 ﻿using System.Text;
 using log4net;
 using Microsoft.CodeAnalysis;
-using TypeSync.Constants;
-using TypeSync.Extensions;
-using TypeSync.Models.CSharp;
+using TypeSync.Core.Constants;
+using TypeSync.Core.Extensions;
+using TypeSync.Core.Models.CSharp;
 
-namespace TypeSync
+namespace TypeSync.Core
 {
     public class TypeScriptGenerator
     {
