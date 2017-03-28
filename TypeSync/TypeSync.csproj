@@ -172,6 +172,11 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UseCases\IUseCase.cs" />
+    <Compile Include="UseCases\ModelGenerationUseCase.cs" />
+    <Compile Include="UseCases\ProjectTemplateScaffoldingUseCase.cs" />
+    <Compile Include="UseCases\ValidatorGenerationUseCase.cs" />
+    <Compile Include="UseCases\WebClientGenerationUseCase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
