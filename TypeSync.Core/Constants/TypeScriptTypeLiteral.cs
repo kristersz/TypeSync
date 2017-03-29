@@ -13,6 +13,6 @@
         public const string Null = "null";
         public const string Undefined = "undefined";
         public const string Never = "never";
-        public const string Date = "date";
+        public const string Date = "Date";
     }
 }

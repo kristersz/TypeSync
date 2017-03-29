@@ -98,7 +98,7 @@ namespace TypeSync.UseCases
                 log.Debug("Some property types were replaced with aliases");
             }
 
-            ProccessSyntaxTree(tree, semanticModel);
+            ProccessSyntaxTree(compilation, tree, semanticModel);
         }
 
         private void ExecuteOnProject()
@@ -127,7 +127,7 @@ namespace TypeSync.UseCases
 
                     var semanticModel = compilation.GetSemanticModel(syntaxTree);
 
-                    ProccessSyntaxTree(syntaxTree, semanticModel);
+                    ProccessSyntaxTree(compilation, syntaxTree, semanticModel);
                 }
 
                 foreach (var document in project.Documents)
@@ -137,12 +137,12 @@ namespace TypeSync.UseCases
             }
         }
 
-        private void ProccessSyntaxTree(SyntaxTree syntaxTree, SemanticModel semanticModel)
+        private void ProccessSyntaxTree(Compilation compilation, SyntaxTree syntaxTree, SemanticModel semanticModel)
         {
             // generate the TypeScript code and output to file
             var outputter = new TypeScriptOutputter();
             var generator = new TypeScriptGenerator();
-            var analyzer = new DTOAnalyzer(syntaxTree, semanticModel);
+            var analyzer = new DTOAnalyzer(compilation, syntaxTree, semanticModel);
 
             var classModels = analyzer.AnalyzeDTOs();
 

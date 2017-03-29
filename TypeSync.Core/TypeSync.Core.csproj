@@ -160,6 +160,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\CSharp\CSharpClassModel.cs" />
     <Compile Include="Models\CSharp\CSharpPropertyModel.cs" />
+    <Compile Include="Models\CSharp\CSharpTypeModel.cs" />
     <Compile Include="Models\TypeScript\TypeScriptClassModel.cs" />
     <Compile Include="Models\TypeScript\TypeScriptPropertyModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

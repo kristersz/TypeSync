@@ -30,13 +30,23 @@ namespace TypeSync.Core
             // properties
             foreach (var property in classModel.Properties)
             {
-                var tsType = TypeConverter.ConvertCSharpTypeToTypeScript(property.SpecialType);
+                var tsType = TypeConverter.ConvertCSharpTypeToTypeScript(property.Type.SpecialType);
                 var typeLiteral = TypeConverter.ConvertTypeScriptTypeToLiteral(tsType);
 
-                if (property.TypeKind == TypeKind.Array)
+                if (property.Type.SpecialType == SpecialType.None)
                 {
-                    var elementTsType = TypeConverter.ConvertCSharpTypeToTypeScript(property.ElementType);
+                    typeLiteral = property.Type.Name;
+                }
+
+                if (property.Type.IsCollection)
+                {
+                    var elementTsType = TypeConverter.ConvertCSharpTypeToTypeScript(property.Type.ElementType.SpecialType);
                     var elementTypeLiteral = TypeConverter.ConvertTypeScriptTypeToLiteral(elementTsType);
+
+                    if (property.Type.ElementType.SpecialType == SpecialType.None)
+                    {
+                        elementTypeLiteral = property.Type.ElementType.Name;
+                    }
 
                     typeLiteral = elementTypeLiteral + TypeScriptTypeLiteral.Array;
                 }

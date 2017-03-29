@@ -11,4 +11,5 @@ Primarily meant to be used for Angular front-end solutions.
 ## Supported features
 1. Model generation:
 	* Classes.
-	* Properties (identifiers and predefined types).
+	* Properties.
+	* Types (CLR types, arrays, collections, custom types).

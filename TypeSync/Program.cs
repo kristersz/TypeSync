@@ -17,6 +17,10 @@ namespace TypeSync
         {
             log.Info("Entering TypeSync");
 
+#if DEBUG
+            args = new string[] { "GenerateModels" };    
+#endif
+
             try
             {
                 var useCases = new List<IUseCase>()

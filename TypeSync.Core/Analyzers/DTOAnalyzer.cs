@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using log4net;
 using Microsoft.CodeAnalysis;
 using TypeSync.Core.Models.CSharp;
@@ -10,11 +11,13 @@ namespace TypeSync.Core.Analyzers
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(DTOAnalyzer));
 
+        private Compilation _compilation;
         private SyntaxTree _syntaxTree;
         private SemanticModel _semanticModel;
 
-        public DTOAnalyzer(SyntaxTree syntaxTree, SemanticModel semanticModel)
+        public DTOAnalyzer(Compilation compilation, SyntaxTree syntaxTree, SemanticModel semanticModel)
         {
+            _compilation = compilation;
             _syntaxTree = syntaxTree;
             _semanticModel = semanticModel;
         }
@@ -33,6 +36,9 @@ namespace TypeSync.Core.Analyzers
             classCollector.Visit(root);
 
             var classNodes = classCollector.Classes;
+
+            // symbol instances for equality checks
+            var IEnumerableSymbol = _compilation.GetTypeByMetadataName("System.Collections.Generic.IEnumerable`1");
 
             // process each class declaration in the syntax tree
             foreach (var classNode in classNodes)
@@ -53,18 +59,52 @@ namespace TypeSync.Core.Analyzers
                     var property = new CSharpPropertyModel();
 
                     property.Name = propertySymbol.Name;
-                    property.TypeKind = propertySymbol.Type.TypeKind;
+                    property.Type.Name = propertySymbol.Type.Name;
+                    property.Type.TypeKind = propertySymbol.Type.TypeKind;
 
+                    
                     if (propertySymbol.Type.SpecialType != SpecialType.None)
                     {
-                        property.SpecialType = propertySymbol.Type.SpecialType;
+                        // special types
+                        property.Type.SpecialType = propertySymbol.Type.SpecialType;
                     }
-
-                    if (propertySymbol.Type.TypeKind == TypeKind.Array)
+                    else if (property.Type.TypeKind == TypeKind.Array)
                     {
+                        // arrays
                         var arrayTypeSymbol = propertySymbol.Type as IArrayTypeSymbol;
 
-                        property.ElementType = arrayTypeSymbol.ElementType.SpecialType;
+                        if (arrayTypeSymbol != null)
+                        {
+                            property.Type.IsCollection = true;
+                            property.Type.ElementType = new CSharpTypeModel()
+                            {
+                                Name = arrayTypeSymbol.ElementType.Name,
+                                TypeKind = arrayTypeSymbol.ElementType.TypeKind,
+                                SpecialType = arrayTypeSymbol.ElementType.SpecialType
+                            };
+                        }
+                    }                   
+                    else if (propertySymbol.Type is INamedTypeSymbol)
+                    {                       
+                        var namedTypeSymbol = propertySymbol.Type as INamedTypeSymbol;
+
+                        // enumerable types such as List<T>, IList<T> or IEnumerable<T>
+                        if (namedTypeSymbol != null && (namedTypeSymbol.ConstructedFrom.Equals(IEnumerableSymbol) || namedTypeSymbol.AllInterfaces.Any(i => i.ConstructedFrom.Equals(IEnumerableSymbol))))
+                        {
+                            property.Type.IsCollection = true;
+
+                            if (!namedTypeSymbol.TypeArguments.IsDefaultOrEmpty)
+                            {
+                                var typeArgument = namedTypeSymbol.TypeArguments[0];
+
+                                property.Type.ElementType = new CSharpTypeModel()
+                                {
+                                    Name = typeArgument.Name,
+                                    TypeKind = typeArgument.TypeKind,
+                                    SpecialType = typeArgument.SpecialType
+                                };
+                            }
+                        } 
                     }
 
                     classModel.Properties.Add(property);
