@@ -11,5 +11,8 @@ namespace TypeSync.Models
         [JsonProperty(PropertyName = "pathKind")]
         [JsonConverter(typeof(StringEnumConverter))]
         public PathKind PathKind { get; set; }
+
+        [JsonProperty(PropertyName = "outputPath")]
+        public string OutputPath { get; set; }
     }
 }

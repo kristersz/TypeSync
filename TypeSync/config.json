@@ -1,4 +1,5 @@
 ﻿{
   "path": "C:\\Dev\\VS2017\\TypeSync\\Samples\\Samples.sln",
-  "pathKind": "Solution"
+  "pathKind": "Solution",
+  "outputPath": "C:\\TypeSync\\Outputs"
 }

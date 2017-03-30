@@ -151,7 +151,7 @@ namespace TypeSync.UseCases
 
                 log.Debug("Contents generated");
 
-                outputter.Output(@"C:\Dev\temp\", classModel.Name, contents);
+                outputter.Output(_configuration.OutputPath, classModel.Name, contents);
 
                 log.Debug("Contents outputted");
             }
