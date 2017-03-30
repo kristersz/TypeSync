@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using log4net;
 using log4net.Config;
+using TypeSync.Providers;
 using TypeSync.UseCases;
 
 [assembly: XmlConfigurator(Watch = true)]
@@ -25,7 +26,7 @@ namespace TypeSync
             {
                 var useCases = new List<IUseCase>()
                 {
-                    new ModelGenerationUseCase(@"C:\Dev\VS2017\TypeSync\Samples\Samples.sln", PathKind.Solution),
+                    new ModelGenerationUseCase(new JsonConfigurationProvider()),
                     new WebClientGenerationUseCase(),
                     new ValidatorGenerationUseCase(),
                     new ProjectTemplateScaffoldingUseCase()

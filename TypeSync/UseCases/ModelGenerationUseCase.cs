@@ -9,36 +9,33 @@ using Microsoft.CodeAnalysis.MSBuild;
 using TypeSync.Core;
 using TypeSync.Core.Analyzers;
 using TypeSync.Core.SyntaxRewriters;
+using TypeSync.Models;
+using TypeSync.Providers;
 
 namespace TypeSync.UseCases
 {
-    public enum PathKind : sbyte
-    {
-        File,
-        Project,
-        Solution
-    }
-
     public class ModelGenerationUseCase : IUseCase
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(ModelGenerationUseCase));
 
-        private string _path;
-        private PathKind _pathKind;
+        private readonly IConfigurationProvider _configurationProvider;
+
+        private Configuration _configuration;
 
         public string Id { get; } = "GenerateModels";
 
         public string Name { get; } = "Generate TypeScript model classes from C# DTO objects.";
 
-        public ModelGenerationUseCase(string path, PathKind pathKind)
+        public ModelGenerationUseCase(IConfigurationProvider configurationProvider)
         {
-            _path = path;
-            _pathKind = pathKind;
+            _configurationProvider = configurationProvider;
         }
 
         public void Execute()
         {
-            switch (_pathKind)
+            _configuration = _configurationProvider.GetConfiguration();
+
+            switch (_configuration.PathKind)
             {
                 case PathKind.File:
                     ExecuteOnFile();
@@ -57,9 +54,9 @@ namespace TypeSync.UseCases
         private void ExecuteOnFile()
         {
             // parse the syntax tree from a .cs file
-            var viewModelText = File.ReadAllText(_path);
+            var viewModelText = File.ReadAllText(_configuration.Path);
 
-            var tree = CSharpSyntaxTree.ParseText(viewModelText).WithFilePath(_path);
+            var tree = CSharpSyntaxTree.ParseText(viewModelText).WithFilePath(_configuration.Path);
 
             // check for any syntax errors
             var errors = tree.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error);
@@ -94,7 +91,7 @@ namespace TypeSync.UseCases
             {
                 root = rewriteResult;
 
-                File.WriteAllText(_path, root.ToFullString());
+                File.WriteAllText(_configuration.Path, root.ToFullString());
                 log.Debug("Some property types were replaced with aliases");
             }
 
@@ -109,7 +106,7 @@ namespace TypeSync.UseCases
         private void ExecuteOnSolution()
         {
             var workspace = MSBuildWorkspace.Create();
-            var solution = workspace.OpenSolutionAsync(_path).Result;
+            var solution = workspace.OpenSolutionAsync(_configuration.Path).Result;
 
             foreach (var project in solution.Projects)
             {

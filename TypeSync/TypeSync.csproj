@@ -72,6 +72,9 @@
       <HintPath>..\packages\Microsoft.CodeAnalysis.Workspaces.Common.2.0.0\lib\net46\Microsoft.CodeAnalysis.Workspaces.Desktop.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.AppContext.4.3.0\lib\net46\System.AppContext.dll</HintPath>
@@ -170,16 +173,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Configuration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\JsonConfigurationProvider.cs" />
+    <Compile Include="Providers\IConfigurationProvider.cs" />
     <Compile Include="UseCases\IUseCase.cs" />
     <Compile Include="UseCases\ModelGenerationUseCase.cs" />
+    <Compile Include="Models\PathKind.cs" />
     <Compile Include="UseCases\ProjectTemplateScaffoldingUseCase.cs" />
     <Compile Include="UseCases\ValidatorGenerationUseCase.cs" />
     <Compile Include="UseCases\WebClientGenerationUseCase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="config.json" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
