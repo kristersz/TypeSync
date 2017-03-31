@@ -158,7 +158,6 @@
     <Compile Include="Analyzers\TypeAnalyzer.cs" />
     <Compile Include="Constants\TypeScriptTypeLiteral.cs" />
     <Compile Include="Enums\TypeScriptType.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Models\CSharp\CSharpClassModel.cs" />
     <Compile Include="Models\CSharp\CSharpPropertyModel.cs" />
     <Compile Include="Models\CSharp\CSharpTypeModel.cs" />
@@ -170,7 +169,6 @@
     <Compile Include="SyntaxWalkers\PropertyCollector.cs" />
     <Compile Include="TypeConverter.cs" />
     <Compile Include="TypeScriptGenerator.cs" />
-    <Compile Include="TypeScriptOutputter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -179,6 +177,12 @@
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TypeSync.Common\TypeSync.Common.csproj">
+      <Project>{26c664fd-6f30-449c-9ba3-cbb79e35ccc9}</Project>
+      <Name>TypeSync.Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

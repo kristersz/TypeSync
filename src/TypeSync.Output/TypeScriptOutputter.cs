@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using TypeSync.Core.Extensions;
+using TypeSync.Common.Extensions;
 
-namespace TypeSync.Core
+namespace TypeSync.Output
 {
     public class TypeScriptOutputter
     {

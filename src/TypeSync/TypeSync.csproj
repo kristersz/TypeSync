@@ -213,6 +213,10 @@
       <Project>{e923114e-cc06-42a2-91fc-04b6e4fa426a}</Project>
       <Name>TypeSync.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TypeSync.Output\TypeSync.Output.csproj">
+      <Project>{9908b917-9dc4-442d-bd33-21500a5aa522}</Project>
+      <Name>TypeSync.Output</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

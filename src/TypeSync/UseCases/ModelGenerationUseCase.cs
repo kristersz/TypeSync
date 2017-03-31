@@ -10,6 +10,7 @@ using TypeSync.Core;
 using TypeSync.Core.Analyzers;
 using TypeSync.Core.SyntaxRewriters;
 using TypeSync.Models;
+using TypeSync.Output;
 using TypeSync.Providers;
 
 namespace TypeSync.UseCases

@@ -1,8 +1,8 @@
 ﻿using System.Text;
 using log4net;
 using Microsoft.CodeAnalysis;
+using TypeSync.Common.Extensions;
 using TypeSync.Core.Constants;
-using TypeSync.Core.Extensions;
 using TypeSync.Core.Models.CSharp;
 
 namespace TypeSync.Core
