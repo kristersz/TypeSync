@@ -40,6 +40,8 @@ namespace TypeSync.Core.Analyzers
             // symbol instances for equality checks
             var IEnumerableSymbol = _compilation.GetTypeByMetadataName("System.Collections.Generic.IEnumerable`1");
 
+            var typeAnalyzer = new TypeAnalyzer();
+
             // process each class declaration in the syntax tree
             foreach (var classNode in classNodes)
             {
@@ -59,53 +61,10 @@ namespace TypeSync.Core.Analyzers
                     var property = new CSharpPropertyModel();
 
                     property.Name = propertySymbol.Name;
+                    property.Type = typeAnalyzer.AnalyzePropertyType(propertySymbol.Type, IEnumerableSymbol);
+
                     property.Type.Name = propertySymbol.Type.Name;
                     property.Type.TypeKind = propertySymbol.Type.TypeKind;
-
-                    
-                    if (propertySymbol.Type.SpecialType != SpecialType.None)
-                    {
-                        // special types
-                        property.Type.SpecialType = propertySymbol.Type.SpecialType;
-                    }
-                    else if (property.Type.TypeKind == TypeKind.Array)
-                    {
-                        // arrays
-                        var arrayTypeSymbol = propertySymbol.Type as IArrayTypeSymbol;
-
-                        if (arrayTypeSymbol != null)
-                        {
-                            property.Type.IsCollection = true;
-                            property.Type.ElementType = new CSharpTypeModel()
-                            {
-                                Name = arrayTypeSymbol.ElementType.Name,
-                                TypeKind = arrayTypeSymbol.ElementType.TypeKind,
-                                SpecialType = arrayTypeSymbol.ElementType.SpecialType
-                            };
-                        }
-                    }                   
-                    else if (propertySymbol.Type is INamedTypeSymbol)
-                    {                       
-                        var namedTypeSymbol = propertySymbol.Type as INamedTypeSymbol;
-
-                        // enumerable types such as List<T>, IList<T> or IEnumerable<T>
-                        if (namedTypeSymbol != null && (namedTypeSymbol.ConstructedFrom.Equals(IEnumerableSymbol) || namedTypeSymbol.AllInterfaces.Any(i => i.ConstructedFrom.Equals(IEnumerableSymbol))))
-                        {
-                            property.Type.IsCollection = true;
-
-                            if (!namedTypeSymbol.TypeArguments.IsDefaultOrEmpty)
-                            {
-                                var typeArgument = namedTypeSymbol.TypeArguments[0];
-
-                                property.Type.ElementType = new CSharpTypeModel()
-                                {
-                                    Name = typeArgument.Name,
-                                    TypeKind = typeArgument.TypeKind,
-                                    SpecialType = typeArgument.SpecialType
-                                };
-                            }
-                        } 
-                    }
 
                     classModel.Properties.Add(property);
                 }

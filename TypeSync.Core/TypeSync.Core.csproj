@@ -155,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analyzers\DTOAnalyzer.cs" />
+    <Compile Include="Analyzers\TypeAnalyzer.cs" />
     <Compile Include="Constants\TypeScriptTypeLiteral.cs" />
     <Compile Include="Enums\TypeScriptType.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
