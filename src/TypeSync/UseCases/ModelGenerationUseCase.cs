@@ -161,7 +161,7 @@ namespace TypeSync.UseCases
             {
                 log.DebugFormat("Class {0}", classModel.Name);
 
-                var tsModel = converter.ConvertModel(classModel);
+                var tsModel = converter.ConvertClassModel(classModel);
 
                 log.Debug("Models converted");
 

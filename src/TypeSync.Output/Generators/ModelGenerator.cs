@@ -31,17 +31,22 @@ namespace TypeSync.Output.Generators
                 {
                     emittedType = property.Type.IsNamedType 
                         ? property.Type.Name 
-                        : TypeConverter.ConvertTypeScriptTypeToLiteral(property.Type.PredefinedType);
+                        : TypeMapper.MapTypeScriptTypeToLiteral(property.Type.PredefinedType);
                 }
                 else
                 {
                     emittedType = property.Type.ElementType.IsNamedType 
                         ? property.Type.ElementType.Name 
-                        : TypeConverter.ConvertTypeScriptTypeToLiteral(property.Type.ElementType.PredefinedType);
+                        : TypeMapper.MapTypeScriptTypeToLiteral(property.Type.ElementType.PredefinedType);
                     emittedType += EmittedTypeName.Array;
                 }
 
-                sb.AppendLine("\t" + property.Name.PascalToCamelCase() + ": " + emittedType + ";");
+                sb.AppendLine("\t"                      // indentation
+                    + property.Name.PascalToCamelCase() // property name
+                    + (property.IsOptional ? "?" : "")  // optional?
+                    + ": "
+                    + emittedType                       // property type
+                    + ";");
             }
 
             sb.AppendLine("}");

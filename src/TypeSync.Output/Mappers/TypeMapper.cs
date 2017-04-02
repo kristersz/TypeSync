@@ -2,9 +2,9 @@
 
 namespace TypeSync.Output.Converters
 {
-    public static class TypeConverter
+    public static class TypeMapper
     {
-        public static TypeScriptType ConvertCSharpTypeToTypeScript(CSharpSpecialType type)
+        public static TypeScriptType MapCSharpTypeToTypeScript(CSharpSpecialType type)
         {
             switch (type)
             {
@@ -83,7 +83,7 @@ namespace TypeSync.Output.Converters
             }
         }
 
-        public static string ConvertTypeScriptTypeToLiteral(TypeScriptType type)
+        public static string MapTypeScriptTypeToLiteral(TypeScriptType type)
         {
             switch (type)
             {

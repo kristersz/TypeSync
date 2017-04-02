@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\ModelConverter.cs" />
-    <Compile Include="Converters\TypeConverter.cs" />
+    <Compile Include="Mappers\TypeMapper.cs" />
     <Compile Include="Generators\ModelGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TypeScriptEmitter.cs" />

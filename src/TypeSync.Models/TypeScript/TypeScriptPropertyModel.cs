@@ -9,6 +9,8 @@
 
         public string Name { get; set; }
 
+        public bool IsOptional { get; set; }
+
         public TypeScriptTypeModel Type { get; set; }
     }
 }

@@ -14,6 +14,7 @@ namespace Samples.ViewModels
         public IList<string> Friends { get; set; }
         public string[] Enemies { get; set; }
         public DateTime DateOfBirth { get; set; }
+        public DateTime? Nameday { get; set; }
 
         private int _someField;
         public int SomeProperty

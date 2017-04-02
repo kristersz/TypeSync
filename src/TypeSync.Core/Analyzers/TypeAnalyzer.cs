@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using log4net;
 using Microsoft.CodeAnalysis;
 using TypeSync.Core.Mappers;
@@ -22,7 +23,6 @@ namespace TypeSync.Core.Analyzers
             typeModel.Name = typeSymbol.Name;
             typeModel.TypeKind = TypeMapper.MapTypeKind(typeSymbol.TypeKind);
 
-
             if (typeSymbol.SpecialType != SpecialType.None)
             {
                 // special types
@@ -35,40 +35,54 @@ namespace TypeSync.Core.Analyzers
 
                 if (arrayTypeSymbol != null)
                 {
-                    typeModel.IsCollection = true;
-                    typeModel.ElementType = new CSharpTypeModel()
-                    {
-                        Name = arrayTypeSymbol.ElementType.Name,
-                        TypeKind = TypeMapper.MapTypeKind(arrayTypeSymbol.ElementType.TypeKind),
-                        SpecialType = TypeMapper.MapSpecialType(arrayTypeSymbol.ElementType.SpecialType)
-                    };
+                    typeModel.IsArray = true;
+                    typeModel.ElementType = CreateTypeModel(arrayTypeSymbol.ElementType);
                 }
             }
             else if (typeSymbol is INamedTypeSymbol)
             {
                 var namedTypeSymbol = typeSymbol as INamedTypeSymbol;
 
-                // enumerable types such as List<T>, IList<T> or IEnumerable<T>
+                if (namedTypeSymbol.ConstructedFrom.SpecialType == SpecialType.System_Nullable_T)
+                {
+                    // nullable types
+                    typeModel.IsNullable = true;
+
+                    if (!namedTypeSymbol.TypeArguments.IsDefaultOrEmpty)
+                    {
+                        var typeArgument = namedTypeSymbol.TypeArguments[0];
+
+                        typeModel.TypeArguments = new List<CSharpTypeModel>() { CreateTypeModel(typeArgument) };
+                    }
+                }
+               
                 if (namedTypeSymbol != null 
                     && (namedTypeSymbol.ConstructedFrom.Equals(IEnumerableTypeSymbol) || namedTypeSymbol.AllInterfaces.Any(i => i.ConstructedFrom.Equals(IEnumerableTypeSymbol))))
                 {
+
+                    // enumerable types such as List<T>, IList<T> or IEnumerable<T>
                     typeModel.IsCollection = true;
 
                     if (!namedTypeSymbol.TypeArguments.IsDefaultOrEmpty)
                     {
                         var typeArgument = namedTypeSymbol.TypeArguments[0];
 
-                        typeModel.ElementType = new CSharpTypeModel()
-                        {
-                            Name = typeArgument.Name,
-                            TypeKind = TypeMapper.MapTypeKind(typeArgument.TypeKind),
-                            SpecialType = TypeMapper.MapSpecialType(typeArgument.SpecialType)
-                        };
+                        typeModel.TypeArguments = new List<CSharpTypeModel>() { CreateTypeModel(typeArgument) };
                     }
                 }
             }
 
             return typeModel;
+        }
+
+        private CSharpTypeModel CreateTypeModel(ITypeSymbol typeSymbol)
+        {
+            return new CSharpTypeModel()
+            {
+                Name = typeSymbol.Name,
+                TypeKind = TypeMapper.MapTypeKind(typeSymbol.TypeKind),
+                SpecialType = TypeMapper.MapSpecialType(typeSymbol.SpecialType)
+            };
         }
     }
 }

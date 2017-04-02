@@ -7,7 +7,7 @@ namespace TypeSync.Output.Converters
 {
     public class ModelConverter
     {
-        public TypeScriptClassModel ConvertModel(CSharpClassModel classModel)
+        public TypeScriptClassModel ConvertClassModel(CSharpClassModel classModel)
         {
             return new TypeScriptClassModel()
             {
@@ -15,29 +15,40 @@ namespace TypeSync.Output.Converters
                 Properties = classModel.Properties.Select(p => new TypeScriptPropertyModel()
                 {
                     Name = p.Name,
-                    Type = ConvertType(p.Type)
+                    IsOptional = p.Type.IsNullable,
+                    Type = ConvertTypeModel(p.Type)
                 }).ToList()
             };
         }
 
-        private TypeScriptTypeModel ConvertType(CSharpTypeModel csTypeModel)
+        private TypeScriptTypeModel ConvertTypeModel(CSharpTypeModel csTypeModel)
         {
-            var tsTypeModel = new TypeScriptTypeModel();
+            var tsTypeModel = CreateTypeModel(csTypeModel);
 
-            tsTypeModel.Name = csTypeModel.Name;
-            tsTypeModel.IsNamedType = csTypeModel.SpecialType == CSharpSpecialType.None;
-            tsTypeModel.PredefinedType = TypeConverter.ConvertCSharpTypeToTypeScript(csTypeModel.SpecialType);
-
-            if (csTypeModel.IsCollection)
+            if (csTypeModel.IsArray)
             {
-                tsTypeModel.ElementType = new TypeScriptTypeModel();
-
-                tsTypeModel.ElementType.Name = csTypeModel.ElementType.Name;
-                tsTypeModel.ElementType.IsNamedType = csTypeModel.ElementType.SpecialType == CSharpSpecialType.None;
-                tsTypeModel.ElementType.PredefinedType = TypeConverter.ConvertCSharpTypeToTypeScript(csTypeModel.ElementType.SpecialType);
+                tsTypeModel.ElementType = CreateTypeModel(csTypeModel.ElementType);
+            }
+            else if (csTypeModel.IsCollection)
+            {
+                tsTypeModel.ElementType = CreateTypeModel(csTypeModel.TypeArguments.First());
+            }
+            else if (csTypeModel.IsNullable)
+            {
+                tsTypeModel = CreateTypeModel(csTypeModel.TypeArguments.First());
             }
 
             return tsTypeModel;
+        }
+
+        private TypeScriptTypeModel CreateTypeModel(CSharpTypeModel csTypeModel)
+        {
+            return new TypeScriptTypeModel()
+            {
+                Name = csTypeModel.Name,
+                IsNamedType = csTypeModel.SpecialType == CSharpSpecialType.None,
+                PredefinedType = TypeMapper.MapCSharpTypeToTypeScript(csTypeModel.SpecialType)
+            };
         }
     }
 }
