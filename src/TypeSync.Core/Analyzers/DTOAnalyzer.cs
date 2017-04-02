@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using log4net;
 using Microsoft.CodeAnalysis;
-using TypeSync.Core.Models.CSharp;
 using TypeSync.Core.SyntaxWalkers;
+using TypeSync.Models.CSharp;
 
 namespace TypeSync.Core.Analyzers
 {
@@ -11,14 +10,10 @@ namespace TypeSync.Core.Analyzers
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(DTOAnalyzer));
 
-        private Compilation _compilation;
-        private SyntaxTree _syntaxTree;
         private SemanticModel _semanticModel;
 
-        public DTOAnalyzer(Compilation compilation, SyntaxTree syntaxTree, SemanticModel semanticModel)
+        public DTOAnalyzer(SemanticModel semanticModel)
         {
-            _compilation = compilation;
-            _syntaxTree = syntaxTree;
             _semanticModel = semanticModel;
         }
 
@@ -28,7 +23,7 @@ namespace TypeSync.Core.Analyzers
 
             var classModels = new List<CSharpClassModel>();
 
-            var root = _syntaxTree.GetRoot();
+            var root = _semanticModel.SyntaxTree.GetRoot();
 
             // collect classes
             var classCollector = new ClassCollector();
@@ -38,7 +33,7 @@ namespace TypeSync.Core.Analyzers
             var classNodes = classCollector.Classes;
 
             // symbol instances for equality checks
-            var IEnumerableSymbol = _compilation.GetTypeByMetadataName("System.Collections.Generic.IEnumerable`1");
+            var IEnumerableSymbol = _semanticModel.Compilation.GetTypeByMetadataName("System.Collections.Generic.IEnumerable`1");
 
             var typeAnalyzer = new TypeAnalyzer();
 
@@ -62,9 +57,6 @@ namespace TypeSync.Core.Analyzers
 
                     property.Name = propertySymbol.Name;
                     property.Type = typeAnalyzer.AnalyzePropertyType(propertySymbol.Type, IEnumerableSymbol);
-
-                    property.Type.Name = propertySymbol.Type.Name;
-                    property.Type.TypeKind = propertySymbol.Type.TypeKind;
 
                     classModel.Properties.Add(property);
                 }

@@ -4,9 +4,9 @@ using TypeSync.Common.Extensions;
 
 namespace TypeSync.Output
 {
-    public class TypeScriptOutputter
+    public class TypeScriptEmitter
     {
-        public void Output(string path, string className, string contents)
+        public void Emit(string path, string className, string contents)
         {
             string fileType = "model";
             string extension = "ts";

@@ -1,6 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
-
-namespace TypeSync.Core.Models.CSharp
+﻿namespace TypeSync.Models.CSharp
 {
     public class CSharpPropertyModel
     {

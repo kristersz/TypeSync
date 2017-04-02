@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using log4net;
 using Microsoft.CodeAnalysis;
-using TypeSync.Core.Models.CSharp;
+using TypeSync.Core.Mappers;
+using TypeSync.Models.CSharp;
+using TypeSync.Models.Enums;
 
 namespace TypeSync.Core.Analyzers
 {
@@ -22,15 +20,15 @@ namespace TypeSync.Core.Analyzers
             var typeModel = new CSharpTypeModel();
 
             typeModel.Name = typeSymbol.Name;
-            typeModel.TypeKind = typeSymbol.TypeKind;
+            typeModel.TypeKind = TypeMapper.MapTypeKind(typeSymbol.TypeKind);
 
 
             if (typeSymbol.SpecialType != SpecialType.None)
             {
                 // special types
-                typeModel.SpecialType = typeSymbol.SpecialType;
+                typeModel.SpecialType = TypeMapper.MapSpecialType(typeSymbol.SpecialType);
             }
-            else if (typeModel.TypeKind == TypeKind.Array)
+            else if (typeModel.TypeKind == CSharpTypeKind.Array)
             {
                 // arrays
                 var arrayTypeSymbol = typeSymbol as IArrayTypeSymbol;
@@ -41,8 +39,8 @@ namespace TypeSync.Core.Analyzers
                     typeModel.ElementType = new CSharpTypeModel()
                     {
                         Name = arrayTypeSymbol.ElementType.Name,
-                        TypeKind = arrayTypeSymbol.ElementType.TypeKind,
-                        SpecialType = arrayTypeSymbol.ElementType.SpecialType
+                        TypeKind = TypeMapper.MapTypeKind(arrayTypeSymbol.ElementType.TypeKind),
+                        SpecialType = TypeMapper.MapSpecialType(arrayTypeSymbol.ElementType.SpecialType)
                     };
                 }
             }
@@ -63,8 +61,8 @@ namespace TypeSync.Core.Analyzers
                         typeModel.ElementType = new CSharpTypeModel()
                         {
                             Name = typeArgument.Name,
-                            TypeKind = typeArgument.TypeKind,
-                            SpecialType = typeArgument.SpecialType
+                            TypeKind = TypeMapper.MapTypeKind(typeArgument.TypeKind),
+                            SpecialType = TypeMapper.MapSpecialType(typeArgument.SpecialType)
                         };
                     }
                 }

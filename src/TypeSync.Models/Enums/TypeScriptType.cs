@@ -1,4 +1,4 @@
-﻿namespace TypeSync.Core.Enums
+﻿namespace TypeSync.Models.Enums
 {
     /// <summary>
     /// https://www.typescriptlang.org/docs/handbook/basic-types.html

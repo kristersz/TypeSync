@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TypeSync.Core.Models.TypeScript
+namespace TypeSync.Models.TypeScript
 {
     public class TypeScriptClassModel
     {

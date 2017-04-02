@@ -1,6 +1,6 @@
-﻿namespace TypeSync.Core.Constants
+﻿namespace TypeSync.Output
 {
-    public static class TypeScriptTypeLiteral
+    public static class EmittedTypeName
     {
         public const string Any = "any";
         public const string Boolean = "boolean";

@@ -1,6 +1,6 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using TypeSync.Models.Enums;
 
-namespace TypeSync.Core.Models.CSharp
+namespace TypeSync.Models.CSharp
 {
     public class CSharpTypeModel
     {
@@ -8,9 +8,9 @@ namespace TypeSync.Core.Models.CSharp
 
         public bool IsCollection { get; set; }
 
-        public SpecialType SpecialType { get; set; }
+        public CSharpSpecialType SpecialType { get; set; }
 
-        public TypeKind TypeKind { get; set; }
+        public CSharpTypeKind TypeKind { get; set; }
 
         public CSharpTypeModel ElementType { get; set; }
     }
