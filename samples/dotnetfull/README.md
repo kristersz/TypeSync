@@ -1,1 +1,0 @@
-This folder is a placeholder for a full .NET framework sample.
