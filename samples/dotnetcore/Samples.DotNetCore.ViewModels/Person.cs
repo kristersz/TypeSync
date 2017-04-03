@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Samples.ViewModels
+namespace Samples.DotNetCore.ViewModels
 {
     public class Person
     {

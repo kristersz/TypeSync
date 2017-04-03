@@ -1,4 +1,4 @@
-﻿namespace Samples.ViewModels
+﻿namespace Samples.DotNetCore.ViewModels
 {
     public class Address
     {
