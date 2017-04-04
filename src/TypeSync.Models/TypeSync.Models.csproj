@@ -43,6 +43,7 @@
     <Compile Include="CSharp\CSharpClassModel.cs" />
     <Compile Include="CSharp\CSharpPropertyModel.cs" />
     <Compile Include="CSharp\CSharpTypeModel.cs" />
+    <Compile Include="CSharp\DependantType.cs" />
     <Compile Include="Enums\CSharpSpecialType.cs" />
     <Compile Include="Enums\CSharpTypeKind.cs" />
     <Compile Include="Enums\TypeScriptType.cs" />

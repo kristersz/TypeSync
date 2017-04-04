@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.FindSymbols;
 using Microsoft.CodeAnalysis.MSBuild;
 using TypeSync.Core;
 using TypeSync.Core.Analyzers;
+using TypeSync.Core.Services;
 using TypeSync.Core.SyntaxRewriters;
 using TypeSync.Models;
 using TypeSync.Output;
@@ -104,6 +105,13 @@ namespace TypeSync.UseCases
 
         private void ExecuteOnProject()
         {
+            var workspaceService = new WorkspaceService();
+
+            workspaceService.OpenProject(_configuration.Path);
+
+            var projectDependencyGraph = workspaceService.GetProjectDependencyGraph();
+            workspaceService.GetClassDependencyGraph();
+
             var workspace = MSBuildWorkspace.Create();
             var project = workspace.OpenProjectAsync(_configuration.Path).Result;
 
@@ -148,21 +156,6 @@ namespace TypeSync.UseCases
 
                     ProccessSemanticModel(semanticModel);
                 }
-
-                //foreach (var document in project.Documents)
-                //{
-                //    var syntaxTree = document.GetSyntaxTreeAsync().Result;
-                //    var semanticModel = compilation.GetSemanticModel(syntaxTree);
-
-                //    var classSyntax = syntaxTree.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>().First();
-                //    var classSymbol = semanticModel.GetDeclaredSymbol(classSyntax) as INamedTypeSymbol;
-                //    var referencesToClass = SymbolFinder.FindReferencesAsync(classSymbol, solution).Result;
-
-                //    var descendantNodes = classSyntax.DescendantNodes().ToList();
-                //    var typesForCurrentClass = descendantNodes.Select(n => semanticModel.GetTypeInfo(n).Type).ToList();
-
-                //    Console.WriteLine(document.Name);
-                //}
             }
         }
 
