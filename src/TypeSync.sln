@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeSync.Common", "TypeSync
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeSync.Models", "TypeSync.Models\TypeSync.Models.csproj", "{83251F52-6057-4D76-8689-C5221C1F169A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vendors", "Vendors", "{6B063FF8-4B90-44BA-8ECE-F2274A663000}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataStructures", "DataStructures\DataStructures.csproj", "{464251A0-3667-42BA-A3D5-0581D65C442B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,8 +63,19 @@ Global
 		{83251F52-6057-4D76-8689-C5221C1F169A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{83251F52-6057-4D76-8689-C5221C1F169A}.Release|x86.ActiveCfg = Release|Any CPU
 		{83251F52-6057-4D76-8689-C5221C1F169A}.Release|x86.Build.0 = Release|Any CPU
+		{464251A0-3667-42BA-A3D5-0581D65C442B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{464251A0-3667-42BA-A3D5-0581D65C442B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{464251A0-3667-42BA-A3D5-0581D65C442B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{464251A0-3667-42BA-A3D5-0581D65C442B}.Debug|x86.Build.0 = Debug|Any CPU
+		{464251A0-3667-42BA-A3D5-0581D65C442B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{464251A0-3667-42BA-A3D5-0581D65C442B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{464251A0-3667-42BA-A3D5-0581D65C442B}.Release|x86.ActiveCfg = Release|Any CPU
+		{464251A0-3667-42BA-A3D5-0581D65C442B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{464251A0-3667-42BA-A3D5-0581D65C442B} = {6B063FF8-4B90-44BA-8ECE-F2274A663000}
 	EndGlobalSection
 EndGlobal
