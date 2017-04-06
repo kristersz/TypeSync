@@ -154,9 +154,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Analyzers\DTOAnalyzer.cs" />
-    <Compile Include="Analyzers\TypeAnalyzer.cs" />
-    <Compile Include="Services\WorkspaceService.cs" />
+    <Compile Include="Features\ModelAnalysis\ModelAnalysisContext.cs" />
+    <Compile Include="Features\ModelAnalysis\ModelAnalyzer.cs" />
+    <Compile Include="Models\AnalysisResult.cs" />
+    <Compile Include="Models\DependantType.cs" />
     <Compile Include="Mappers\TypeMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SyntaxRewriters\PropertyTypeAliasRewriter.cs" />

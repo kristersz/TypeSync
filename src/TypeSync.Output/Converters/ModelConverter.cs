@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using TypeSync.Models.CSharp;
 using TypeSync.Models.Enums;
 using TypeSync.Models.TypeScript;
@@ -7,18 +8,18 @@ namespace TypeSync.Output.Converters
 {
     public class ModelConverter
     {
-        public TypeScriptClassModel ConvertClassModel(CSharpClassModel classModel)
+        public List<TypeScriptClassModel> ConvertClassModels(List<CSharpClassModel> classModels)
         {
-            return new TypeScriptClassModel()
+            return classModels.Select(c => new TypeScriptClassModel()
             {
-                Name = classModel.Name,
-                Properties = classModel.Properties.Select(p => new TypeScriptPropertyModel()
+                Name = c.Name,
+                Properties = c.Properties.Select(p => new TypeScriptPropertyModel()
                 {
                     Name = p.Name,
                     IsOptional = p.Type.IsNullable,
                     Type = ConvertTypeModel(p.Type)
                 }).ToList()
-            };
+            }).ToList();
         }
 
         private TypeScriptTypeModel ConvertTypeModel(CSharpTypeModel csTypeModel)

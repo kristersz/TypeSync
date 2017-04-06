@@ -40,7 +40,7 @@ namespace TypeSync
 
                     foreach (var useCase in useCases)
                     {
-                        Console.WriteLine("Id: {0}; Name: {1}", useCase.Id, useCase.Name);
+                        Console.WriteLine($"Id: {useCase.Id}; Name: {useCase.Name}");
                     }
 
                     selectedUseCaseId = Console.ReadLine();
@@ -54,7 +54,12 @@ namespace TypeSync
                 }
                 else
                 {
-                    selectedUseCase.Execute();
+                    var result = selectedUseCase.Handle();
+
+                    if (!result.Success)
+                    {
+                        Console.WriteLine($"error {result.ErrorCode}: {result.ErrorMessage}");
+                    }
                 }
             }
             catch (Exception ex)

@@ -1,16 +1,23 @@
 ﻿using System;
+using Microsoft.CodeAnalysis;
 
-namespace TypeSync.Models.CSharp
+namespace TypeSync.Core.Models
 {
     public class DependantType : IComparable<DependantType>
     {
         public string Name { get; set; }
 
+        public string Namespace { get; set; }
+
         public string ContainingAssembly { get; set; }
+
+        public bool IsExternal { get; set; }
+
+        public SemanticModel SemanticModel { get; set; }
 
         public override string ToString()
         {
-            return Name + " [" + ContainingAssembly + "]";
+            return $"{Namespace}.{Name} [{ContainingAssembly}]";
         }
 
 

@@ -1,4 +1,6 @@
-﻿namespace TypeSync.UseCases
+﻿using TypeSync.Models;
+
+namespace TypeSync.UseCases
 {
     public interface IUseCase
     {
@@ -6,6 +8,6 @@
 
         string Name { get; }
 
-        void Execute();
+        Result Handle();
     }
 }

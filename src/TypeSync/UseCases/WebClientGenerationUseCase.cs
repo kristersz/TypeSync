@@ -1,4 +1,5 @@
 ﻿using log4net;
+using TypeSync.Models;
 
 namespace TypeSync.UseCases
 {
@@ -14,8 +15,9 @@ namespace TypeSync.UseCases
         {
         }
 
-        public void Execute()
+        public Result Handle()
         {
+            return Result.CreateSuccess();
         }
     }
 }
