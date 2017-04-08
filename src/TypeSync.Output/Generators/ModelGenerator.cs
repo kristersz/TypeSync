@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using log4net;
-using TypeSync.Common.Extensions;
+using TypeSync.Common.Utilities;
 using TypeSync.Models.TypeScript;
 using TypeSync.Output.Converters;
 
@@ -41,11 +41,11 @@ namespace TypeSync.Output.Generators
                     emittedType += EmittedTypeName.Array;
                 }
 
-                sb.AppendLine("\t"                      // indentation
-                    + property.Name.PascalToCamelCase() // property name
-                    + (property.IsOptional ? "?" : "")  // optional?
+                sb.AppendLine("\t"                                  // indentation
+                    + NameCaseConverter.ToCamelCase(property.Name)  // property name
+                    + (property.IsOptional ? "?" : "")              // optional?
                     + ": "
-                    + emittedType                       // property type
+                    + emittedType                                   // property type
                     + ";");
             }
 
@@ -73,7 +73,7 @@ namespace TypeSync.Output.Generators
             foreach (var member in enumModel.Members)
             {
                 sb.AppendLine("\t"                                              // indentation
-                    + member.Name.PascalToCamelCase()                           // member name
+                    + NameCaseConverter.ToCamelCase(member.Name)                // member name
                     + (member.Value.HasValue ? $" = {member.Value.Value}" : "") // optional constant value
                     + ",");
             }
