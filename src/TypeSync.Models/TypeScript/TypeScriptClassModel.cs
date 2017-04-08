@@ -11,6 +11,8 @@ namespace TypeSync.Models.TypeScript
 
         public string Name { get; set; }
 
+        public string BaseClass { get; set; }
+
         public List<TypeScriptPropertyModel> Properties { get; set; }
     }
 }

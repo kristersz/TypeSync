@@ -76,7 +76,7 @@ namespace TypeSync.UseCases
             {
                 log.DebugFormat("Enum {0}", tsModel.Name);
 
-                var contents = generator.GenerateEnum(tsModel);
+                var contents = generator.GenerateEnums(tsModel);
 
                 log.Debug("Contents generated");
 

@@ -13,6 +13,7 @@ namespace TypeSync.Output.Converters
             return classModels.Select(c => new TypeScriptClassModel()
             {
                 Name = c.Name,
+                BaseClass = c.BaseClass,
                 Properties = c.Properties.Select(p => new TypeScriptPropertyModel()
                 {
                     Name = p.Name,

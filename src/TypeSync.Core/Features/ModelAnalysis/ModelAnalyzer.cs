@@ -27,6 +27,9 @@ namespace TypeSync.Core.Features.ModelAnalysis
             _context.Init(path);
 
             var graph = BuildTypeDependencyGraph();
+
+            var readable = graph.ToReadable();
+
             var types = graph.Vertices;
 
             foreach (var type in types)
@@ -44,6 +47,11 @@ namespace TypeSync.Core.Features.ModelAnalysis
                 if (type.TypeKind == TypeKind.Class)
                 {
                     var classModel = new CSharpClassModel() { Name = type.Name };
+
+                    if (type.NamedTypeSymbol.BaseType != null)
+                    {
+                        classModel.BaseClass = type.NamedTypeSymbol.BaseType.Name;
+                    }
 
                     var propertyNodes = syntaxTree.GetRoot().DescendantNodes().OfType<PropertyDeclarationSyntax>().ToList();
 
@@ -97,8 +105,10 @@ namespace TypeSync.Core.Features.ModelAnalysis
             //var mscorlib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
             //var mscorlibSymbol = compilation.GetAssemblyOrModuleSymbol(mscorlib);
 
-            var internalTypes = new List<DependantType>();
-            var externalTypes = new List<DependantType>();
+            //var internalTypes = new List<DependantType>();
+            //var externalTypes = new List<DependantType>();
+
+            var processedTypes = new List<DependantType>();
 
             foreach (var syntaxTree in _context.Compilation.SyntaxTrees)
             {
@@ -113,14 +123,15 @@ namespace TypeSync.Core.Features.ModelAnalysis
 
                     var classSymbol = semanticModel.GetDeclaredSymbol(classNode) as INamedTypeSymbol;
 
-                    var internalType = internalTypes.FirstOrDefault(t => t.Name == classSymbol.Name);
+                    var processedType = processedTypes.FirstOrDefault(t => t.Name == classSymbol.Name);
 
-                    if (internalType != null)
+                    if (processedType != null)
                     {
                         // we already added this to the graph as a dependency earlier
-                        type = internalType;
+                        type = processedType;
 
                         type.SemanticModel = semanticModel;
+                        type.NamedTypeSymbol = classSymbol;
                     }
                     else
                     {
@@ -131,9 +142,11 @@ namespace TypeSync.Core.Features.ModelAnalysis
                             ContainingAssembly = classSymbol.ContainingAssembly.Name,
                             IsExternal = false,
                             SemanticModel = semanticModel,
+                            NamedTypeSymbol = classSymbol,
                             TypeKind = classSymbol.TypeKind
                         };
 
+                        processedTypes.Add(type);
                         graph.AddVertex(type);
                     }
 
@@ -147,45 +160,26 @@ namespace TypeSync.Core.Features.ModelAnalysis
 
                     foreach (var dependency in classDependencies)
                     {
-                        var dep = new DependantType()
+                        DependantType dep = null;
+
+                        var processedDep = processedTypes.FirstOrDefault(t => t.Name == dependency.Name);
+
+                        if (processedDep != null)
                         {
-                            Name = dependency.Name,
-                            Namespace = dependency.ContainingNamespace.ToString(),
-                            ContainingAssembly = dependency.ContainingAssembly.Name,
-                            TypeKind = dependency.TypeKind
-                        };
-
-                        // collect mscorlib types as 'external'
-                        if (dep.ContainingAssembly == "mscorlib")
-                        {
-                            dep.IsExternal = true;
-
-                            var externalDep = externalTypes.FirstOrDefault(t => t.Name == dep.Name);
-
-                            // check if not already registered
-                            if (externalDep != null)
-                            {
-                                dep = externalDep;
-                            }
-                            else
-                            {
-                                externalTypes.Add(dep);
-                            }
+                            dep = processedDep;
                         }
                         else
                         {
-                            dep.IsExternal = false;
-
-                            var internalDep = internalTypes.FirstOrDefault(t => t.Name == dependency.Name);
-
-                            if (internalDep != null)
+                            dep = new DependantType()
                             {
-                                dep = internalDep;
-                            }
-                            else
-                            {
-                                internalTypes.Add(dep);
-                            }
+                                Name = dependency.Name,
+                                Namespace = dependency.ContainingNamespace.ToString(),
+                                ContainingAssembly = dependency.ContainingAssembly.Name,
+                                TypeKind = dependency.TypeKind,
+                                IsExternal = dependency.ContainingAssembly.Name == "mscorlib"
+                            };
+
+                            processedTypes.Add(dep);
                         }
 
                         if (!graph.HasVertex(dep))
@@ -195,8 +189,6 @@ namespace TypeSync.Core.Features.ModelAnalysis
 
                         graph.AddEdge(type, dep);
                     }
-
-                    internalTypes.Add(type);
                 }
 
 
@@ -208,14 +200,15 @@ namespace TypeSync.Core.Features.ModelAnalysis
 
                     var enumSymbol = semanticModel.GetDeclaredSymbol(enumNode) as INamedTypeSymbol;
 
-                    var internalType = internalTypes.FirstOrDefault(t => t.Name == enumSymbol.Name);
+                    var processedType = processedTypes.FirstOrDefault(t => t.Name == enumSymbol.Name);
 
-                    if (internalType != null)
+                    if (processedType != null)
                     {
                         // we already added this to the graph as a dependency earlier
-                        type = internalType;
+                        type = processedType;
 
                         type.SemanticModel = semanticModel;
+                        type.NamedTypeSymbol = enumSymbol;
                     }
                     else
                     {
@@ -226,18 +219,15 @@ namespace TypeSync.Core.Features.ModelAnalysis
                             ContainingAssembly = enumSymbol.ContainingAssembly.Name,
                             IsExternal = false,
                             SemanticModel = semanticModel,
+                            NamedTypeSymbol = enumSymbol,
                             TypeKind = enumSymbol.TypeKind
                         };
 
+                        processedTypes.Add(type);
                         graph.AddVertex(type);
                     }
                 }
             }
-
-            var vertices = graph.Vertices;
-            var edges = graph.Edges;
-
-            var readable = graph.ToReadable();
 
             return graph;
         }

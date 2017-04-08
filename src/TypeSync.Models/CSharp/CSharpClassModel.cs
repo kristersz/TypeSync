@@ -11,6 +11,8 @@ namespace TypeSync.Models.CSharp
 
         public string Name { get; set; }
 
+        public string BaseClass { get; set; }
+
         public List<CSharpPropertyModel> Properties { get; set; }
     }
 }

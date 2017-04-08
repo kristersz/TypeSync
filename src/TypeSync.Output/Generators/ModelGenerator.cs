@@ -20,7 +20,10 @@ namespace TypeSync.Output.Generators
             sb.AppendLine();
 
             // class declaration
-            sb.AppendLine("export class " + classModel.Name + " {");
+            sb.AppendLine("export class "
+                + classModel.Name
+                + (string.IsNullOrEmpty(classModel.BaseClass) ? "" : " extends " + classModel.BaseClass)
+                + " {");
 
             // properties
             foreach (var property in classModel.Properties)
@@ -57,7 +60,7 @@ namespace TypeSync.Output.Generators
             return sb.ToString();
         }
 
-        public string GenerateEnum(TypeScriptEnumModel enumModel)
+        public string GenerateEnums(TypeScriptEnumModel enumModel)
         {
             log.Info("Enum generation started");
 
