@@ -11,5 +11,7 @@ namespace Samples.DotNetFull.ViewModels
         public string LastName { get; set; }
 
         public DateTime DateOfBirth { get; set; }
+
+        public Address Address { get; set; }
     }
 }

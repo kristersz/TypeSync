@@ -13,5 +13,7 @@ namespace Samples.DotNetFull.ViewModels
         public DateTime DateOfBirth { get; set; }
 
         public DateTime? YearOfGraduation { get; set; }
+
+        public Address Address { get; set; }
     }
 }

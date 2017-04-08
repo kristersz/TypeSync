@@ -73,6 +73,8 @@ namespace TypeSync.Core.Features.ModelAnalysis
 
             //var mscorlib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
             //var mscorlibSymbol = compilation.GetAssemblyOrModuleSymbol(mscorlib);
+
+            var internalTypes = new List<DependantType>();
             var externalTypes = new List<DependantType>();
 
             foreach (var syntaxTree in _context.Compilation.SyntaxTrees)
@@ -82,18 +84,32 @@ namespace TypeSync.Core.Features.ModelAnalysis
 
                 foreach (var classNode in classNodes)
                 {
+                    DependantType type = null;
+
                     var classSymbol = semanticModel.GetDeclaredSymbol(classNode) as INamedTypeSymbol;
 
-                    var dependantType = new DependantType()
-                    {
-                        Name = classSymbol.Name,
-                        Namespace = classSymbol.ContainingNamespace.ToString(),
-                        ContainingAssembly = classSymbol.ContainingAssembly.Name,
-                        IsExternal = false,
-                        SemanticModel = semanticModel
-                    };
+                    var internalType = internalTypes.FirstOrDefault(t => t.Name == classSymbol.Name);
 
-                    graph.AddVertex(dependantType);
+                    if (internalType != null)
+                    {
+                        // we already added this to the graph as a dependency earlier
+                        type = internalType;
+
+                        type.SemanticModel = semanticModel;
+                    }
+                    else
+                    {
+                        type = new DependantType()
+                        {
+                            Name = classSymbol.Name,
+                            Namespace = classSymbol.ContainingNamespace.ToString(),
+                            ContainingAssembly = classSymbol.ContainingAssembly.Name,
+                            IsExternal = false,
+                            SemanticModel = semanticModel
+                        };
+
+                        graph.AddVertex(type);
+                    }                   
 
                     var referencesToClass = SymbolFinder.FindReferencesAsync(classSymbol, _context.Solution).Result;
 
@@ -129,14 +145,31 @@ namespace TypeSync.Core.Features.ModelAnalysis
                                 externalTypes.Add(dep);
                             }
                         }
+                        else
+                        {
+                            dep.IsExternal = false;
+
+                            var internalDep = internalTypes.FirstOrDefault(t => t.Name == dependency.Name);
+
+                            if (internalDep != null)
+                            {
+                                dep = internalDep;
+                            }
+                            else
+                            {
+                                internalTypes.Add(dep);
+                            } 
+                        }
 
                         if (!graph.HasVertex(dep))
                         {
                             graph.AddVertex(dep);
                         }
 
-                        graph.AddEdge(dependantType, dep);
+                        graph.AddEdge(type, dep);
                     }
+
+                    internalTypes.Add(type);
                 }
             }
 
