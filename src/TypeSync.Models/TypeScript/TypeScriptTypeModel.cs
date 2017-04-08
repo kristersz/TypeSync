@@ -8,7 +8,7 @@ namespace TypeSync.Models.TypeScript
 
         public bool IsNamedType { get; set; }
 
-        public TypeScriptType PredefinedType { get; set; }
+        public TypeScriptBasicType PredefinedType { get; set; }
 
         public TypeScriptTypeModel ElementType { get; set; }
     }

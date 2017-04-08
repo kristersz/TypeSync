@@ -54,15 +54,29 @@ namespace TypeSync.UseCases
 
             log.Debug("Source analyzed");
 
-            var tsModels = converter.ConvertClassModels(analysisResult.Value);
+            var tsClassModels = converter.ConvertClasses(analysisResult.Value.Classes);
+            var tsEnumModels = converter.ConvertEnums(analysisResult.Value.Enums);
 
             log.Debug("Models converted");
 
-            foreach (var tsModel in tsModels)
+            foreach (var tsModel in tsClassModels)
             {
                 log.DebugFormat("Class {0}", tsModel.Name);
 
-                var contents = generator.Generate(tsModel);
+                var contents = generator.GenerateClass(tsModel);
+
+                log.Debug("Contents generated");
+
+                emitter.Emit(_configuration.OutputPath, tsModel.Name, contents);
+
+                log.Debug("Contents emitted");
+            }
+
+            foreach (var tsModel in tsEnumModels)
+            {
+                log.DebugFormat("Enum {0}", tsModel.Name);
+
+                var contents = generator.GenerateEnum(tsModel);
 
                 log.Debug("Contents generated");
 

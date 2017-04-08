@@ -15,6 +15,8 @@ namespace TypeSync.Core.Models
 
         public SemanticModel SemanticModel { get; set; }
 
+        public TypeKind TypeKind { get; set; }
+
         public override string ToString()
         {
             return $"{Namespace}.{Name} [{ContainingAssembly}]";

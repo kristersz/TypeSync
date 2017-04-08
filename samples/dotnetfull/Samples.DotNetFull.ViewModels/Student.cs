@@ -15,5 +15,7 @@ namespace Samples.DotNetFull.ViewModels
         public DateTime? YearOfGraduation { get; set; }
 
         public Address Address { get; set; }
+
+        public StudentType Type { get; set; }
     }
 }

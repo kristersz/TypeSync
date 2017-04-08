@@ -10,9 +10,9 @@ namespace TypeSync.Output.Generators
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(ModelGenerator));
 
-        public string Generate(TypeScriptClassModel classModel)
+        public string GenerateClass(TypeScriptClassModel classModel)
         {
-            log.Info("Model generation started");
+            log.Info("Class generation started");
 
             var sb = new StringBuilder();
 
@@ -52,7 +52,36 @@ namespace TypeSync.Output.Generators
             sb.AppendLine("}");
             sb.AppendLine();
 
-            log.Info("Model generation finished");
+            log.Info("Class generation finished");
+
+            return sb.ToString();
+        }
+
+        public string GenerateEnum(TypeScriptEnumModel enumModel)
+        {
+            log.Info("Enum generation started");
+
+            var sb = new StringBuilder();
+
+            // imports
+            sb.AppendLine();
+
+            // enum declaration
+            sb.AppendLine("export enum " + enumModel.Name + " {");
+
+            // members
+            foreach (var member in enumModel.Members)
+            {
+                sb.AppendLine("\t"                                              // indentation
+                    + member.Name.PascalToCamelCase()                           // member name
+                    + (member.Value.HasValue ? $" = {member.Value.Value}" : "") // optional constant value
+                    + ",");
+            }
+
+            sb.AppendLine("}");
+            sb.AppendLine();
+
+            log.Info("Enum generation finished");
 
             return sb.ToString();
         }

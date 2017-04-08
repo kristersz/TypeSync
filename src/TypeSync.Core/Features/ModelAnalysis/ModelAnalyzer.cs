@@ -20,13 +20,13 @@ namespace TypeSync.Core.Features.ModelAnalysis
             _context = new ModelAnalysisContext();
         }
 
-        public AnalysisResult<List<CSharpClassModel>> Analyze(string path)
+        public AnalysisResult<CSharpModels> Analyze(string path)
         {
-            var models = new List<CSharpClassModel>();
+            var models = new CSharpModels();
 
             _context.Init(path);
 
-            var graph = GetClassDependencyGraph();
+            var graph = BuildTypeDependencyGraph();
             var types = graph.Vertices;
 
             foreach (var type in types)
@@ -41,33 +41,56 @@ namespace TypeSync.Core.Features.ModelAnalysis
                 var semanticModel = type.SemanticModel;
                 var syntaxTree = semanticModel.SyntaxTree;
 
-                var classModel = new CSharpClassModel() { Name = type.Name };
-
-                var propertyNodes = syntaxTree.GetRoot().DescendantNodes().OfType<PropertyDeclarationSyntax>().ToList();
-
-                foreach (var propertyNode in propertyNodes)
+                if (type.TypeKind == TypeKind.Class)
                 {
-                    var propertySymbol = semanticModel.GetDeclaredSymbol(propertyNode) as IPropertySymbol;
+                    var classModel = new CSharpClassModel() { Name = type.Name };
 
-                    var property = new CSharpPropertyModel();
+                    var propertyNodes = syntaxTree.GetRoot().DescendantNodes().OfType<PropertyDeclarationSyntax>().ToList();
 
-                    property.Name = propertySymbol.Name;
-                    property.Type = AnalyzePropertyType(propertySymbol.Type);
+                    foreach (var propertyNode in propertyNodes)
+                    {
+                        var propertySymbol = semanticModel.GetDeclaredSymbol(propertyNode) as IPropertySymbol;
 
-                    classModel.Properties.Add(property);
+                        var property = new CSharpPropertyModel();
+
+                        property.Name = propertySymbol.Name;
+                        property.Type = AnalyzePropertyType(propertySymbol.Type);
+
+                        classModel.Properties.Add(property);
+                    }
+
+                    models.Classes.Add(classModel);
                 }
+                else if (type.TypeKind == TypeKind.Enum)
+                {
+                    var enumModel = new CSharpEnumModel() { Name = type.Name };
 
-                models.Add(classModel);
+                    var memberNodes = syntaxTree.GetRoot().DescendantNodes().OfType<EnumMemberDeclarationSyntax>().ToList();
+
+                    foreach (var memberNode in memberNodes)
+                    {
+                        var memberSymbol = semanticModel.GetDeclaredSymbol(memberNode) as IFieldSymbol;
+
+                        var member = new CSharpEnumMemberModel();
+
+                        member.Name = memberSymbol.Name;
+                        member.Value = memberSymbol.HasConstantValue ? (int)memberSymbol.ConstantValue : 0;
+
+                        enumModel.Members.Add(member);
+                    }
+
+                   models.Enums.Add(enumModel);
+                } 
             }
 
-            return new AnalysisResult<List<CSharpClassModel>>()
+            return new AnalysisResult<CSharpModels>()
             {
                 Value = models,
                 Success = true
             };
         }
 
-        public DirectedSparseGraph<DependantType> GetClassDependencyGraph()
+        public DirectedSparseGraph<DependantType> BuildTypeDependencyGraph()
         {
             var graph = new DirectedSparseGraph<DependantType>();
 
@@ -79,8 +102,10 @@ namespace TypeSync.Core.Features.ModelAnalysis
 
             foreach (var syntaxTree in _context.Compilation.SyntaxTrees)
             {
+                var root = syntaxTree.GetRoot();
                 var semanticModel = _context.Compilation.GetSemanticModel(syntaxTree);
-                var classNodes = syntaxTree.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>().ToList();
+
+                var classNodes = root.DescendantNodes().OfType<ClassDeclarationSyntax>().ToList();
 
                 foreach (var classNode in classNodes)
                 {
@@ -105,11 +130,12 @@ namespace TypeSync.Core.Features.ModelAnalysis
                             Namespace = classSymbol.ContainingNamespace.ToString(),
                             ContainingAssembly = classSymbol.ContainingAssembly.Name,
                             IsExternal = false,
-                            SemanticModel = semanticModel
+                            SemanticModel = semanticModel,
+                            TypeKind = classSymbol.TypeKind
                         };
 
                         graph.AddVertex(type);
-                    }                   
+                    }
 
                     var referencesToClass = SymbolFinder.FindReferencesAsync(classSymbol, _context.Solution).Result;
 
@@ -125,7 +151,8 @@ namespace TypeSync.Core.Features.ModelAnalysis
                         {
                             Name = dependency.Name,
                             Namespace = dependency.ContainingNamespace.ToString(),
-                            ContainingAssembly = dependency.ContainingAssembly.Name
+                            ContainingAssembly = dependency.ContainingAssembly.Name,
+                            TypeKind = dependency.TypeKind
                         };
 
                         // collect mscorlib types as 'external'
@@ -158,7 +185,7 @@ namespace TypeSync.Core.Features.ModelAnalysis
                             else
                             {
                                 internalTypes.Add(dep);
-                            } 
+                            }
                         }
 
                         if (!graph.HasVertex(dep))
@@ -170,6 +197,40 @@ namespace TypeSync.Core.Features.ModelAnalysis
                     }
 
                     internalTypes.Add(type);
+                }
+
+
+                var enumNodes = root.DescendantNodes().OfType<EnumDeclarationSyntax>().ToList();
+
+                foreach (var enumNode in enumNodes)
+                {
+                    DependantType type = null;
+
+                    var enumSymbol = semanticModel.GetDeclaredSymbol(enumNode) as INamedTypeSymbol;
+
+                    var internalType = internalTypes.FirstOrDefault(t => t.Name == enumSymbol.Name);
+
+                    if (internalType != null)
+                    {
+                        // we already added this to the graph as a dependency earlier
+                        type = internalType;
+
+                        type.SemanticModel = semanticModel;
+                    }
+                    else
+                    {
+                        type = new DependantType()
+                        {
+                            Name = enumSymbol.Name,
+                            Namespace = enumSymbol.ContainingNamespace.ToString(),
+                            ContainingAssembly = enumSymbol.ContainingAssembly.Name,
+                            IsExternal = false,
+                            SemanticModel = semanticModel,
+                            TypeKind = enumSymbol.TypeKind
+                        };
+
+                        graph.AddVertex(type);
+                    }
                 }
             }
 

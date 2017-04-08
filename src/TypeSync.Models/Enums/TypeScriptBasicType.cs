@@ -3,7 +3,7 @@
     /// <summary>
     /// https://www.typescriptlang.org/docs/handbook/basic-types.html
     /// </summary>
-    public enum TypeScriptType
+    public enum TypeScriptBasicType
     {
         /// <summary>
         /// Can represent any type

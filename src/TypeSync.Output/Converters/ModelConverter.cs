@@ -8,7 +8,7 @@ namespace TypeSync.Output.Converters
 {
     public class ModelConverter
     {
-        public List<TypeScriptClassModel> ConvertClassModels(List<CSharpClassModel> classModels)
+        public List<TypeScriptClassModel> ConvertClasses(List<CSharpClassModel> classModels)
         {
             return classModels.Select(c => new TypeScriptClassModel()
             {
@@ -17,12 +17,25 @@ namespace TypeSync.Output.Converters
                 {
                     Name = p.Name,
                     IsOptional = p.Type.IsNullable,
-                    Type = ConvertTypeModel(p.Type)
+                    Type = ConvertTypes(p.Type)
                 }).ToList()
             }).ToList();
         }
 
-        private TypeScriptTypeModel ConvertTypeModel(CSharpTypeModel csTypeModel)
+        public List<TypeScriptEnumModel> ConvertEnums(List<CSharpEnumModel> enumModels)
+        {
+            return enumModels.Select(c => new TypeScriptEnumModel()
+            {
+                Name = c.Name,
+                Members = c.Members.Select(p => new TypeScriptEnumMemberModel()
+                {
+                    Name = p.Name,
+                    Value = p.Value
+                }).ToList()
+            }).ToList();
+        }
+
+        public TypeScriptTypeModel ConvertTypes(CSharpTypeModel csTypeModel)
         {
             var tsTypeModel = CreateTypeModel(csTypeModel);
 
