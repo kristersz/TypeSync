@@ -12,4 +12,10 @@ Primarily meant to be used for Angular front-end solutions.
 1. Model generation:
 	* Classes.
 	* Properties.
-	* Types (CLR types, arrays, collections, custom types).
+	* CLR types.
+	* Arrays and collections.
+	* Nullable types.
+	* Enums.
+	* Inheritance.
+	* Works with .NET solutions, projects or individual C# files.
+	* Support for various symbol/file name cases (PascalCase, camelCase, kebab-case or snake_case).
