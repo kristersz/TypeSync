@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace TypeSync.Core.SyntaxRewriters
+namespace TypeSync.Core.Visitors
 {
     public class PropertyTypeAliasRewriter : CSharpSyntaxRewriter
     {

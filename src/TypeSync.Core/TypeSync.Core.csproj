@@ -160,9 +160,10 @@
     <Compile Include="Models\DependantType.cs" />
     <Compile Include="Mappers\TypeMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SyntaxRewriters\PropertyTypeAliasRewriter.cs" />
-    <Compile Include="SyntaxWalkers\ClassCollector.cs" />
-    <Compile Include="SyntaxWalkers\PropertyCollector.cs" />
+    <Compile Include="Visitors\NamedTypeSymbolFinder.cs" />
+    <Compile Include="Visitors\PropertyTypeAliasRewriter.cs" />
+    <Compile Include="Visitors\ClassCollector.cs" />
+    <Compile Include="Visitors\PropertyCollector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

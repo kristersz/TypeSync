@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace TypeSync.Core.SyntaxWalkers
+namespace TypeSync.Core.Visitors
 {
     public class ClassCollector : CSharpSyntaxWalker
     {
