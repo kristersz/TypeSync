@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DataStructures</RootNamespace>
-    <AssemblyName>DataStrcutres</AssemblyName>
+    <AssemblyName>DataStructures</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -116,7 +116,5 @@
     </Content>
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="SortedCollections\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>
