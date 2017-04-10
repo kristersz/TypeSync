@@ -47,23 +47,9 @@ namespace TypeSync.Core.Features.ModelAnalysis
                 {
                     var classModel = new CSharpClassModel() { Name = type.Name };
 
-                    if (type.NamedTypeSymbol.BaseType != null)
-                    {
-                        classModel.BaseClass = type.NamedTypeSymbol.BaseType.Name;
-                    }
+                    HandleInheritance(classModel, type.NamedTypeSymbol);
 
-                    var internalDependencies = dependencies
-                        .Where(d => !d.IsExternal)
-                        .ToList();
-
-                    foreach (var dep in internalDependencies)
-                    {
-                        classModel.Dependencies.Add(new CSharpDependencyModel()
-                        {
-                            Name = dep.Name,
-                            Namespace = dep.Namespace
-                        });
-                    }
+                    HandleDependencies(classModel, dependencies);
 
                     var propertyNodes = syntaxTree.GetRoot().DescendantNodes().OfType<PropertyDeclarationSyntax>().ToList();
 
@@ -242,6 +228,30 @@ namespace TypeSync.Core.Features.ModelAnalysis
             }
 
             return graph;
+        }
+
+        private void HandleInheritance(CSharpClassModel model, INamedTypeSymbol classSymbol)
+        {
+            if (classSymbol.BaseType != null && classSymbol.BaseType.ContainingAssembly.Name != "mscorlib")
+            {
+                model.BaseClass = classSymbol.BaseType.Name;
+            }
+        }
+
+        private void HandleDependencies(CSharpClassModel model, List<DependantType> dependencies)
+        {
+            var internalDependencies = dependencies
+                        .Where(d => !d.IsExternal)
+                        .ToList();
+
+            foreach (var dep in internalDependencies)
+            {
+                model.Dependencies.Add(new CSharpDependencyModel()
+                {
+                    Name = dep.Name,
+                    Namespace = dep.Namespace
+                });
+            }
         }
 
         private CSharpTypeModel AnalyzePropertyType(ITypeSymbol typeSymbol)
