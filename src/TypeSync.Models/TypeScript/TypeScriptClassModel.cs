@@ -6,12 +6,15 @@ namespace TypeSync.Models.TypeScript
     {
         public TypeScriptClassModel()
         {
+            Imports = new List<TypeScriptImportModel>();
             Properties = new List<TypeScriptPropertyModel>();
         }
 
         public string Name { get; set; }
 
         public string BaseClass { get; set; }
+
+        public List<TypeScriptImportModel> Imports { get; set; }
 
         public List<TypeScriptPropertyModel> Properties { get; set; }
     }

@@ -1,4 +1,5 @@
-﻿using TypeSync.Models.Enums;
+﻿using TypeSync.Models.CSharp;
+using TypeSync.Models.TypeScript;
 
 namespace TypeSync.Output.Converters
 {

@@ -1,4 +1,4 @@
-﻿namespace TypeSync.Models.Enums
+﻿namespace TypeSync.Models.CSharp
 {
     /// <summary>
     /// Specifies the Ids of special runtime types.

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using TypeSync.Models.Enums;
 
 namespace TypeSync.Models.CSharp
 {

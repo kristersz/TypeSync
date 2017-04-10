@@ -1,6 +1,4 @@
-﻿using TypeSync.Models.Enums;
-
-namespace TypeSync.Models.TypeScript
+﻿namespace TypeSync.Models.TypeScript
 {
     public class TypeScriptTypeModel
     {

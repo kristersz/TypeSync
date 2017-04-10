@@ -1,5 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
-using TypeSync.Models.Enums;
+using TypeSync.Models.CSharp;
 
 namespace TypeSync.Core.Mappers
 {

@@ -1,4 +1,4 @@
-﻿namespace TypeSync.Models.Enums
+﻿namespace TypeSync.Models.CSharp
 {
     /// <summary>
     /// Enumeration for possible kinds of type symbols.

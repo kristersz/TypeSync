@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using TypeSync.Models.CSharp;
-using TypeSync.Models.Enums;
 using TypeSync.Models.TypeScript;
 
 namespace TypeSync.Output.Converters
@@ -14,11 +13,16 @@ namespace TypeSync.Output.Converters
             {
                 Name = c.Name,
                 BaseClass = c.BaseClass,
+                Imports = c.Dependencies.Select(d => new TypeScriptImportModel()
+                {
+                    Name = d.Name,
+                    FilePath = ""
+                }).ToList(),
                 Properties = c.Properties.Select(p => new TypeScriptPropertyModel()
                 {
                     Name = p.Name,
                     IsOptional = p.Type.IsNullable,
-                    Type = ConvertTypes(p.Type)
+                    Type = ConvertType(p.Type)
                 }).ToList()
             }).ToList();
         }
@@ -36,7 +40,7 @@ namespace TypeSync.Output.Converters
             }).ToList();
         }
 
-        public TypeScriptTypeModel ConvertTypes(CSharpTypeModel csTypeModel)
+        public TypeScriptTypeModel ConvertType(CSharpTypeModel csTypeModel)
         {
             var tsTypeModel = CreateTypeModel(csTypeModel);
 

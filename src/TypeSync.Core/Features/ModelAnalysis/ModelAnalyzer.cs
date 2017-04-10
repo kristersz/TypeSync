@@ -7,7 +7,6 @@ using Microsoft.CodeAnalysis.FindSymbols;
 using TypeSync.Core.Mappers;
 using TypeSync.Core.Models;
 using TypeSync.Models.CSharp;
-using TypeSync.Models.Enums;
 
 namespace TypeSync.Core.Features.ModelAnalysis
 {
@@ -51,6 +50,19 @@ namespace TypeSync.Core.Features.ModelAnalysis
                     if (type.NamedTypeSymbol.BaseType != null)
                     {
                         classModel.BaseClass = type.NamedTypeSymbol.BaseType.Name;
+                    }
+
+                    var internalDependencies = dependencies
+                        .Where(d => !d.IsExternal)
+                        .ToList();
+
+                    foreach (var dep in internalDependencies)
+                    {
+                        classModel.Dependencies.Add(new CSharpDependencyModel()
+                        {
+                            Name = dep.Name,
+                            Namespace = dep.Namespace
+                        });
                     }
 
                     var propertyNodes = syntaxTree.GetRoot().DescendantNodes().OfType<PropertyDeclarationSyntax>().ToList();
@@ -98,7 +110,7 @@ namespace TypeSync.Core.Features.ModelAnalysis
             };
         }
 
-        public DirectedSparseGraph<DependantType> BuildTypeDependencyGraph()
+        private DirectedSparseGraph<DependantType> BuildTypeDependencyGraph()
         {
             var graph = new DirectedSparseGraph<DependantType>();
 

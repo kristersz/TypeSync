@@ -17,6 +17,13 @@ namespace TypeSync.Output.Generators
             var sb = new StringBuilder();
 
             // imports
+            foreach (var import in classModel.Imports)
+            {
+                import.FilePath = NameCaseConverter.ToKebabCase(import.Name);
+
+                sb.AppendLine("import { " + import.Name + " } from './" + import.FilePath + ".model'");
+            }
+
             sb.AppendLine();
 
             // class declaration
