@@ -14,6 +14,10 @@ namespace TypeSync.Models.CSharp
 
         public string BaseClass { get; set; }
 
+        public bool IsGeneric { get; set; }
+
+        public CSharpTypeParameterModel TypeParameter { get; set; }
+
         public List<CSharpDependencyModel> Dependencies { get; set; }
 
         public List<CSharpPropertyModel> Properties { get; set; }

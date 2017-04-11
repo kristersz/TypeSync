@@ -16,7 +16,7 @@ namespace TypeSync
 
         public static void Main(string[] args)
         {
-            log.Info("Entering TypeSync");
+            log.Info("Starting TypeSync");
 
 #if DEBUG
             args = new string[] { "GenerateModels" };    
@@ -64,7 +64,7 @@ namespace TypeSync
             }
             catch (Exception ex)
             {
-                log.ErrorFormat("Exception thrown: " + ex.Message);
+                log.ErrorFormat("Exception thrown: " + ex.Message + "\n" + ex.StackTrace);
             }
 
             log.Info("Exiting TypeSync");

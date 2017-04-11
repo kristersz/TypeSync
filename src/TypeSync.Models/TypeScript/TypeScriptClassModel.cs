@@ -14,6 +14,10 @@ namespace TypeSync.Models.TypeScript
 
         public string BaseClass { get; set; }
 
+        public bool IsGeneric { get; set; }
+
+        public TypeScriptTypeParameterModel TypeParameter { get; set; }
+
         public List<TypeScriptImportModel> Imports { get; set; }
 
         public List<TypeScriptPropertyModel> Properties { get; set; }

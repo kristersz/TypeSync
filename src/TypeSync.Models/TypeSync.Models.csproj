@@ -49,6 +49,7 @@
     <Compile Include="CSharp\CSharpTypeModel.cs" />
     <Compile Include="CSharp\CSharpSpecialType.cs" />
     <Compile Include="CSharp\CSharpTypeKind.cs" />
+    <Compile Include="CSharp\CSharpTypeParameterModel.cs" />
     <Compile Include="TypeScript\TypeScriptBasicType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TypeScript\TypeScriptClassModel.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="TypeScript\TypeScriptEnumModel.cs" />
     <Compile Include="TypeScript\TypeScriptPropertyModel.cs" />
     <Compile Include="TypeScript\TypeScriptTypeModel.cs" />
+    <Compile Include="TypeScript\TypeScriptTypeParameterModel.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

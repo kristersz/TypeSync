@@ -4,8 +4,8 @@ using log4net;
 using TypeSync.Common.Constants;
 using TypeSync.Core.Features.ModelAnalysis;
 using TypeSync.Models;
-using TypeSync.Output;
 using TypeSync.Output.Converters;
+using TypeSync.Output.Emitters;
 using TypeSync.Output.Generators;
 using TypeSync.Providers;
 
@@ -32,7 +32,7 @@ namespace TypeSync.UseCases
         {
             _configuration = _configurationProvider.GetConfiguration();
 
-            var supportedExtensions = FileExtension.All;
+            var supportedExtensions = DotNetFileExtension.All;
             var extension = Path.GetExtension(_configuration.Path);
 
             if (!supportedExtensions.Contains(extension))
@@ -61,28 +61,20 @@ namespace TypeSync.UseCases
 
             foreach (var tsModel in tsClassModels)
             {
-                log.DebugFormat("Class {0}", tsModel.Name);
-
                 var contents = generator.GenerateClass(tsModel);
 
-                log.Debug("Contents generated");
+                emitter.Emit(_configuration.OutputPath, tsModel.Name, EmittedFileType.Model, contents);
 
-                emitter.Emit(_configuration.OutputPath, tsModel.Name, contents);
-
-                log.Debug("Contents emitted");
+                log.Debug($"Class {tsModel.Name} emitted");
             }
 
             foreach (var tsModel in tsEnumModels)
             {
-                log.DebugFormat("Enum {0}", tsModel.Name);
+                var contents = generator.GenerateEnum(tsModel);
 
-                var contents = generator.GenerateEnums(tsModel);
+                emitter.Emit(_configuration.OutputPath, tsModel.Name, EmittedFileType.Enum, contents);
 
-                log.Debug("Contents generated");
-
-                emitter.Emit(_configuration.OutputPath, tsModel.Name, contents);
-
-                log.Debug("Contents emitted");
+                log.Debug($"Enum {tsModel.Name} emitted");
             }
 
             return Result.CreateSuccess();

@@ -1,4 +1,4 @@
-﻿namespace TypeSync.Output
+﻿namespace TypeSync.Output.Emitters
 {
     public static class EmittedTypeName
     {

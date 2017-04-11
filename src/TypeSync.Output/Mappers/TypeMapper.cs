@@ -1,5 +1,6 @@
 ﻿using TypeSync.Models.CSharp;
 using TypeSync.Models.TypeScript;
+using TypeSync.Output.Emitters;
 
 namespace TypeSync.Output.Converters
 {

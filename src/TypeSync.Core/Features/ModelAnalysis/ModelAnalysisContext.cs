@@ -31,7 +31,7 @@ namespace TypeSync.Core.Features.ModelAnalysis
         {
             var extension = Path.GetExtension(path);
 
-            if (extension == FileExtension.Solution)
+            if (extension == DotNetFileExtension.Solution)
             {
                 _solution = _workspace.OpenSolutionAsync(path).Result;
                 _project = _solution.Projects.FirstOrDefault(p => p.Name.Contains("ViewModels"));
@@ -41,7 +41,7 @@ namespace TypeSync.Core.Features.ModelAnalysis
                     _compilation = _project.GetCompilationAsync().Result;
                 }
             }
-            else if (extension == FileExtension.Project)
+            else if (extension == DotNetFileExtension.Project)
             {
                 _project = _workspace.OpenProjectAsync(path).Result;
                 _solution = _project.Solution;

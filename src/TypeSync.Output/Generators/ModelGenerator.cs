@@ -3,6 +3,7 @@ using log4net;
 using TypeSync.Common.Utilities;
 using TypeSync.Models.TypeScript;
 using TypeSync.Output.Converters;
+using TypeSync.Output.Emitters;
 
 namespace TypeSync.Output.Generators
 {
@@ -12,8 +13,6 @@ namespace TypeSync.Output.Generators
 
         public string GenerateClass(TypeScriptClassModel classModel)
         {
-            log.Info("Class generation started");
-
             var sb = new StringBuilder();
 
             // imports
@@ -21,7 +20,7 @@ namespace TypeSync.Output.Generators
             {
                 import.FilePath = NameCaseConverter.ToKebabCase(import.Name);
 
-                sb.AppendLine("import { " + import.Name + " } from './" + import.FilePath + ".model'");
+                sb.AppendLine("import { " + import.Name + " } from './" + import.FilePath + ".model';");
             }
 
             sb.AppendLine();
@@ -29,6 +28,7 @@ namespace TypeSync.Output.Generators
             // class declaration
             sb.AppendLine("export class "
                 + classModel.Name
+                + (classModel.IsGeneric ? $"<{classModel.TypeParameter.Name}>" : "")
                 + (string.IsNullOrEmpty(classModel.BaseClass) ? "" : " extends " + classModel.BaseClass)
                 + " {");
 
@@ -62,15 +62,11 @@ namespace TypeSync.Output.Generators
             sb.AppendLine("}");
             sb.AppendLine();
 
-            log.Info("Class generation finished");
-
             return sb.ToString();
         }
 
-        public string GenerateEnums(TypeScriptEnumModel enumModel)
+        public string GenerateEnum(TypeScriptEnumModel enumModel)
         {
-            log.Info("Enum generation started");
-
             var sb = new StringBuilder();
 
             // imports
@@ -83,15 +79,13 @@ namespace TypeSync.Output.Generators
             foreach (var member in enumModel.Members)
             {
                 sb.AppendLine("\t"                                              // indentation
-                    + NameCaseConverter.ToCamelCase(member.Name)                // member name
+                    + member.Name                                               // member name
                     + (member.Value.HasValue ? $" = {member.Value.Value}" : "") // optional constant value
                     + ",");
             }
 
             sb.AppendLine("}");
             sb.AppendLine();
-
-            log.Info("Enum generation finished");
 
             return sb.ToString();
         }

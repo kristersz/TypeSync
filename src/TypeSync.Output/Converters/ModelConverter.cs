@@ -13,6 +13,8 @@ namespace TypeSync.Output.Converters
             {
                 Name = c.Name,
                 BaseClass = c.BaseClass,
+                IsGeneric = c.IsGeneric,
+                TypeParameter = c.TypeParameter == null ? null : new TypeScriptTypeParameterModel() { Name = c.TypeParameter.Name },
                 Imports = c.Dependencies.Select(d => new TypeScriptImportModel()
                 {
                     Name = d.Name,

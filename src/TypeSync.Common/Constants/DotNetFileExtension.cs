@@ -1,6 +1,6 @@
 ﻿namespace TypeSync.Common.Constants
 {
-    public class FileExtension
+    public static class DotNetFileExtension
     {
         public static string File => ".cs";
         public static string Project => ".csproj";

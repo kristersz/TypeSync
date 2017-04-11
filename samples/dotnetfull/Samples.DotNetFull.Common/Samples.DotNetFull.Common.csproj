@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8A8E61B0-6205-4A61-A00B-2C03C42C44E7}</ProjectGuid>
+    <ProjectGuid>{EE201237-A0E8-4FD5-AAE9-2E5A524FBC3B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Samples.DotNetFull.ViewModels</RootNamespace>
-    <AssemblyName>Samples.DotNetFull.ViewModels</AssemblyName>
+    <RootNamespace>Samples.DotNetFull.Common</RootNamespace>
+    <AssemblyName>Samples.DotNetFull.Common</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,18 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Address.cs" />
-    <Compile Include="PagedDataResponse.cs" />
-    <Compile Include="Person.cs" />
-    <Compile Include="Student.cs" />
+    <Compile Include="Enums\Gender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StudentType.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Samples.DotNetFull.Common\Samples.DotNetFull.Common.csproj">
-      <Project>{ee201237-a0e8-4fd5-aae9-2e5a524fbc3b}</Project>
-      <Name>Samples.DotNetFull.Common</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

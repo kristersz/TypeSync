@@ -1,4 +1,5 @@
 ﻿using System;
+using Samples.DotNetFull.Common.Enums;
 
 namespace Samples.DotNetFull.ViewModels
 {
@@ -13,5 +14,7 @@ namespace Samples.DotNetFull.ViewModels
         public DateTime DateOfBirth { get; set; }
 
         public Address Address { get; set; }
+
+        public Gender Gender { get; set; }
     }
 }

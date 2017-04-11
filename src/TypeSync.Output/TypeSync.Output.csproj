@@ -44,11 +44,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\ModelConverter.cs" />
+    <Compile Include="Emitters\EmittedFileType.cs" />
     <Compile Include="Mappers\TypeMapper.cs" />
     <Compile Include="Generators\ModelGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TypeScriptEmitter.cs" />
-    <Compile Include="EmittedTypeName.cs" />
+    <Compile Include="Emitters\TypeScriptEmitter.cs" />
+    <Compile Include="Emitters\EmittedTypeName.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TypeSync.Common\TypeSync.Common.csproj">
