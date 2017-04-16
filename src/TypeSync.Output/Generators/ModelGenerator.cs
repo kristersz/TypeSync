@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using log4net;
 using TypeSync.Common.Utilities;
+using TypeSync.Models.Common;
 using TypeSync.Models.TypeScript;
 using TypeSync.Output.Converters;
 using TypeSync.Output.Emitters;
@@ -24,7 +25,12 @@ namespace TypeSync.Output.Generators
                 {
                     import.FilePath = NameCaseConverter.ToKebabCase(import.Name);
 
-                    sb.AppendLine("import { " + import.Name + " } from './" + import.FilePath + ".model';");
+                    sb.AppendLine("import { "
+                        + import.Name
+                        + " } from './"
+                        + import.FilePath
+                        + (import.DependencyKind == DependencyKind.Model ? ".model" : ".enum")
+                        + "';");
                 }
 
                 sb.AppendLine();

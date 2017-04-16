@@ -18,7 +18,8 @@ namespace TypeSync.Output.Converters
                 Imports = c.Dependencies.Select(d => new TypeScriptImportModel()
                 {
                     Name = d.Name,
-                    FilePath = ""
+                    FilePath = "",
+                    DependencyKind = d.DependencyKind
                 }).ToList(),
                 Properties = c.Properties.Select(p => new TypeScriptPropertyModel()
                 {

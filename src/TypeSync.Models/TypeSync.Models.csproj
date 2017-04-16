@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\DependencyKind.cs" />
     <Compile Include="CSharp\CSharpClassModel.cs" />
     <Compile Include="CSharp\CSharpDependencyModel.cs" />
     <Compile Include="CSharp\CSharpEnumMemberModel.cs" />

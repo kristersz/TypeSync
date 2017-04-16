@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.FindSymbols;
 using TypeSync.Core.Mappers;
 using TypeSync.Core.Models;
+using TypeSync.Models.Common;
 using TypeSync.Models.CSharp;
 
 namespace TypeSync.Core.Features.ModelAnalysis
@@ -292,7 +293,8 @@ namespace TypeSync.Core.Features.ModelAnalysis
                 model.Dependencies.Add(new CSharpDependencyModel()
                 {
                     Name = dep.Name,
-                    Namespace = dep.Namespace
+                    Namespace = dep.Namespace,
+                    DependencyKind = dep.TypeKind == TypeKind.Class ? DependencyKind.Model : DependencyKind.Enum
                 });
             }
         }
