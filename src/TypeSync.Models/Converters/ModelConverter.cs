@@ -3,7 +3,7 @@ using System.Linq;
 using TypeSync.Models.CSharp;
 using TypeSync.Models.TypeScript;
 
-namespace TypeSync.Output.Converters
+namespace TypeSync.Models.Converters
 {
     public class ModelConverter
     {
@@ -69,7 +69,7 @@ namespace TypeSync.Output.Converters
             {
                 Name = csTypeModel.Name,
                 IsNamedType = csTypeModel.SpecialType == CSharpSpecialType.None,
-                PredefinedType = TypeMapper.MapCSharpTypeToTypeScript(csTypeModel.SpecialType)
+                PredefinedType = TypeConverter.MapCSharpTypeToTypeScript(csTypeModel.SpecialType)
             };
         }
     }

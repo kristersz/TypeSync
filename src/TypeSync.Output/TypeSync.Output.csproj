@@ -43,9 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Converters\ModelConverter.cs" />
     <Compile Include="Emitters\EmittedFileType.cs" />
     <Compile Include="Generators\BaseGenerator.cs" />
+    <Compile Include="Generators\WebClientGenerator.cs" />
     <Compile Include="Mappers\TypeMapper.cs" />
     <Compile Include="Generators\ModelGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

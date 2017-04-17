@@ -4,11 +4,11 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using TypeSync.Common.Constants;
 
-namespace TypeSync.Core.Features.ModelAnalysis
+namespace TypeSync.Core.Features.WebApiAnalysis
 {
-    public class ModelAnalysisContext : BaseAnalysisContext
+    public class WebApiAnalysisContext : BaseAnalysisContext
     {
-        public ModelAnalysisContext() : base() { }
+        public WebApiAnalysisContext() : base() { }
 
         public override void Init(string path)
         {
@@ -17,7 +17,7 @@ namespace TypeSync.Core.Features.ModelAnalysis
             if (extension == DotNetFileExtension.Solution)
             {
                 _solution = _workspace.OpenSolutionAsync(path).Result;
-                _project = _solution.Projects.FirstOrDefault(p => p.Name.Contains("ViewModels"));
+                _project = _solution.Projects.FirstOrDefault(p => p.Name.Contains("WebAPI"));
 
                 if (_project != null)
                 {
@@ -38,8 +38,8 @@ namespace TypeSync.Core.Features.ModelAnalysis
                 var mscorlib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
 
                 _compilation = CSharpCompilation.Create(
-                    "MyCompilation", 
-                    syntaxTrees: new[] { tree }, 
+                    "MyCompilation",
+                    syntaxTrees: new[] { tree },
                     references: new[] { mscorlib }
                 );
             }

@@ -19,7 +19,7 @@ namespace TypeSync
             log.Info("Starting TypeSync");
 
 #if DEBUG
-            args = new string[] { "GenerateModels" };    
+            args = new string[] { "GenerateWebClient" };
 #endif
 
             try
@@ -27,7 +27,7 @@ namespace TypeSync
                 var useCases = new List<IUseCase>()
                 {
                     new ModelGenerationUseCase(new JsonConfigurationProvider()),
-                    new WebClientGenerationUseCase(),
+                    new WebClientGenerationUseCase(new JsonConfigurationProvider()),
                     new ValidatorGenerationUseCase(),
                     new ProjectTemplateScaffoldingUseCase()
                 };

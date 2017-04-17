@@ -41,10 +41,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\DependencyKind.cs" />
+    <Compile Include="Converters\ModelConverter.cs" />
+    <Compile Include="Converters\TypeConverter.cs" />
+    <Compile Include="Converters\WebApiConverter.cs" />
     <Compile Include="CSharp\CSharpClassModel.cs" />
+    <Compile Include="CSharp\CSharpControllerMethodModel.cs" />
+    <Compile Include="CSharp\CSharpControllerModel.cs" />
     <Compile Include="CSharp\CSharpDependencyModel.cs" />
     <Compile Include="CSharp\CSharpEnumMemberModel.cs" />
     <Compile Include="CSharp\CSharpEnumModel.cs" />
+    <Compile Include="Common\HttpMethod.cs" />
     <Compile Include="CSharp\CSharpModels.cs" />
     <Compile Include="CSharp\CSharpPropertyModel.cs" />
     <Compile Include="CSharp\CSharpTypeModel.cs" />
@@ -58,6 +64,8 @@
     <Compile Include="TypeScript\TypeScriptEnumMemberModel.cs" />
     <Compile Include="TypeScript\TypeScriptEnumModel.cs" />
     <Compile Include="TypeScript\TypeScriptPropertyModel.cs" />
+    <Compile Include="TypeScript\TypeScriptServiceFunctionModel.cs" />
+    <Compile Include="TypeScript\TypeScriptServiceModel.cs" />
     <Compile Include="TypeScript\TypeScriptTypeModel.cs" />
     <Compile Include="TypeScript\TypeScriptTypeParameterModel.cs" />
   </ItemGroup>

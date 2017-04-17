@@ -154,8 +154,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Features\BaseAnalysisContext.cs" />
     <Compile Include="Features\ModelAnalysis\ModelAnalysisContext.cs" />
     <Compile Include="Features\ModelAnalysis\ModelAnalyzer.cs" />
+    <Compile Include="Features\WebApiAnalysis\WebApiAnalysisContext.cs" />
+    <Compile Include="Features\WebApiAnalysis\WebApiAnalyzer.cs" />
+    <Compile Include="Helpers\AttributeHelper.cs" />
+    <Compile Include="Helpers\ControllerHelper.cs" />
     <Compile Include="Models\AnalysisResult.cs" />
     <Compile Include="Models\DependantType.cs" />
     <Compile Include="Mappers\TypeMapper.cs" />

@@ -4,7 +4,7 @@ using log4net;
 using TypeSync.Common.Constants;
 using TypeSync.Core.Features.ModelAnalysis;
 using TypeSync.Models;
-using TypeSync.Output.Converters;
+using TypeSync.Models.Converters;
 using TypeSync.Output.Emitters;
 using TypeSync.Output.Generators;
 using TypeSync.Providers;
