@@ -9,6 +9,9 @@ Primarily meant to be used for Angular front-end solutions.
 4. Scaffold entire Angular project templates based on server side ASP.NET Web APIs.
 
 ## Supported features
+* Works with .NET solutions, projects or individual C# files.
+* Support for various symbol/file name cases (PascalCase, camelCase, kebab-case or snake_case).
+
 1. Model generation:
 	* Classes.
 	* Properties.
@@ -17,5 +20,8 @@ Primarily meant to be used for Angular front-end solutions.
 	* Nullable types.
 	* Enums.
 	* Inheritance.
-	* Works with .NET solutions, projects or individual C# files.
-	* Support for various symbol/file name cases (PascalCase, camelCase, kebab-case or snake_case).
+2. Web client generation:
+	* Web API Controllers as Angular services.
+	* Public controller methods as wrapped Angular Http service functions.
+	* Supports attribute routing.
+	* Strongly typed return types and parameters.
