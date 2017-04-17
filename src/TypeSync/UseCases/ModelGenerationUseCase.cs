@@ -19,9 +19,9 @@ namespace TypeSync.UseCases
 
         private Configuration _configuration;
 
-        public string Id { get; } = "GenerateModels";
+        public string Id => "GenerateModels";
 
-        public string Name { get; } = "Generate TypeScript model classes from C# DTO objects.";
+        public string Description => "Generate TypeScript model classes from C# DTO objects.";
 
         public ModelGenerationUseCase(IConfigurationProvider configurationProvider)
         {

@@ -19,9 +19,9 @@ namespace TypeSync.UseCases
 
         private Configuration _configuration;
 
-        public string Id { get; } = "GenerateWebClient";
+        public string Id => "GenerateWebClient";
 
-        public string Name { get; } = "Generate Angular specific Typescript services that can consume ASP.NET Web APIs.";
+        public string Description => "Generate Angular specific Typescript services that can consume ASP.NET Web APIs.";
 
         public WebClientGenerationUseCase(IConfigurationProvider configurationProvider)
         {

@@ -6,7 +6,7 @@ namespace TypeSync.UseCases
     {
         string Id { get; }
 
-        string Name { get; }
+        string Description { get; }
 
         Result Handle();
     }

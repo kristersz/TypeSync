@@ -40,7 +40,7 @@ namespace TypeSync
 
                     foreach (var useCase in useCases)
                     {
-                        Console.WriteLine($"Id: {useCase.Id}; Name: {useCase.Name}");
+                        Console.WriteLine($"Id: {useCase.Id}; Description: {useCase.Description}");
                     }
 
                     selectedUseCaseId = Console.ReadLine();
