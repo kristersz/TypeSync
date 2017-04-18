@@ -41,7 +41,7 @@ namespace TypeSync.Core.Features.ModelAnalysis
 
                 var dependencies = graph.OutgoingEdges(type)
                     .Select(e => e.Destination)
-                    .Where(d => d.TypeKind != TypeKind.TypeParameter) // no need to process type parameters as deps
+                    .Where(d => d.TypeKind == TypeKind.Class || d.TypeKind == TypeKind.Enum)
                     .ToList();
 
                 var semanticModel = type.SemanticModel;
