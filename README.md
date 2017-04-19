@@ -25,3 +25,93 @@ Primarily meant to be used for Angular front-end solutions.
 	* Public controller methods as wrapped Angular Http service functions.
 	* Supports attribute routing.
 	* Strongly typed return types and parameters.
+
+## System requirements
+TypeSync uses MSBuildWorkspace to open and build .NET solutions and projects.
+MSBuildWorkspace directly or indirectly depends on being able to find the location of MSBuild binaries, settings, and targets in the registry. This was fine for MSBuild 14.0, but no such information is available for 15.0 (by design).
+
+In case interactions with MSBuildWorkspace are failing, you need to do the following:
+* Add the Microsoft.Build and Microsoft.Build.Tasks.Core packages from NuGet to TypeSync console app project.
+* Add the MSBuild assembly binding redirects to TypeSync console app.config
+
+In case you only got VS 2015
+```xml
+<?xml version ="1.0"?>
+<configuration>
+    <runtime>
+        <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+            <dependentAssembly>
+                <assemblyIdentity name="Microsoft.Build.Framework" publicKeyToken="b03f5f7f11d50a3a" culture="neutral"/>
+                <bindingRedirect oldVersion="0.0.0.0-99.9.9.9" newVersion="14.0.0.0"/>
+            </dependentAssembly>
+            <dependentAssembly>
+                <assemblyIdentity name="Microsoft.Build.Engine" publicKeyToken="b03f5f7f11d50a3a" culture="neutral"/>
+                <bindingRedirect oldVersion="0.0.0.0-99.9.9.9" newVersion="14.0.0.0"/>
+            </dependentAssembly>
+            <dependentAssembly>
+                <assemblyIdentity name="Microsoft.Build" publicKeyToken="b03f5f7f11d50a3a" culture="neutral"/>
+                <bindingRedirect oldVersion="0.0.0.0-99.9.9.9" newVersion="14.0.0.0"/>
+            </dependentAssembly>
+            <dependentAssembly>
+                <assemblyIdentity name="Microsoft.Build.Conversion.Core" publicKeyToken="b03f5f7f11d50a3a" culture="neutral"/>
+                <bindingRedirect oldVersion="0.0.0.0-99.9.9.9" newVersion="14.0.0.0"/>
+            </dependentAssembly>
+            <dependentAssembly>
+                <assemblyIdentity name="Microsoft.Build.Tasks.Core" publicKeyToken="b03f5f7f11d50a3a" culture="neutral"/>
+                <bindingRedirect oldVersion="0.0.0.0-99.9.9.9" newVersion="14.0.0.0"/>
+            </dependentAssembly>
+            <dependentAssembly>
+                <assemblyIdentity name="Microsoft.Build.Utilities.Core" publicKeyToken="b03f5f7f11d50a3a" culture="neutral"/>
+                <bindingRedirect oldVersion="0.0.0.0-99.9.9.9" newVersion="14.0.0.0"/>
+            </dependentAssembly>
+        </assemblyBinding>
+    </runtime>
+</configuration>
+```
+
+In case you got VS 2017
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+  <configuration>
+    <runtime>
+      <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+        <dependentAssembly>
+          <assemblyIdentity name="Microsoft.Build.Framework" culture="neutral" publicKeyToken="b03f5f7f11d50a3a" />
+          <bindingRedirect oldVersion="0.0.0.0-99.9.9.9" newVersion="15.1.0.0" />
+        </dependentAssembly>
+        <dependentAssembly>
+          <assemblyIdentity name="Microsoft.Build" culture="neutral" publicKeyToken="b03f5f7f11d50a3a" />
+          <bindingRedirect oldVersion="0.0.0.0-99.9.9.9" newVersion="15.1.0.0" />
+        </dependentAssembly>
+        <dependentAssembly>
+          <assemblyIdentity name="Microsoft.Build.Conversion.Core" culture="neutral" publicKeyToken="b03f5f7f11d50a3a" />
+          <bindingRedirect oldVersion="0.0.0.0-99.9.9.9" newVersion="15.1.0.0" />
+        </dependentAssembly>
+        <dependentAssembly>
+          <assemblyIdentity name="Microsoft.Build.Tasks.Core" culture="neutral" publicKeyToken="b03f5f7f11d50a3a" />
+          <bindingRedirect oldVersion="0.0.0.0-99.9.9.9" newVersion="15.1.0.0" />
+        </dependentAssembly>
+        <dependentAssembly>
+          <assemblyIdentity name="Microsoft.Build.Utilities.Core" culture="neutral" publicKeyToken="b03f5f7f11d50a3a" />
+          <bindingRedirect oldVersion="0.0.0.0-99.9.9.9" newVersion="15.1.0.0" />
+        </dependentAssembly>
+        <dependentAssembly>
+          <assemblyIdentity name="Microsoft.Build.Engine" culture="neutral" publicKeyToken="b03f5f7f11d50a3a" />
+          <bindingRedirect oldVersion="0.0.0.0-99.9.9.9" newVersion="15.1.0.0" />
+        </dependentAssembly>
+        <dependentAssembly>
+          <assemblyIdentity name="Microsoft.Build.Conversion.Core" culture="neutral" publicKeyToken="b03f5f7f11d50a3a" />
+          <bindingRedirect oldVersion="0.0.0.0-99.9.9.9" newVersion="15.1.0.0" />
+        </dependentAssembly>
+        <dependentAssembly>
+          <assemblyIdentity name="Microsoft.Activities.Build" culture="neutral" publicKeyToken="31bf3856ad364e35" />
+          <bindingRedirect oldVersion="4.0.0.0" newVersion="15.0.0.0" />
+        </dependentAssembly>
+        <dependentAssembly>
+          <assemblyIdentity name="XamlBuildTask" culture="neutral" publicKeyToken="31bf3856ad364e35" />
+          <bindingRedirect oldVersion="4.0.0.0" newVersion="15.0.0.0" />
+        </dependentAssembly>
+    </runtime>
+  </configuration>
+
+```
