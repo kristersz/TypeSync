@@ -19,7 +19,7 @@ namespace TypeSync
             log.Info("Starting TypeSync");
 
 #if DEBUG
-            args = new string[] { "GenerateWebClient" };
+            args = new string[] { "GenerateModels" };
 #endif
 
             try

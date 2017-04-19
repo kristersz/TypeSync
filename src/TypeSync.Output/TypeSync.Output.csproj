@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Emitters\EmittedDirectoryName.cs" />
     <Compile Include="Emitters\EmittedFileType.cs" />
     <Compile Include="Generators\BaseGenerator.cs" />
     <Compile Include="Generators\WebClientGenerator.cs" />

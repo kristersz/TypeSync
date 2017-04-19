@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using TypeSync.Common.Constants;
+using TypeSync.Common.Extensions;
 using TypeSync.Common.Utilities;
 
 namespace TypeSync.Output.Emitters
@@ -8,31 +9,32 @@ namespace TypeSync.Output.Emitters
     {
         public void Emit(string path, string name, EmittedFileType fileType, string contents)
         {
-            string fileTypeName = string.Empty;
+            string fileTypeName = fileType.GetDescription();
+            string fileTypeDirectoryName = MapFileTypeToDirectoryName(fileType);
 
-            switch (fileType)
-            {
-                case EmittedFileType.Model:
-                    fileTypeName = "model";
-                    break;
-                case EmittedFileType.Enum:
-                    fileTypeName = "enum";
-                    break;
-                case EmittedFileType.Service:
-                    fileTypeName = "service";
-                    break;
-                default:
-                    break;
-            }
+            string directory = Path.Combine(path, fileTypeDirectoryName);
+
+            // this will also ensure the root directory is created if it does not exist yet
+            Directory.CreateDirectory(directory);
 
             string fileName = $"{NameCaseConverter.ToKebabCase(name)}.{fileTypeName}.{TypeScriptFileExtension.File}";
 
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
+            File.WriteAllText(Path.Combine(directory, fileName), contents);
+        }
 
-            File.WriteAllText(Path.Combine(path, fileName), contents);
+        private string MapFileTypeToDirectoryName(EmittedFileType fileType)
+        {
+            switch (fileType)
+            {
+                case EmittedFileType.Model:
+                    return EmittedDirectoryName.Models;
+                case EmittedFileType.Enum:
+                    return EmittedDirectoryName.Enums;
+                case EmittedFileType.Service:
+                    return EmittedDirectoryName.Services;
+                default:
+                    return string.Empty;
+            }
         }
     }
 }

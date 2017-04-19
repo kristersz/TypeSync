@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Constants\DotNetFileExtension.cs" />
     <Compile Include="Constants\TypeScriptFileExtension.cs" />
+    <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\NameCaseConverter.cs" />
   </ItemGroup>
