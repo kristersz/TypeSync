@@ -88,12 +88,14 @@ namespace TypeSync.Output.Generators
             sb.AppendLine("export enum " + enumModel.Name + " {");
 
             // members
-            foreach (var member in enumModel.Members)
+            for (int i = 0; i < enumModel.Members.Count; i++)
             {
+                var member = enumModel.Members[i];
+
                 sb.AppendLine("\t"                                              // indentation
                     + member.Name                                               // member name
                     + (member.Value.HasValue ? $" = {member.Value.Value}" : "") // optional constant value
-                    + ",");
+                    + (i == enumModel.Members.Count - 1 ? "" : ","));           // skip comma if last value
             }
 
             sb.AppendLine("}");
