@@ -27,6 +27,11 @@ namespace TypeSync.Output.Emitters
 
             string fileName = $"{NameCaseConverter.ToKebabCase(name)}.{fileTypeName}.{TypeScriptFileExtension.File}";
 
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
             File.WriteAllText(Path.Combine(path, fileName), contents);
         }
     }

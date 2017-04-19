@@ -193,7 +193,9 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="config.json" />
+    <None Include="config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
