@@ -32,9 +32,9 @@ MSBuildWorkspace directly or indirectly depends on being able to find the locati
 
 In case interactions with MSBuildWorkspace are failing, you need to do the following:
 * Add the Microsoft.Build and Microsoft.Build.Tasks.Core packages from NuGet to TypeSync console app project.
-* Add the MSBuild assembly binding redirects to TypeSync console app.config
+* Add the MSBuild assembly binding redirects to TypeSync console app.config.
 
-In case you only got VS 2015
+In case of VS 2015:
 ```xml
 <?xml version ="1.0"?>
 <configuration>
@@ -69,7 +69,7 @@ In case you only got VS 2015
 </configuration>
 ```
 
-In case you got VS 2017
+In case of VS 2017:
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
   <configuration>
@@ -115,3 +115,7 @@ In case you got VS 2017
   </configuration>
 
 ```
+
+Related GitHub Roslyn issues:
+* <https://github.com/dotnet/roslyn/issues/17401>
+* <https://github.com/dotnet/roslyn/issues/15056>
