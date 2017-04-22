@@ -7,7 +7,7 @@ namespace TypeSync.UseCases
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(ValidatorGenerationUseCase));
 
-        public string Id => "GenerateValidators";
+        public UseCase Id => UseCase.ValidatatorGeneration;
 
         public string Description => "Generate TypeScript validators based on server side implemented .NET DTO validation.";
 

@@ -7,7 +7,6 @@ using TypeSync.Models;
 using TypeSync.Models.Converters;
 using TypeSync.Output.Emitters;
 using TypeSync.Output.Generators;
-using TypeSync.Providers;
 
 namespace TypeSync.UseCases
 {
@@ -15,25 +14,21 @@ namespace TypeSync.UseCases
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(WebClientGenerationUseCase));
 
-        private readonly IConfigurationProvider _configurationProvider;
-
         private Configuration _configuration;
 
-        public string Id => "GenerateWebClient";
+        public UseCase Id => UseCase.WebClientGeneration;
 
         public string Description => "Generate Angular specific Typescript services that can consume ASP.NET Web APIs.";
 
-        public WebClientGenerationUseCase(IConfigurationProvider configurationProvider)
+        public WebClientGenerationUseCase(Configuration configuration)
         {
-            _configurationProvider = configurationProvider;
+            _configuration = configuration;
         }
 
         public Result Handle()
         {
-            _configuration = _configurationProvider.GetConfiguration();
-
             var supportedExtensions = DotNetFileExtension.All;
-            var extension = Path.GetExtension(_configuration.Path);
+            var extension = Path.GetExtension(_configuration.InputPath);
 
             if (!supportedExtensions.Contains(extension))
             {
@@ -42,7 +37,7 @@ namespace TypeSync.UseCases
 
             var analyzer = new WebApiAnalyzer();
 
-            var analysisResult = analyzer.Analyze(_configuration.Path);
+            var analysisResult = analyzer.Analyze(_configuration.InputPath);
 
             if (!analysisResult.Success)
             {

@@ -7,7 +7,7 @@ namespace TypeSync.UseCases
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(ProjectTemplateScaffoldingUseCase));
 
-        public string Id => "ScaffoldProject";
+        public UseCase Id => UseCase.ProjectTemplateScaffolding;
 
         public string Description => "Scaffold entire Angular project templates based on server side ASP.NET Web APIs.";
 

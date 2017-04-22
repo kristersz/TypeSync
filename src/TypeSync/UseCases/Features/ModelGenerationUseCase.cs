@@ -7,7 +7,6 @@ using TypeSync.Models;
 using TypeSync.Models.Converters;
 using TypeSync.Output.Emitters;
 using TypeSync.Output.Generators;
-using TypeSync.Providers;
 
 namespace TypeSync.UseCases
 {
@@ -15,25 +14,21 @@ namespace TypeSync.UseCases
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(ModelGenerationUseCase));
 
-        private readonly IConfigurationProvider _configurationProvider;
-
         private Configuration _configuration;
 
-        public string Id => "GenerateModels";
+        public UseCase Id => UseCase.ModelGeneration;
 
         public string Description => "Generate TypeScript model classes from C# DTO objects.";
 
-        public ModelGenerationUseCase(IConfigurationProvider configurationProvider)
+        public ModelGenerationUseCase(Configuration configuration)
         {
-            _configurationProvider = configurationProvider;
+            _configuration = configuration;
         }
 
         public Result Handle()
         {
-            _configuration = _configurationProvider.GetConfiguration();
-
             var supportedExtensions = DotNetFileExtension.All;
-            var extension = Path.GetExtension(_configuration.Path);
+            var extension = Path.GetExtension(_configuration.InputPath);
 
             if (!supportedExtensions.Contains(extension))
             {
@@ -45,7 +40,7 @@ namespace TypeSync.UseCases
             var generator = new ModelGenerator();
             var emitter = new TypeScriptEmitter();
 
-            var analysisResult = analyzer.Analyze(_configuration.Path);
+            var analysisResult = analyzer.Analyze(_configuration.InputPath);
 
             if (!analysisResult.Success)
             {

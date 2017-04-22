@@ -6,6 +6,11 @@
         public int ErrorCode { get; set; }
         public string ErrorMessage { get; set; }
 
+        public string ErrorString()
+        {
+            return $"error {ErrorCode}: {ErrorMessage}";
+        }
+
         public static Result CreateSuccess()
         {
             return new Result()

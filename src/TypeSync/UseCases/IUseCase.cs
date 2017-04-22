@@ -4,7 +4,7 @@ namespace TypeSync.UseCases
 {
     public interface IUseCase
     {
-        string Id { get; }
+        UseCase Id { get; }
 
         string Description { get; }
 

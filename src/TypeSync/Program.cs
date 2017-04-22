@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using CommandLine;
 using log4net;
 using log4net.Config;
-using TypeSync.Providers;
+using TypeSync.Models;
 using TypeSync.UseCases;
 
 [assembly: XmlConfigurator(Watch = true)]
@@ -18,56 +18,90 @@ namespace TypeSync
         {
             log.Info("Starting TypeSync");
 
-#if DEBUG
-            args = new string[] { "GenerateModels" };
-#endif
+            Parser.Default.ParseArguments<Options>(args)
+                .WithParsed(options => Run(options))
+                .WithNotParsed(errors => PrintParserErrors(errors));
 
+            log.Info("Exiting TypeSync");
+        }
+
+        private static void Run(Options options)
+        {
             try
             {
-                var useCases = new List<IUseCase>()
+                var validationResult = ValidateArguments(options);
+
+                if (!validationResult.Success)
                 {
-                    new ModelGenerationUseCase(new JsonConfigurationProvider()),
-                    new WebClientGenerationUseCase(new JsonConfigurationProvider()),
-                    new ValidatorGenerationUseCase(),
-                    new ProjectTemplateScaffoldingUseCase()
-                };
-
-                string selectedUseCaseId = args.Length > 0 ? args[0] : string.Empty;
-
-                if (string.IsNullOrEmpty(selectedUseCaseId))
-                {
-                    Console.WriteLine("Select a use case: ");
-
-                    foreach (var useCase in useCases)
-                    {
-                        Console.WriteLine($"Id: {useCase.Id}; Description: {useCase.Description}");
-                    }
-
-                    selectedUseCaseId = Console.ReadLine();
+                    Console.WriteLine(validationResult.ErrorString());
+                    return;
                 }
 
-                var selectedUseCase = useCases.FirstOrDefault(u => u.Id == selectedUseCaseId);
+                var configuration = MapConfiguration(options);
 
-                if (selectedUseCase == null)
+                if (Enum.TryParse(options.UseCase, true, out UseCase useCaseEnum))
                 {
-                    Console.WriteLine("Selected use case was not found.");
-                }
-                else
-                {
-                    var result = selectedUseCase.Handle();
+                    var useCase = UseCaseFactory.Create(useCaseEnum, configuration);
+
+                    var result = useCase.Handle();
 
                     if (!result.Success)
                     {
-                        Console.WriteLine($"error {result.ErrorCode}: {result.ErrorMessage}");
+                        Console.WriteLine(validationResult.ErrorString());
                     }
-                }
+                }  
             }
             catch (Exception ex)
             {
                 log.ErrorFormat("Exception thrown: " + ex.Message + "\n" + ex.StackTrace);
             }
+        }
 
-            log.Info("Exiting TypeSync");
+        private static void PrintParserErrors(IEnumerable<Error> errors)
+        {
+            Console.WriteLine("Argument errors:");
+
+            foreach (var error in errors)
+            {
+                Console.WriteLine($"\t {error.Tag.ToString()}");
+            }
+        }
+
+        private static Result ValidateArguments(Options options)
+        {
+            var result = new Result();
+
+            if (string.IsNullOrEmpty(options.UseCase))
+            {
+                result.ErrorMessage = "Use case must be specified with the '-u' flag";
+                return result;
+            }
+
+            if (string.IsNullOrEmpty(options.InputPath))
+            {
+                result.ErrorMessage = "Input path must be specified with the '-i' flag";
+                return result;
+            }
+
+            if (string.IsNullOrEmpty(options.OutputPath))
+            {
+                result.ErrorMessage = "Output path must be specified with the '-i' flag";
+                return result;
+            }
+
+            // if we got this far, the arguments are valid
+            result.Success = true;
+
+            return result;
+        }
+
+        private static Configuration MapConfiguration(Options options)
+        {
+            return new Configuration()
+            {
+                InputPath = options.InputPath,
+                OutputPath = options.OutputPath
+            };
         }
     }
 }
