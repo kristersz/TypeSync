@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.MSBuild;
 
 namespace TypeSync.Core.Features
 {
-    public abstract class BaseAnalysisContext : IAnalysisContext
+    public abstract class AnalysisContextBase : IAnalysisContext
     {
         protected readonly MSBuildWorkspace _workspace;
         protected Solution _solution;
@@ -18,7 +18,7 @@ namespace TypeSync.Core.Features
 
         public Compilation Compilation => _compilation;
 
-        public BaseAnalysisContext()
+        public AnalysisContextBase()
         {
             _workspace = MSBuildWorkspace.Create();
         }

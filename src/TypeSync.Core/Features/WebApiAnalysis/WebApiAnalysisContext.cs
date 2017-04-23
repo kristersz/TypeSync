@@ -6,7 +6,7 @@ using TypeSync.Common.Constants;
 
 namespace TypeSync.Core.Features.WebApiAnalysis
 {
-    public class WebApiAnalysisContext : BaseAnalysisContext
+    public class WebApiAnalysisContext : AnalysisContextBase
     {
         public WebApiAnalysisContext() : base() { }
 

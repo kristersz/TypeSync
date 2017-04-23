@@ -6,7 +6,7 @@ using TypeSync.Models.TypeScript;
 
 namespace TypeSync.Output.Generators
 {
-    public class WebClientGenerator : BaseGenerator
+    public class WebClientGenerator : GeneratorBase
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(WebClientGenerator));
 

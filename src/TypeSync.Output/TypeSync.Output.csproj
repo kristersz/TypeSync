@@ -45,7 +45,7 @@
   <ItemGroup>
     <Compile Include="Emitters\EmittedDirectoryName.cs" />
     <Compile Include="Emitters\EmittedFileType.cs" />
-    <Compile Include="Generators\BaseGenerator.cs" />
+    <Compile Include="Generators\GeneratorBase.cs" />
     <Compile Include="Generators\WebClientGenerator.cs" />
     <Compile Include="Mappers\TypeMapper.cs" />
     <Compile Include="Generators\ModelGenerator.cs" />

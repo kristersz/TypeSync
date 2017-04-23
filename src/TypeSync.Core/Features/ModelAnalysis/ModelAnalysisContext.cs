@@ -6,7 +6,7 @@ using TypeSync.Common.Constants;
 
 namespace TypeSync.Core.Features.ModelAnalysis
 {
-    public class ModelAnalysisContext : BaseAnalysisContext
+    public class ModelAnalysisContext : AnalysisContextBase
     {
         public ModelAnalysisContext() : base() { }
 

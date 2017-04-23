@@ -8,7 +8,7 @@ using TypeSync.Output.Emitters;
 
 namespace TypeSync.Output.Generators
 {
-    public class ModelGenerator : BaseGenerator
+    public class ModelGenerator : GeneratorBase
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(ModelGenerator));
 
