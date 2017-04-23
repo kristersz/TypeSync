@@ -159,6 +159,7 @@
   <ItemGroup>
     <Compile Include="Integration\ModelGenerationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestDoubles\TestAnalysisContext.cs" />
     <Compile Include="Utility\NameConversionTest.cs" />
   </ItemGroup>
   <ItemGroup>

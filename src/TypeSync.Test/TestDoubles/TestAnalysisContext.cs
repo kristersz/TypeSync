@@ -1,9 +1,10 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
+using TypeSync.Core.Features;
 
-namespace TypeSync.Core.Features
+namespace TypeSync.Test.TestDoubles
 {
-    public abstract class BaseAnalysisContext : IAnalysisContext
+    public class TestAnalysisContext : IAnalysisContext
     {
         protected readonly MSBuildWorkspace _workspace;
         protected Solution _solution;
@@ -18,9 +19,9 @@ namespace TypeSync.Core.Features
 
         public Compilation Compilation => _compilation;
 
-        public BaseAnalysisContext()
+        public TestAnalysisContext(Compilation compilation)
         {
-            _workspace = MSBuildWorkspace.Create();
+            _compilation = compilation;
         }
 
         public virtual void Init(string path)

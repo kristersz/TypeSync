@@ -7,6 +7,7 @@ using NUnit.Framework;
 using TypeSync.Core.Features.ModelAnalysis;
 using TypeSync.Models.Converters;
 using TypeSync.Output.Generators;
+using TypeSync.Test.TestDoubles;
 
 namespace TypeSync.Test.Integration
 {
@@ -28,9 +29,7 @@ namespace TypeSync.Test.Integration
 public class Person
 {
     public long Id { get; set; }
-
     public string FirstName { get; set; }
-
     public string LastName { get; set; }
 }");
 
@@ -44,9 +43,10 @@ public class Person
             var classDeclaration = root.DescendantNodes().OfType<ClassDeclarationSyntax>().First();
             var classSymbol = semanticModel.GetDeclaredSymbol(classDeclaration);
 
-            var analyzer = new ModelAnalyzer();
+            var context = new TestAnalysisContext(compilation);
+            var analyzer = new ModelAnalyzer(context);
 
-            var csClassModel = analyzer.AnalyzeClassSemantic(classSymbol);
+            var csClassModel = analyzer.AnalyzeClassSymbol(classSymbol);
 
             // convert
             var converter = new ModelConverter();
@@ -77,11 +77,8 @@ public class Person
 public class Person
 {
     public long Id { get; set; }
-
     public string FirstName { get; set; }
-
     public string LastName { get; set; }
-
     public System.DateTime DateOfBirth { get; set; }
 }");
 
@@ -95,9 +92,10 @@ public class Person
             var classDeclaration = root.DescendantNodes().OfType<ClassDeclarationSyntax>().First();
             var classSymbol = semanticModel.GetDeclaredSymbol(classDeclaration);
 
-            var analyzer = new ModelAnalyzer();
+            var context = new TestAnalysisContext(compilation);
+            var analyzer = new ModelAnalyzer(context);
 
-            var csClassModel = analyzer.AnalyzeClassSemantic(classSymbol);
+            var csClassModel = analyzer.AnalyzeClassSymbol(classSymbol);
 
             // convert
             var converter = new ModelConverter();
@@ -115,6 +113,71 @@ public class Person
 	firstName: string;
 	lastName: string;
 	dateOfBirth: Date;
+}
+";
+
+            Assert.AreEqual(expected, generated);
+        }
+
+        [Test]
+        public void ModelGeneration_Class_Dependency()
+        {
+            // create syntax tree
+            var personSyntaxTree = CSharpSyntaxTree.ParseText(@"
+using System;
+public class Person
+{
+    public long Id { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public DateTime DateOfBirth { get; set; }
+    public Address Address { get; set; }
+}");
+
+            var addressSyntaxTree = CSharpSyntaxTree.ParseText(@"public class Address
+{
+    public int Id { get; set; }
+    public string Country { get; set; }
+    public string City { get; set; }
+    public string PostalCode { get; set; }
+    public string Street { get; set; }
+    public string HouseNumber { get; set; }
+}");
+
+            // create compilation
+            var compilation = CreateTestCompilation(new[] { personSyntaxTree, addressSyntaxTree });
+
+            // analyze
+            var root = personSyntaxTree.GetRoot();
+            var semanticModel = compilation.GetSemanticModel(personSyntaxTree);
+
+            var classDeclaration = root.DescendantNodes().OfType<ClassDeclarationSyntax>().First();
+            var classSymbol = semanticModel.GetDeclaredSymbol(classDeclaration);
+
+            var context = new TestAnalysisContext(compilation);
+            var analyzer = new ModelAnalyzer(context);
+
+            var csClassModel = analyzer.AnalyzeClassSymbol(classSymbol);
+
+            // convert
+            var converter = new ModelConverter();
+
+            var tsClassModel = converter.ConvertClass(csClassModel);
+
+            // generate
+            var generator = new ModelGenerator();
+
+            var generated = generator.GenerateClass(tsClassModel, false);
+
+            // assert
+            var expected = @"import { Address } from './address.model';
+
+export class Person {
+	id: number;
+	firstName: string;
+	lastName: string;
+	dateOfBirth: Date;
+	address: Address;
 }
 ";
 
@@ -144,9 +207,10 @@ public enum Gender
             var enumDeclaration = root.DescendantNodes().OfType<EnumDeclarationSyntax>().First();
             var enumSymbol = semanticModel.GetDeclaredSymbol(enumDeclaration);
 
-            var analyzer = new ModelAnalyzer();
+            var context = new TestAnalysisContext(compilation);
+            var analyzer = new ModelAnalyzer(context);
 
-            var csEnumModel = analyzer.AnalyzeEnumSemantic(enumSymbol);
+            var csEnumModel = analyzer.AnalyzeEnumSymbol(enumSymbol);
 
             // convert
             var converter = new ModelConverter();

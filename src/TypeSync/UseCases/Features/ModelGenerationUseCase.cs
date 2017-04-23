@@ -35,7 +35,7 @@ namespace TypeSync.UseCases
                 return Result.CreateError(string.Format("Unsupported path extension - {0}.  Supported extensions: {1}", extension, string.Join(", ", supportedExtensions)));
             }
 
-            var analyzer = new ModelAnalyzer();
+            var analyzer = new ModelAnalyzer(new ModelAnalysisContext());
             var converter = new ModelConverter();
             var generator = new ModelGenerator();
             var emitter = new TypeScriptEmitter();

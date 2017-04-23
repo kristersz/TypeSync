@@ -155,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Features\BaseAnalysisContext.cs" />
+    <Compile Include="Features\IAnalysisContext.cs" />
     <Compile Include="Features\ModelAnalysis\ModelAnalysisContext.cs" />
     <Compile Include="Features\ModelAnalysis\ModelAnalyzer.cs" />
     <Compile Include="Features\WebApiAnalysis\WebApiAnalysisContext.cs" />

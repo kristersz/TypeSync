@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DataStructures.Graphs;
+using log4net;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.FindSymbols;
@@ -13,11 +14,13 @@ namespace TypeSync.Core.Features.ModelAnalysis
 {
     public class ModelAnalyzer
     {
-        private readonly ModelAnalysisContext _context;
+        private static readonly ILog log = LogManager.GetLogger(typeof(ModelAnalyzer));
 
-        public ModelAnalyzer()
+        private readonly IAnalysisContext _context;
+
+        public ModelAnalyzer(IAnalysisContext context)
         {
-            _context = new ModelAnalysisContext();
+            _context = context;
         }
 
         public AnalysisResult<CSharpModels> Analyze(string path)
@@ -52,25 +55,7 @@ namespace TypeSync.Core.Features.ModelAnalysis
                     {
                         if (type.TypeKind == TypeKind.Enum)
                         {
-                            var symbols = type.NamedTypeSymbol.GetMembers()
-                                .Where(m => m.Kind == SymbolKind.Field)
-                                .ToList();
-
-                            var enumModel = new CSharpEnumModel() { Name = type.Name };
-
-                            foreach (var symbol in symbols)
-                            {
-                                var fieldSymbol = symbol as IFieldSymbol;
-
-                                var member = new CSharpEnumMemberModel();
-
-                                member.Name = fieldSymbol.Name;
-                                member.Value = fieldSymbol.HasConstantValue ? (int)fieldSymbol.ConstantValue : 0;
-
-                                enumModel.Members.Add(member);
-                            }
-
-                            models.Enums.Add(enumModel);
+                            models.Enums.Add(AnalyzeEnumSymbol(type.NamedTypeSymbol));
                         }
                     }  
                 }
@@ -80,13 +65,20 @@ namespace TypeSync.Core.Features.ModelAnalysis
 
                     if (type.TypeKind == TypeKind.Class)
                     {
+                        var x = AnalyzeClassSymbol(type.NamedTypeSymbol);
+
                         var classModel = new CSharpClassModel() { Name = type.Name };
 
                         HandleInheritance(classModel, type.NamedTypeSymbol);
 
                         HandleGenerics(classModel, type.NamedTypeSymbol);
 
-                        HandleDependencies(classModel, dependencies);
+                        var internalDependencies = dependencies
+                            .Where(d => !d.IsExternal)
+                            .Select(d => d.NamedTypeSymbol)
+                            .ToList();
+
+                        HandleDependencies(classModel, internalDependencies);
 
                         var propertyNodes = syntaxTree.GetRoot().DescendantNodes().OfType<PropertyDeclarationSyntax>().ToList();
 
@@ -106,23 +98,7 @@ namespace TypeSync.Core.Features.ModelAnalysis
                     }
                     else if (type.TypeKind == TypeKind.Enum)
                     {
-                        var enumModel = new CSharpEnumModel() { Name = type.Name };
-
-                        var memberNodes = syntaxTree.GetRoot().DescendantNodes().OfType<EnumMemberDeclarationSyntax>().ToList();
-
-                        foreach (var memberNode in memberNodes)
-                        {
-                            var memberSymbol = semanticModel.GetDeclaredSymbol(memberNode) as IFieldSymbol;
-
-                            var member = new CSharpEnumMemberModel();
-
-                            member.Name = memberSymbol.Name;
-                            member.Value = memberSymbol.HasConstantValue ? (int)memberSymbol.ConstantValue : 0;
-
-                            enumModel.Members.Add(member);
-                        }
-
-                        models.Enums.Add(enumModel);
+                        models.Enums.Add(AnalyzeEnumSymbol(type.NamedTypeSymbol));
                     }
                 }
             }
@@ -136,7 +112,7 @@ namespace TypeSync.Core.Features.ModelAnalysis
 
 
 
-        public CSharpClassModel AnalyzeClassSemantic(INamedTypeSymbol classSymbol)
+        public CSharpClassModel AnalyzeClassSymbol(INamedTypeSymbol classSymbol)
         {
             var classModel = new CSharpClassModel() { Name = classSymbol.Name };
 
@@ -144,11 +120,11 @@ namespace TypeSync.Core.Features.ModelAnalysis
 
             HandleGenerics(classModel, classSymbol);
 
-            //HandleDependencies(classModel, dependencies);
+            var members = classSymbol.GetMembers().ToList();
 
-            var properties = classSymbol.GetMembers().Where(m => m.Kind == SymbolKind.Property).ToList();
+            var dependencies = new List<INamedTypeSymbol>();          
 
-            //var propertyNodes = syntaxTree.GetRoot().DescendantNodes().OfType<PropertyDeclarationSyntax>().ToList();
+            var properties = members.Where(m => m.Kind == SymbolKind.Property).ToList();
 
             foreach (var property in properties)
             {
@@ -161,12 +137,19 @@ namespace TypeSync.Core.Features.ModelAnalysis
                 };
 
                 classModel.Properties.Add(propertyModel);
+
+                if (propertySymbol.Type.ContainingAssembly.Equals(classSymbol.ContainingAssembly))
+                {
+                    dependencies.Add(propertySymbol.Type as INamedTypeSymbol);
+                }
             }
+
+            HandleDependencies(classModel, dependencies);
 
             return classModel;
         }
 
-        public CSharpEnumModel AnalyzeEnumSemantic(INamedTypeSymbol enumSymbol)
+        public CSharpEnumModel AnalyzeEnumSymbol(INamedTypeSymbol enumSymbol)
         {
             var enumModel = new CSharpEnumModel() { Name = enumSymbol.Name };
 
@@ -238,7 +221,10 @@ namespace TypeSync.Core.Features.ModelAnalysis
                         graph.AddVertex(type);
                     }
 
-                    var referencesToClass = SymbolFinder.FindReferencesAsync(classSymbol, _context.Solution).Result;
+                    if (_context.Solution != null)
+                    {
+                        var referencesToClass = SymbolFinder.FindReferencesAsync(classSymbol, _context.Solution).Result;
+                    }                   
 
                     var classDependencies = classNode.DescendantNodes()
                         .Select(n => semanticModel.GetTypeInfo(n).Type)
@@ -340,18 +326,14 @@ namespace TypeSync.Core.Features.ModelAnalysis
             }
         }
 
-        private void HandleDependencies(CSharpClassModel model, List<DependantType> dependencies)
+        private void HandleDependencies(CSharpClassModel model, List<INamedTypeSymbol> dependencies)
         {
-            var internalDependencies = dependencies
-                        .Where(d => !d.IsExternal)
-                        .ToList();
-
-            foreach (var dep in internalDependencies)
+            foreach (var dep in dependencies)
             {
                 model.Dependencies.Add(new CSharpDependencyModel()
                 {
                     Name = dep.Name,
-                    Namespace = dep.Namespace,
+                    Namespace = dep.ContainingNamespace.ToString(),
                     DependencyKind = dep.TypeKind == TypeKind.Class ? DependencyKind.Model : DependencyKind.Enum
                 });
             }
