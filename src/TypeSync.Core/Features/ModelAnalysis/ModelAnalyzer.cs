@@ -134,6 +134,64 @@ namespace TypeSync.Core.Features.ModelAnalysis
             };
         }
 
+
+
+        public CSharpClassModel AnalyzeClassSemantic(INamedTypeSymbol classSymbol)
+        {
+            var classModel = new CSharpClassModel() { Name = classSymbol.Name };
+
+            HandleInheritance(classModel, classSymbol);
+
+            HandleGenerics(classModel, classSymbol);
+
+            //HandleDependencies(classModel, dependencies);
+
+            var properties = classSymbol.GetMembers().Where(m => m.Kind == SymbolKind.Property).ToList();
+
+            //var propertyNodes = syntaxTree.GetRoot().DescendantNodes().OfType<PropertyDeclarationSyntax>().ToList();
+
+            foreach (var property in properties)
+            {
+                var propertySymbol = property as IPropertySymbol;
+
+                var propertyModel = new CSharpPropertyModel()
+                {
+                    Name = propertySymbol.Name,
+                    Type = AnalyzePropertyType(propertySymbol.Type)
+                };
+
+                classModel.Properties.Add(propertyModel);
+            }
+
+            return classModel;
+        }
+
+        public CSharpEnumModel AnalyzeEnumSemantic(INamedTypeSymbol enumSymbol)
+        {
+            var enumModel = new CSharpEnumModel() { Name = enumSymbol.Name };
+
+            var fields = enumSymbol.GetMembers()
+                .Where(m => m.Kind == SymbolKind.Field)
+                .ToList();
+
+            foreach (var field in fields)
+            {
+                var fieldSymbol = field as IFieldSymbol;
+
+                var member = new CSharpEnumMemberModel()
+                {
+                    Name = fieldSymbol.Name,
+                    Value = fieldSymbol.HasConstantValue ? (int)fieldSymbol.ConstantValue : 0
+                };
+
+                enumModel.Members.Add(member);
+            }
+
+            return enumModel;
+        }
+
+
+
         private DirectedSparseGraph<DependantType> BuildTypeDependencyGraph()
         {
             var graph = new DirectedSparseGraph<DependantType>();
@@ -298,6 +356,8 @@ namespace TypeSync.Core.Features.ModelAnalysis
                 });
             }
         }
+
+
 
         private CSharpTypeModel AnalyzePropertyType(ITypeSymbol typeSymbol)
         {

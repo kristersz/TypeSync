@@ -43,8 +43,6 @@ namespace TypeSync.Core.Features.WebApiAnalysis
                     references: new[] { mscorlib }
                 );
             }
-
-            _compilation = _project.GetCompilationAsync().Result;
         }
     }
 }

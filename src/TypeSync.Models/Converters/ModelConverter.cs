@@ -7,41 +7,55 @@ namespace TypeSync.Models.Converters
 {
     public class ModelConverter
     {
-        public List<TypeScriptClassModel> ConvertClasses(List<CSharpClassModel> classModels)
+        public TypeScriptClassModel ConvertClass(CSharpClassModel classModel)
         {
-            return classModels.Select(c => new TypeScriptClassModel()
+            return new TypeScriptClassModel()
             {
-                Name = c.Name,
-                BaseClass = c.BaseClass,
-                IsGeneric = c.IsGeneric,
-                TypeParameter = c.TypeParameter == null ? null : new TypeScriptTypeParameterModel() { Name = c.TypeParameter.Name },
-                Imports = c.Dependencies.Select(d => new TypeScriptImportModel()
+                Name = classModel.Name,
+                BaseClass = classModel.BaseClass,
+                IsGeneric = classModel.IsGeneric,
+                TypeParameter = classModel.TypeParameter == null ? null : new TypeScriptTypeParameterModel() { Name = classModel.TypeParameter.Name },
+                Imports = classModel.Dependencies.Select(d => new TypeScriptImportModel()
                 {
                     Name = d.Name,
                     FilePath = "",
                     DependencyKind = d.DependencyKind
                 }).ToList(),
-                Properties = c.Properties.Select(p => new TypeScriptPropertyModel()
+                Properties = classModel.Properties.Select(p => new TypeScriptPropertyModel()
                 {
                     Name = p.Name,
                     IsOptional = p.Type.IsNullable,
                     Type = ConvertType(p.Type)
                 }).ToList()
-            }).ToList();
+            };
         }
 
-        public List<TypeScriptEnumModel> ConvertEnums(List<CSharpEnumModel> enumModels)
+        public List<TypeScriptClassModel> ConvertClasses(List<CSharpClassModel> classModels)
         {
-            return enumModels.Select(c => new TypeScriptEnumModel()
+            return classModels
+                .Select(c => ConvertClass(c))
+                .ToList();
+        }
+
+
+        public TypeScriptEnumModel ConvertEnum(CSharpEnumModel enumModel)
+        {
+            return new TypeScriptEnumModel()
             {
-                Name = c.Name,
-                Members = c.Members.Select(p => new TypeScriptEnumMemberModel()
+                Name = enumModel.Name,
+                Members = enumModel.Members.Select(p => new TypeScriptEnumMemberModel()
                 {
                     Name = p.Name,
                     Value = p.Value
                 }).ToList()
-            }).ToList();
+            };
         }
+
+        public List<TypeScriptEnumModel> ConvertEnums(List<CSharpEnumModel> enumModels)
+        {
+            return enumModels.Select(c => ConvertEnum(c)).ToList();
+        }
+
 
         public TypeScriptTypeModel ConvertType(CSharpTypeModel csTypeModel)
         {
@@ -62,6 +76,7 @@ namespace TypeSync.Models.Converters
 
             return tsTypeModel;
         }
+
 
         private TypeScriptTypeModel CreateTypeModel(CSharpTypeModel csTypeModel)
         {

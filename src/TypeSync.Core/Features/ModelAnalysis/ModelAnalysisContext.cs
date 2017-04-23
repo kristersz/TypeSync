@@ -43,8 +43,6 @@ namespace TypeSync.Core.Features.ModelAnalysis
                     references: new[] { mscorlib }
                 );
             }
-
-            _compilation = _project.GetCompilationAsync().Result;
         }
     }
 }

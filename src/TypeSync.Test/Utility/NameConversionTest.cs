@@ -1,9 +1,10 @@
 ﻿using NUnit.Framework;
 using TypeSync.Common.Utilities;
 
-namespace TypeSync.Test
+namespace TypeSync.Test.Utility
 {
     [TestFixture]
+    [Category("Utility")]
     public class NameConversionTest
     {
         [Test]
