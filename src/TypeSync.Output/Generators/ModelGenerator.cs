@@ -30,7 +30,8 @@ namespace TypeSync.Output.Generators
 
                     sb.AppendLine("import { "
                         + import.Name
-                        + " } from './"
+                        + " } from "
+                        + (import.DependencyKind == DependencyKind.Model ? "./" : "../enums/") 
                         + import.FilePath
                         + (import.DependencyKind == DependencyKind.Model ? ".model" : ".enum")
                         + "';");
