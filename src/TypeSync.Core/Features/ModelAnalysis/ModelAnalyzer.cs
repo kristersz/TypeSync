@@ -122,7 +122,9 @@ namespace TypeSync.Core.Features.ModelAnalysis
 
             var members = classSymbol.GetMembers().ToList();
 
-            var dependencies = new List<INamedTypeSymbol>();          
+            var dependencies = GetDependencies(classSymbol);
+
+            HandleDependencies(classModel, dependencies);
 
             var properties = members.Where(m => m.Kind == SymbolKind.Property).ToList();
 
@@ -137,14 +139,7 @@ namespace TypeSync.Core.Features.ModelAnalysis
                 };
 
                 classModel.Properties.Add(propertyModel);
-
-                if (propertySymbol.Type.ContainingAssembly.Equals(classSymbol.ContainingAssembly))
-                {
-                    dependencies.Add(propertySymbol.Type as INamedTypeSymbol);
-                }
             }
-
-            HandleDependencies(classModel, dependencies);
 
             return classModel;
         }
@@ -305,6 +300,32 @@ namespace TypeSync.Core.Features.ModelAnalysis
             }
 
             return graph;
+        }
+
+        private List<INamedTypeSymbol> GetDependencies(INamedTypeSymbol classSymbol)
+        {
+            var dependencies = new List<INamedTypeSymbol>();
+
+            if (classSymbol.BaseType != null && classSymbol.BaseType.ContainingAssembly.Equals(classSymbol.ContainingAssembly))
+            {
+                dependencies.Add(classSymbol.BaseType);
+            }
+
+            var members = classSymbol.GetMembers().ToList();
+
+            var properties = members.Where(m => m.Kind == SymbolKind.Property).ToList();
+
+            foreach (var property in properties)
+            {
+                var propertySymbol = property as IPropertySymbol;
+
+                if (propertySymbol.Type.ContainingAssembly.Equals(classSymbol.ContainingAssembly))
+                {
+                    dependencies.Add(propertySymbol.Type as INamedTypeSymbol);
+                }
+            }
+
+            return dependencies;
         }
 
         private void HandleInheritance(CSharpClassModel model, INamedTypeSymbol classSymbol)
