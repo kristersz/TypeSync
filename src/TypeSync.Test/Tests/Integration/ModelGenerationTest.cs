@@ -1,16 +1,14 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using NUnit.Framework;
 using TypeSync.Core.Features.ModelAnalysis;
 using TypeSync.Models.Converters;
 using TypeSync.Output.Generators;
-using TypeSync.Test.TestDoubles;
+using TypeSync.Test.Infrastructure.Helpers;
+using TypeSync.Test.Infrastructure.TestDoubles;
 
-namespace TypeSync.Test.Integration
+namespace TypeSync.Test.Tests.Integration
 {
     [TestFixture]
     [Category("ModelGeneration")]
@@ -35,13 +33,13 @@ public class Person
 }");
 
             // create compilation
-            var compilation = CreateTestCompilation(new[] { syntaxTree });
+            var compilation = RoslynTestHelpers.CreateTestCompilation(new[] { syntaxTree });
 
             // analyze
             var context = new TestAnalysisContext(compilation);
             var analyzer = new ModelAnalyzer(context);
 
-            var csClassModel = analyzer.AnalyzeClassSymbol(GetClassSymbol(compilation, syntaxTree));
+            var csClassModel = analyzer.AnalyzeClassSymbol(RoslynTestHelpers.GetClassSymbol(compilation, syntaxTree));
 
             // convert
             var converter = new ModelConverter();
@@ -76,13 +74,13 @@ public class Person
 }");
 
             // create compilation
-            var compilation = CreateTestCompilation(new[] { syntaxTree });
+            var compilation = RoslynTestHelpers.CreateTestCompilation(new[] { syntaxTree });
 
             // analyze
             var context = new TestAnalysisContext(compilation);
             var analyzer = new ModelAnalyzer(context);
 
-            var csClassModel = analyzer.AnalyzeClassSymbol(GetClassSymbol(compilation, syntaxTree));
+            var csClassModel = analyzer.AnalyzeClassSymbol(RoslynTestHelpers.GetClassSymbol(compilation, syntaxTree));
 
             // convert
             var converter = new ModelConverter();
@@ -130,13 +128,13 @@ public class Person
 }");
 
             // create compilation
-            var compilation = CreateTestCompilation(new[] { personSyntaxTree, addressSyntaxTree });
+            var compilation = RoslynTestHelpers.CreateTestCompilation(new[] { personSyntaxTree, addressSyntaxTree });
 
             // analyze
             var context = new TestAnalysisContext(compilation);
             var analyzer = new ModelAnalyzer(context);
 
-            var csClassModel = analyzer.AnalyzeClassSymbol(GetClassSymbol(compilation, personSyntaxTree));
+            var csClassModel = analyzer.AnalyzeClassSymbol(RoslynTestHelpers.GetClassSymbol(compilation, personSyntaxTree));
 
             // convert
             var converter = new ModelConverter();
@@ -183,13 +181,13 @@ public class Student : Person
 }");
 
             // create compilation
-            var compilation = CreateTestCompilation(new[] { personSyntaxTree, studentSyntaxTree });
+            var compilation = RoslynTestHelpers.CreateTestCompilation(new[] { personSyntaxTree, studentSyntaxTree });
 
             // analyze
             var context = new TestAnalysisContext(compilation);
             var analyzer = new ModelAnalyzer(context);
 
-            var csClassModel = analyzer.AnalyzeClassSymbol(GetClassSymbol(compilation, studentSyntaxTree));
+            var csClassModel = analyzer.AnalyzeClassSymbol(RoslynTestHelpers.GetClassSymbol(compilation, studentSyntaxTree));
 
             // convert
             var converter = new ModelConverter();
@@ -223,13 +221,13 @@ public class PagedDataResponse<T>
 }");
 
             // create compilation
-            var compilation = CreateTestCompilation(new[] { syntaxTree });
+            var compilation = RoslynTestHelpers.CreateTestCompilation(new[] { syntaxTree });
 
             // analyze
             var context = new TestAnalysisContext(compilation);
             var analyzer = new ModelAnalyzer(context);
 
-            var csClassModel = analyzer.AnalyzeClassSymbol(GetClassSymbol(compilation, syntaxTree));
+            var csClassModel = analyzer.AnalyzeClassSymbol(RoslynTestHelpers.GetClassSymbol(compilation, syntaxTree));
 
             // convert
             var converter = new ModelConverter();
@@ -277,13 +275,13 @@ public class AllBuiltInTypes
 }");
 
             // create compilation
-            var compilation = CreateTestCompilation(new[] { syntaxTree });
+            var compilation = RoslynTestHelpers.CreateTestCompilation(new[] { syntaxTree });
 
             // analyze
             var context = new TestAnalysisContext(compilation);
             var analyzer = new ModelAnalyzer(context);
 
-            var csClassModel = analyzer.AnalyzeClassSymbol(GetClassSymbol(compilation, syntaxTree));
+            var csClassModel = analyzer.AnalyzeClassSymbol(RoslynTestHelpers.GetClassSymbol(compilation, syntaxTree));
 
             // convert
             var converter = new ModelConverter();
@@ -313,7 +311,7 @@ public class AllBuiltInTypes
                 new KeyValuePair<string, string>("loremIpsum", "string")
             };
 
-            var expected = BuildTypeScriptClass("AllBuiltInTypes", fields);
+            var expected = TypeScriptTestHelpers.BuildTypeScriptClass("AllBuiltInTypes", fields);
 
             Assert.AreEqual(expected, generated);
         }
@@ -332,13 +330,13 @@ public enum Gender
 }");
 
             // create compilation
-            var compilation = CreateTestCompilation(new[] { syntaxTree });
+            var compilation = RoslynTestHelpers.CreateTestCompilation(new[] { syntaxTree });
 
             // analyze
             var context = new TestAnalysisContext(compilation);
             var analyzer = new ModelAnalyzer(context);
 
-            var csEnumModel = analyzer.AnalyzeEnumSymbol(GetEnumSymbol(compilation, syntaxTree));
+            var csEnumModel = analyzer.AnalyzeEnumSymbol(RoslynTestHelpers.GetEnumSymbol(compilation, syntaxTree));
 
             // convert
             var converter = new ModelConverter();
@@ -357,62 +355,6 @@ public enum Gender
 ";
 
             Assert.AreEqual(expected, generated);
-        }
-
-
-        private Compilation CreateTestCompilation(IEnumerable<SyntaxTree> syntaxTrees)
-        {
-            var mscorlib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
-
-            var compilation = CSharpCompilation.Create(
-                "TestCompilation",
-                syntaxTrees: syntaxTrees,
-                references: new[] { mscorlib }
-            );
-
-            return compilation;
-        }
-
-        private INamedTypeSymbol GetClassSymbol(Compilation compilation, SyntaxTree syntaxTree)
-        {
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-
-            var classDeclaration = syntaxTree
-                .GetRoot()
-                .DescendantNodes()
-                .OfType<ClassDeclarationSyntax>()
-                .First();
-
-            return semanticModel.GetDeclaredSymbol(classDeclaration);
-        }
-
-        private INamedTypeSymbol GetEnumSymbol(Compilation compilation, SyntaxTree syntaxTree)
-        {
-            var semanticModel = compilation.GetSemanticModel(syntaxTree);
-
-            var enumDeclaration = syntaxTree
-                .GetRoot()
-                .DescendantNodes()
-                .OfType<EnumDeclarationSyntax>()
-                .First();
-
-            return semanticModel.GetDeclaredSymbol(enumDeclaration);
-        }
-
-        private string BuildTypeScriptClass(string className, List<KeyValuePair<string, string>> fields)
-        {
-            var sb = new StringBuilder();
-
-            sb.AppendLine("export class " + className + " {");
-
-            foreach (var field in fields)
-            {
-                sb.AppendLine("\t" + field.Key + ": " + field.Value + ";");
-            }
-
-            sb.AppendLine("}");
-
-            return sb.ToString();
         }
     }
 }

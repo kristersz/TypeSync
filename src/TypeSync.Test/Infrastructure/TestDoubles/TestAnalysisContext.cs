@@ -2,7 +2,7 @@
 using Microsoft.CodeAnalysis.MSBuild;
 using TypeSync.Core.Features;
 
-namespace TypeSync.Test.TestDoubles
+namespace TypeSync.Test.Infrastructure.TestDoubles
 {
     public class TestAnalysisContext : IAnalysisContext
     {
