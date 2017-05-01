@@ -27,14 +27,6 @@ namespace TypeSync.UseCases
 
         public Result Handle()
         {
-            var supportedExtensions = DotNetFileExtension.All;
-            var extension = Path.GetExtension(_configuration.InputPath);
-
-            if (!supportedExtensions.Contains(extension))
-            {
-                return Result.CreateError(string.Format("Unsupported path extension - {0}.  Supported extensions: {1}", extension, string.Join(", ", supportedExtensions)));
-            }
-
             var analyzer = new WebApiAnalyzer();
 
             var analysisResult = analyzer.Analyze(_configuration.InputPath);

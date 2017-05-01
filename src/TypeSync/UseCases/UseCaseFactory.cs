@@ -10,7 +10,7 @@ namespace TypeSync.UseCases
             {
                 case UseCase.ModelGeneration: return new ModelGenerationUseCase(configuration);
                 case UseCase.WebClientGeneration: return new WebClientGenerationUseCase(configuration);
-                //case "GenerateModels": return new ModelGenerationUseCase(configuration);
+                case UseCase.ValidatatorGeneration: return new ValidatorGenerationUseCase(configuration);
                 //case "GenerateModels": return new ModelGenerationUseCase(configuration);
                 default:
                     return null;

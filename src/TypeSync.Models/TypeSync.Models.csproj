@@ -40,6 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Angular\AngularFormFieldModel.cs" />
+    <Compile Include="Angular\AngularFormGroupModel.cs" />
+    <Compile Include="Angular\AngularFormValidatorModel.cs" />
     <Compile Include="Common\DependencyKind.cs" />
     <Compile Include="Converters\ModelConverter.cs" />
     <Compile Include="Converters\TypeConverter.cs" />
@@ -57,6 +60,7 @@
     <Compile Include="CSharp\CSharpSpecialType.cs" />
     <Compile Include="CSharp\CSharpTypeKind.cs" />
     <Compile Include="CSharp\CSharpTypeParameterModel.cs" />
+    <Compile Include="CSharp\CSharpValidationAttributeModel.cs" />
     <Compile Include="TypeScript\TypeScriptBasicType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TypeScript\TypeScriptClassModel.cs" />
@@ -69,5 +73,6 @@
     <Compile Include="TypeScript\TypeScriptTypeModel.cs" />
     <Compile Include="TypeScript\TypeScriptTypeParameterModel.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

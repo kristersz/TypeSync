@@ -158,6 +158,8 @@
     <Compile Include="Features\IAnalysisContext.cs" />
     <Compile Include="Features\ModelAnalysis\ModelAnalysisContext.cs" />
     <Compile Include="Features\ModelAnalysis\ModelAnalyzer.cs" />
+    <Compile Include="Features\ValidationAnalysis\ValidationAnalysisContext.cs" />
+    <Compile Include="Features\ValidationAnalysis\ValidationAnalyzer.cs" />
     <Compile Include="Features\WebApiAnalysis\WebApiAnalysisContext.cs" />
     <Compile Include="Features\WebApiAnalysis\WebApiAnalyzer.cs" />
     <Compile Include="Helpers\AttributeHelper.cs" />

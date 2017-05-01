@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using CommandLine;
 using log4net;
 using log4net.Config;
+using TypeSync.Common.Constants;
 using TypeSync.Models;
 using TypeSync.UseCases;
 
@@ -86,6 +89,15 @@ namespace TypeSync
             if (string.IsNullOrEmpty(options.OutputPath))
             {
                 result.ErrorMessage = "Output path must be specified with the '-i' flag";
+                return result;
+            }
+
+            var supportedExtensions = DotNetFileExtension.All;
+            var extension = Path.GetExtension(options.InputPath);
+
+            if (!supportedExtensions.Contains(extension))
+            {
+                result.ErrorMessage = string.Format("Unsupported path extension - {0}.  Supported extensions: {1}", extension, string.Join(", ", supportedExtensions));
                 return result;
             }
 

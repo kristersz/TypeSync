@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using TypeSync.Models.Common;
@@ -15,12 +16,7 @@ namespace TypeSync.Core.Helpers
                 {
                     if (attribute.AttributeClass.Name == "RoutePrefixAttribute")
                     {
-                        var arguments = attribute.ConstructorArguments;
-
-                        if (!arguments.IsDefaultOrEmpty)
-                        {
-                            return arguments.First().Value as string;
-                        }
+                        return GetFirstAttributeArgument(attribute);
                     }
                 }
             }
@@ -36,12 +32,7 @@ namespace TypeSync.Core.Helpers
                 {
                     if (attribute.AttributeClass.Name == "RouteAttribute")
                     {
-                        var arguments = attribute.ConstructorArguments;
-
-                        if (!arguments.IsDefaultOrEmpty)
-                        {
-                            return arguments.First().Value as string;
-                        }
+                        return GetFirstAttributeArgument(attribute);
                     }
                 }
             }
@@ -79,6 +70,40 @@ namespace TypeSync.Core.Helpers
             }
 
             return null;
+        }
+
+
+        public static List<AttributeData> GetValidationAttributes(IPropertySymbol propertySymbol)
+        {
+            var result = new List<AttributeData>();
+
+            var attributes = propertySymbol.GetAttributes();
+
+            if (!attributes.IsDefaultOrEmpty)
+            {
+                foreach (var attribute in attributes)
+                {
+                    if (attribute.AttributeClass.BaseType.Name == "ValidationAttribute")
+                    {
+                        result.Add(attribute);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+
+        public static string GetFirstAttributeArgument(AttributeData attribute)
+        {
+            var arguments = attribute.ConstructorArguments;
+
+            if (!arguments.IsDefaultOrEmpty)
+            {
+                return arguments.First().Value as string;
+            }
+
+            return string.Empty;
         }
     }
 }
