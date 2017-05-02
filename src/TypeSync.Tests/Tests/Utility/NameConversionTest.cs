@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using TypeSync.Common.Utilities;
 
-namespace TypeSync.Test.Tests.Utility
+namespace TypeSync.Tests.Tests.Utility
 {
     [TestFixture]
     [Category("Utility")]

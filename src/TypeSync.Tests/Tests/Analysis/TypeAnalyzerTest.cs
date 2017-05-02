@@ -2,10 +2,10 @@
 using NUnit.Framework;
 using TypeSync.Core.Features.Common;
 using TypeSync.Models.CSharp;
-using TypeSync.Test.Infrastructure.Helpers;
-using TypeSync.Test.Infrastructure.TestDoubles;
+using TypeSync.Tests.Infrastructure.Helpers;
+using TypeSync.Tests.Infrastructure.TestDoubles;
 
-namespace TypeSync.Test.Tests.Analysis
+namespace TypeSync.Tests.Tests.Analysis
 {
     [TestFixture]
     [Category("TypeAnalysis")]

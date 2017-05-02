@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 
-namespace TypeSync.Test.Infrastructure.Helpers
+namespace TypeSync.Tests.Infrastructure.Helpers
 {
     public static class TypeScriptTestHelpers
     {

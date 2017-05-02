@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.3
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeSync", "TypeSync\TypeSync.csproj", "{CEDF3930-6C08-4FD3-85C9-3849AF12E4E8}"
 EndProject
@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataStructures", "DataStruc
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{8D483F11-CD17-4821-BEE4-83BBAE9F2564}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeSync.Test", "TypeSync.Test\TypeSync.Test.csproj", "{D168CF6E-5DE0-469D-87B1-BDA3DF0ED148}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeSync.Tests", "TypeSync.Tests\TypeSync.Tests.csproj", "{D168CF6E-5DE0-469D-87B1-BDA3DF0ED148}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

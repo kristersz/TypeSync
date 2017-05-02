@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace TypeSync.Test.Infrastructure.Helpers
+namespace TypeSync.Tests.Infrastructure.Helpers
 {
     public static class RoslynTestHelpers
     {
