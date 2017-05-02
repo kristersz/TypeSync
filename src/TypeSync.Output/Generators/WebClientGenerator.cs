@@ -36,7 +36,7 @@ namespace TypeSync.Output.Generators
             sb.AppendLine();
 
             // route prefix
-            sb.AppendLine("\t" + $"private baseUrl = '${serviceModel.RoutePrefix}';");
+            sb.AppendLine("\t" + $"private baseUrl = '{serviceModel.RoutePrefix}';");
             sb.AppendLine();
 
             // constructor

@@ -164,6 +164,7 @@
     <Compile Include="Features\WebApiAnalysis\WebApiAnalysisContext.cs" />
     <Compile Include="Features\WebApiAnalysis\WebApiAnalyzer.cs" />
     <Compile Include="Helpers\AttributeHelper.cs" />
+    <Compile Include="Helpers\ProjectHelper.cs" />
     <Compile Include="Helpers\ControllerHelper.cs" />
     <Compile Include="Models\AnalysisResult.cs" />
     <Compile Include="Models\DependantType.cs" />

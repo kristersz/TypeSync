@@ -26,6 +26,8 @@ namespace TypeSync.Core.Features.WebApiAnalysis
 
             _context.Init(path);
 
+            var isDotNetCore = ProjectHelper.IsDotNetCoreProject(_context.Compilation);
+
             var documents = _context.Project.Documents
                 .Where(d => d.Name.Contains("Controller"))
                 .ToList();
@@ -53,7 +55,8 @@ namespace TypeSync.Core.Features.WebApiAnalysis
 
                     if (!classAttributes.IsDefaultOrEmpty)
                     {
-                        var routePrefix = AttributeHelper.GetRoutePrefix(classAttributes);
+                        // .net core projects use Route attribute on controllers instead of RoutePrefix
+                        var routePrefix = isDotNetCore ? AttributeHelper.GetRoute(classAttributes) : AttributeHelper.GetRoutePrefix(classAttributes);
 
                         if (!string.IsNullOrEmpty(routePrefix))
                         {
