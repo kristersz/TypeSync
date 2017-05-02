@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Text;
 using Microsoft.CodeAnalysis.CSharp;
 using NUnit.Framework;
 using TypeSync.Core.Features.ModelAnalysis;
@@ -8,7 +7,7 @@ using TypeSync.Output.Generators;
 using TypeSync.Tests.Infrastructure.Helpers;
 using TypeSync.Tests.Infrastructure.TestDoubles;
 
-namespace TypeSync.Tests.Tests.Integration
+namespace TypeSync.Tests.Integration
 {
     [TestFixture]
     [Category("ModelGeneration")]

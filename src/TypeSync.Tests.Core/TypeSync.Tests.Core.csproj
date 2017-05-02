@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D168CF6E-5DE0-469D-87B1-BDA3DF0ED148}</ProjectGuid>
+    <ProjectGuid>{2D5BBF75-D85F-4847-8E81-9A0BFA426EEC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TypeSync.Tests</RootNamespace>
-    <AssemblyName>TypeSync.Tests</AssemblyName>
+    <RootNamespace>TypeSync.Tests.Core</RootNamespace>
+    <AssemblyName>TypeSync.Tests.Core</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -157,19 +157,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Integration\ModelGenerationTest.cs" />
+    <Compile Include="Analysis\TypeAnalyzerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utility\NameConversionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TypeSync.Common\TypeSync.Common.csproj">
-      <Project>{26C664FD-6F30-449C-9BA3-CBB79E35CCC9}</Project>
+      <Project>{26c664fd-6f30-449c-9ba3-cbb79e35ccc9}</Project>
       <Name>TypeSync.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\TypeSync.Core\TypeSync.Core.csproj">
@@ -180,20 +181,11 @@
       <Project>{83251f52-6057-4d76-8689-c5221c1f169a}</Project>
       <Name>TypeSync.Models</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TypeSync.Output\TypeSync.Output.csproj">
-      <Project>{9908b917-9dc4-442d-bd33-21500a5aa522}</Project>
-      <Name>TypeSync.Output</Name>
-    </ProjectReference>
     <ProjectReference Include="..\TypeSync.Tests.Infrastructure\TypeSync.Tests.Infrastructure.csproj">
       <Project>{8c4aae7b-763d-407c-938f-6350191d1a15}</Project>
       <Name>TypeSync.Tests.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -5,7 +5,7 @@ using TypeSync.Models.CSharp;
 using TypeSync.Tests.Infrastructure.Helpers;
 using TypeSync.Tests.Infrastructure.TestDoubles;
 
-namespace TypeSync.Tests.Tests.Analysis
+namespace TypeSync.Tests.Core.Analysis
 {
     [TestFixture]
     [Category("TypeAnalysis")]
