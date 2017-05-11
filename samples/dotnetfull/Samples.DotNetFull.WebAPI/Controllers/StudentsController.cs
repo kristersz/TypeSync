@@ -13,7 +13,7 @@ namespace Samples.DotNetFull.WebAPI.Controllers
     {
         // GET: api/students
         [HttpGet]
-        public IEnumerable<Student> Get()
+        public IEnumerable<Student> List()
         {
             return new List<Student>()
             {

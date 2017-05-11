@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var ts = require("typescript");
+var models = require("./models");
 var utilities_1 = require("./utilities");
 var Generator = (function () {
     function Generator() {
@@ -40,15 +41,32 @@ var Generator = (function () {
                 ts.createReturn(ts.createCall(ts.createPropertyAccess(ts.createIdentifier('Promise'), 'reject'), [], [ts.createLogicalOr(ts.createPropertyAccess(ts.createIdentifier('error'), 'message'), ts.createIdentifier('error'))]))
             ], true));
         };
-        this.createHttpCallBlock = function (name) {
+        this.createHttpCallBlock = function (name, httpMethod) {
+            var params = [];
+            switch (httpMethod) {
+                case models.HttpMethod.Get:
+                    params.push(ts.createAdd(ts.createPropertyAccess(ts.createThis(), 'baseUrl'), ts.createAdd(ts.createLiteral('/'), ts.createIdentifier('id'))));
+                    break;
+                case models.HttpMethod.Post:
+                    params.push(ts.createPropertyAccess(ts.createThis(), 'baseUrl'));
+                    params.push(ts.createIdentifier('student'));
+                    break;
+                case models.HttpMethod.Put:
+                    params.push(ts.createAdd(ts.createPropertyAccess(ts.createThis(), 'baseUrl'), ts.createAdd(ts.createLiteral('/'), ts.createIdentifier('id'))));
+                    params.push(ts.createIdentifier('student'));
+                    break;
+                case models.HttpMethod.Delete:
+                    params.push(ts.createAdd(ts.createPropertyAccess(ts.createThis(), 'baseUrl'), ts.createAdd(ts.createLiteral('/'), ts.createIdentifier('id'))));
+                    break;
+            }
             return ts.createBlock([
-                ts.createReturn(ts.createCall(ts.createPropertyAccess(ts.createCall(ts.createPropertyAccess(ts.createCall(ts.createPropertyAccess(ts.createCall(ts.createPropertyAccess(ts.createPropertyAccess(ts.createThis(), 'http'), name), [], [ts.createPropertyAccess(ts.createThis(), 'baseUrl')]), 'toPromise'), [], []), 'then'), [], [ts.createArrowFunction([], [], [_this.createParameter({ name: 'response', type: 'Response', isPrivate: false })], undefined, undefined, ts.createIdentifier('response'))
+                ts.createReturn(ts.createCall(ts.createPropertyAccess(ts.createCall(ts.createPropertyAccess(ts.createCall(ts.createPropertyAccess(ts.createCall(ts.createPropertyAccess(ts.createPropertyAccess(ts.createThis(), 'http'), name), [], params), 'toPromise'), [], []), 'then'), [], [ts.createArrowFunction([], [], [_this.createParameter({ name: 'response', type: 'Response', isPrivate: false })], undefined, undefined, ts.createIdentifier('response'))
                 ]), 'catch'), [], [ts.createPropertyAccess(ts.createThis(), 'handleError')]))
             ], true);
         };
         this.createHttpMethod = function (name, returnType, httpMethod, parameters) {
             var params = parameters.map(function (p) { return _this.createParameter(p); });
-            return ts.createMethodDeclaration([], [], undefined, name, undefined, [], params, ts.createTypeReferenceNode('Promise', [ts.createTypeReferenceNode(returnType, [])]), _this.createHttpCallBlock(name));
+            return ts.createMethodDeclaration([], [], undefined, name, undefined, [], params, ts.createTypeReferenceNode('Promise', [ts.createTypeReferenceNode(returnType, [])]), _this.createHttpCallBlock(name, httpMethod));
         };
         this.createConstructor = function (constructorModel) {
             var parameters = constructorModel.parameters.map(function (p) { return _this.createParameter(p); });

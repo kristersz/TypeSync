@@ -55,7 +55,7 @@ export class Generator {
 
     private createHttpErrorHandler = () => {
         return ts.createMethodDeclaration([], [], undefined, 'handleError', undefined, [],
-            [this.createParameter({name: 'error', type: 'any', isPrivate: false })],
+            [this.createParameter({ name: 'error', type: 'any', isPrivate: false })],
             ts.createTypeReferenceNode('Promise', [ts.createTypeReferenceNode('any', [])]),
             ts.createBlock([
                 ts.createReturn(
@@ -69,7 +69,35 @@ export class Generator {
         );
     }
 
-    private createHttpCallBlock = (name: string): ts.Block => {
+    private createHttpCallBlock = (name: string, httpMethod: models.HttpMethod): ts.Block => {
+        const params = [];
+
+        switch (httpMethod) {
+            case models.HttpMethod.Get:
+                params.push(ts.createAdd(
+                    ts.createPropertyAccess(ts.createThis(), 'baseUrl'),
+                    ts.createAdd(ts.createLiteral('/'), ts.createIdentifier('id'))
+                ));
+                break;
+            case models.HttpMethod.Post:
+                params.push(ts.createPropertyAccess(ts.createThis(), 'baseUrl'));
+                params.push(ts.createIdentifier('student'));
+                break;
+            case models.HttpMethod.Put:
+                params.push(ts.createAdd(
+                    ts.createPropertyAccess(ts.createThis(), 'baseUrl'),
+                    ts.createAdd(ts.createLiteral('/'), ts.createIdentifier('id'))
+                ));
+                params.push(ts.createIdentifier('student'));
+                break;
+            case models.HttpMethod.Delete:
+                params.push(ts.createAdd(
+                    ts.createPropertyAccess(ts.createThis(), 'baseUrl'),
+                    ts.createAdd(ts.createLiteral('/'), ts.createIdentifier('id'))
+                ));
+                break;
+        }
+
         return ts.createBlock([
             ts.createReturn(
                 ts.createCall(
@@ -81,13 +109,13 @@ export class Generator {
                                         ts.createCall(
                                             ts.createPropertyAccess(
                                                 ts.createPropertyAccess(ts.createThis(), 'http'), name
-                                            ), [], [ts.createPropertyAccess(ts.createThis(), 'baseUrl')]),
+                                            ), [], params),
                                         'toPromise'
                                     ), [], []),
                                 'then'
                             ), [], [ts.createArrowFunction([], [],
-                                [this.createParameter({name: 'response', type: 'Response', isPrivate: false})], undefined, undefined,
-                                    ts.createIdentifier('response'))
+                                [this.createParameter({ name: 'response', type: 'Response', isPrivate: false })], undefined, undefined,
+                                ts.createIdentifier('response'))
                             ]),
                         'catch'
                     ), [], [ts.createPropertyAccess(ts.createThis(), 'handleError')]
@@ -97,15 +125,15 @@ export class Generator {
     }
 
     private createHttpMethod = (name: string, returnType: string, httpMethod: models.HttpMethod,
-        parameters: models.ParameterModel[]) : ts.MethodDeclaration => {
+        parameters: models.ParameterModel[]): ts.MethodDeclaration => {
 
         const params = parameters.map(p => this.createParameter(p));
 
         return ts.createMethodDeclaration([], [], undefined, name, undefined, [],
             params,
             ts.createTypeReferenceNode('Promise',
-            [ts.createTypeReferenceNode(returnType, [])]),
-            this.createHttpCallBlock(name)
+                [ts.createTypeReferenceNode(returnType, [])]),
+            this.createHttpCallBlock(name, httpMethod)
         );
     }
 
