@@ -78,7 +78,7 @@
     <Compile Include="TypeScript\TypeScriptEnumMemberModel.cs" />
     <Compile Include="TypeScript\TypeScriptEnumModel.cs" />
     <Compile Include="TypeScript\TypeScriptPropertyModel.cs" />
-    <Compile Include="TypeScript\TypeScriptServiceFunctionModel.cs" />
+    <Compile Include="TypeScript\TypeScriptServiceMethodModel.cs" />
     <Compile Include="TypeScript\TypeScriptServiceModel.cs" />
     <Compile Include="TypeScript\TypeScriptTypeModel.cs" />
     <Compile Include="TypeScript\TypeScriptTypeParameterModel.cs" />

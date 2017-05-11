@@ -140,7 +140,7 @@ namespace TypeSync.Output.Generators
                         new ParameterModel() { Name = "http", Type = "Http", IsPrivate = true }
                     }
                 },
-                Methods = serviceModel.Functions.Select(m => new MethodModel()
+                Methods = serviceModel.Methods.Select(m => new MethodModel()
                 {
                     Name = NameCaseConverter.ToCamelCase(m.Name),
                     ReturnType = typeGenerator.GetEmittedType(m.ReturnType),

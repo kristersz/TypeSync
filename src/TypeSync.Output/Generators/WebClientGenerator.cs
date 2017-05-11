@@ -43,10 +43,10 @@ namespace TypeSync.Output.Generators
             sb.AppendLine("\t" + "constructor(private http: Http) { }");
             sb.AppendLine();
 
-            foreach (var func in serviceModel.Functions)
+            foreach (var method in serviceModel.Methods)
             {
-                sb.AppendLine("\t" + NameCaseConverter.ToCamelCase(func.Name) + "(): Promise<Response> {");
-                sb.AppendLine("\t\t" + $"return this.http.{MapHttpMethod(func.HttpMethod)}(this.baseUrl)");
+                sb.AppendLine("\t" + NameCaseConverter.ToCamelCase(method.Name) + "(): Promise<Response> {");
+                sb.AppendLine("\t\t" + $"return this.http.{MapHttpMethod(method.HttpMethod)}(this.baseUrl)");
                 sb.AppendLine("\t\t\t" + ".toPromise()");
                 sb.AppendLine("\t\t\t" + ".then(response => response)");
                 sb.AppendLine("\t\t\t" + ".catch(this.handleError);");

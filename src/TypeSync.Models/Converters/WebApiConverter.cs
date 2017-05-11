@@ -27,13 +27,13 @@ namespace TypeSync.Models.Converters
                     FilePath = "",
                     DependencyKind = d.DependencyKind
                 }).ToList(),
-                Functions = ConvertMethods(c.Methods)
+                Methods = ConvertMethods(c.Methods)
             }).ToList();
         }
 
-        public List<TypeScriptServiceFunctionModel> ConvertMethods(List<CSharpControllerMethodModel> methodModels)
+        public List<TypeScriptServiceMethodModel> ConvertMethods(List<CSharpControllerMethodModel> methodModels)
         {
-            return methodModels.Select(m => new TypeScriptServiceFunctionModel()
+            return methodModels.Select(m => new TypeScriptServiceMethodModel()
             {
                 Name = m.Name,
                 HttpMethod = m.HttpMethod,

@@ -7,7 +7,7 @@ namespace TypeSync.Models.TypeScript
         public TypeScriptServiceModel()
         {
             Imports = new List<TypeScriptImportModel>();
-            Functions = new List<TypeScriptServiceFunctionModel>();
+            Methods = new List<TypeScriptServiceMethodModel>();
         }
 
         public string Name { get; set; }
@@ -16,6 +16,6 @@ namespace TypeSync.Models.TypeScript
 
         public List<TypeScriptImportModel> Imports { get; set; }
 
-        public List<TypeScriptServiceFunctionModel> Functions { get; set; }
+        public List<TypeScriptServiceMethodModel> Methods { get; set; }
     }
 }

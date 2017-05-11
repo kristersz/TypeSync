@@ -4,9 +4,9 @@ using TypeSync.Models.Common;
 
 namespace TypeSync.Models.TypeScript
 {
-    public class TypeScriptServiceFunctionModel
+    public class TypeScriptServiceMethodModel
     {
-        public TypeScriptServiceFunctionModel()
+        public TypeScriptServiceMethodModel()
         {
             Parameters = new List<Tuple<TypeScriptTypeModel, string>>();
         }
