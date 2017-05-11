@@ -7,6 +7,13 @@ namespace TypeSync.Models.Converters
 {
     public class ModelConverter
     {
+        private readonly TypeConverter _typeConverter;
+
+        public ModelConverter()
+        {
+            _typeConverter = new TypeConverter();
+        }
+
         public TypeScriptClassModel ConvertClass(CSharpClassModel classModel)
         {
             return new TypeScriptClassModel()
@@ -25,7 +32,7 @@ namespace TypeSync.Models.Converters
                 {
                     Name = p.Name,
                     IsOptional = p.Type.IsNullable,
-                    Type = ConvertType(p.Type)
+                    Type = _typeConverter.ConvertType(p.Type)
                 }).ToList()
             };
         }
@@ -54,38 +61,6 @@ namespace TypeSync.Models.Converters
         public List<TypeScriptEnumModel> ConvertEnums(List<CSharpEnumModel> enumModels)
         {
             return enumModels.Select(c => ConvertEnum(c)).ToList();
-        }
-
-
-        public TypeScriptTypeModel ConvertType(CSharpTypeModel csTypeModel)
-        {
-            var tsTypeModel = CreateTypeModel(csTypeModel);
-
-            if (csTypeModel.IsArray)
-            {
-                tsTypeModel.ElementType = CreateTypeModel(csTypeModel.ElementType);
-            }
-            else if (csTypeModel.IsCollection)
-            {
-                tsTypeModel.ElementType = CreateTypeModel(csTypeModel.TypeArguments.First());
-            }
-            else if (csTypeModel.IsNullable)
-            {
-                tsTypeModel = CreateTypeModel(csTypeModel.TypeArguments.First());
-            }
-
-            return tsTypeModel;
-        }
-
-
-        private TypeScriptTypeModel CreateTypeModel(CSharpTypeModel csTypeModel)
-        {
-            return new TypeScriptTypeModel()
-            {
-                Name = csTypeModel.Name,
-                IsNamedType = csTypeModel.SpecialType == CSharpSpecialType.None,
-                PredefinedType = TypeConverter.MapCSharpTypeToTypeScript(csTypeModel.SpecialType)
-            };
         }
     }
 }

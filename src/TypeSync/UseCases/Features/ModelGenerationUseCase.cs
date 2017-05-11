@@ -53,6 +53,8 @@ namespace TypeSync.UseCases
                 emitter.Emit(_configuration.OutputPath, tsModel.Name, EmittedFileType.Model, contents);
 
                 log.Debug($"Class {tsModel.Name} emitted");
+
+                new TsGenerator().GenerateDataModelAST(tsModel);
             }
 
             foreach (var tsModel in tsEnumModels)
@@ -62,6 +64,8 @@ namespace TypeSync.UseCases
                 emitter.Emit(_configuration.OutputPath, tsModel.Name, EmittedFileType.Enum, contents);
 
                 log.Debug($"Enum {tsModel.Name} emitted");
+
+                new TsGenerator().GenerateEnumAST(tsModel);
             }
 
             return Result.CreateSuccess();

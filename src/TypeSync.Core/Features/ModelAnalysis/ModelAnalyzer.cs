@@ -6,7 +6,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.FindSymbols;
 using TypeSync.Core.Features.Common;
-using TypeSync.Core.Mappers;
 using TypeSync.Core.Models;
 using TypeSync.Models.Common;
 using TypeSync.Models.CSharp;

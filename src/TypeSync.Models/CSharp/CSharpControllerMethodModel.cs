@@ -6,6 +6,11 @@ namespace TypeSync.Models.CSharp
 {
     public class CSharpControllerMethodModel
     {
+        public CSharpControllerMethodModel()
+        {
+            Parameters = new List<Tuple<CSharpTypeModel, string>>();
+        }
+
         public string Name { get; set; }
 
         public HttpMethod HttpMethod { get; set; }
@@ -14,6 +19,6 @@ namespace TypeSync.Models.CSharp
 
         public CSharpTypeModel ReturnType { get; set; }
 
-        public List<Tuple<CSharpTypeModel, string>> Arguments { get; set; }
+        public List<Tuple<CSharpTypeModel, string>> Parameters { get; set; }
     }
 }

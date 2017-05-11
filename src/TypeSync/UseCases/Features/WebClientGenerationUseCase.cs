@@ -53,6 +53,8 @@ namespace TypeSync.UseCases
                 emitter.Emit(_configuration.OutputPath, tsModel.Name, EmittedFileType.Service, contents);
 
                 log.Debug($"Service {tsModel.Name} emitted");
+
+                new TsGenerator().GenerateServiceAST(tsModel);
             }
 
             return Result.CreateSuccess();

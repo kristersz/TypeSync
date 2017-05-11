@@ -6,6 +6,11 @@ namespace TypeSync.Models.TypeScript
 {
     public class TypeScriptServiceFunctionModel
     {
+        public TypeScriptServiceFunctionModel()
+        {
+            Parameters = new List<Tuple<TypeScriptTypeModel, string>>();
+        }
+
         public string Name { get; set; }
 
         public HttpMethod HttpMethod { get; set; }
@@ -14,6 +19,6 @@ namespace TypeSync.Models.TypeScript
 
         public TypeScriptTypeModel ReturnType { get; set; }
 
-        public List<Tuple<TypeScriptTypeModel, string>> Arguments { get; set; }
+        public List<Tuple<TypeScriptTypeModel, string>> Parameters { get; set; }
     }
 }

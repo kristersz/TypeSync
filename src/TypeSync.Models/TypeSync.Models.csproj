@@ -61,6 +61,16 @@
     <Compile Include="CSharp\CSharpTypeKind.cs" />
     <Compile Include="CSharp\CSharpTypeParameterModel.cs" />
     <Compile Include="CSharp\CSharpValidationAttributeModel.cs" />
+    <Compile Include="TypeScriptDTO\ClassModel.cs" />
+    <Compile Include="TypeScriptDTO\ConstructorModel.cs" />
+    <Compile Include="TypeScriptDTO\MethodModel.cs" />
+    <Compile Include="TypeScriptDTO\ParameterModel.cs" />
+    <Compile Include="TypeScriptDTO\Requests\ClassGenerationRequest.cs" />
+    <Compile Include="TypeScriptDTO\Requests\EnumGenerationRequest.cs" />
+    <Compile Include="TypeScriptDTO\EnumMemberModel.cs" />
+    <Compile Include="TypeScriptDTO\EnumModel.cs" />
+    <Compile Include="TypeScriptDTO\ImportModel.cs" />
+    <Compile Include="TypeScriptDTO\PropertyModel.cs" />
     <Compile Include="TypeScript\TypeScriptBasicType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TypeScript\TypeScriptClassModel.cs" />

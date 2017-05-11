@@ -1,10 +1,42 @@
-﻿using TypeSync.Models.CSharp;
+﻿using System.Linq;
+using TypeSync.Models.CSharp;
 using TypeSync.Models.TypeScript;
 
 namespace TypeSync.Models.Converters
 {
     public class TypeConverter
     {
+        public TypeScriptTypeModel ConvertType(CSharpTypeModel csTypeModel)
+        {
+            var tsTypeModel = CreateTypeModel(csTypeModel);
+
+            if (csTypeModel.IsArray)
+            {
+                tsTypeModel.ElementType = CreateTypeModel(csTypeModel.ElementType);
+            }
+            else if (csTypeModel.IsCollection)
+            {
+                tsTypeModel.ElementType = CreateTypeModel(csTypeModel.TypeArguments.First());
+            }
+            else if (csTypeModel.IsNullable)
+            {
+                tsTypeModel = CreateTypeModel(csTypeModel.TypeArguments.First());
+            }
+
+            return tsTypeModel;
+        }
+
+
+        private TypeScriptTypeModel CreateTypeModel(CSharpTypeModel csTypeModel)
+        {
+            return new TypeScriptTypeModel()
+            {
+                Name = csTypeModel.Name,
+                IsNamedType = csTypeModel.SpecialType == CSharpSpecialType.None,
+                PredefinedType = TypeConverter.MapCSharpTypeToTypeScript(csTypeModel.SpecialType)
+            };
+        }
+
         public static TypeScriptBasicType MapCSharpTypeToTypeScript(CSharpSpecialType type)
         {
             switch (type)
