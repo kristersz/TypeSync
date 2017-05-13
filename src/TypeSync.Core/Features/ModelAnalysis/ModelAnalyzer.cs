@@ -67,36 +67,36 @@ namespace TypeSync.Core.Features.ModelAnalysis
 
                     if (type.TypeKind == TypeKind.Class)
                     {
-                        var x = AnalyzeClassSymbol(type.NamedTypeSymbol);
+                        //var classModel = new CSharpClassModel() { Name = type.Name };
 
-                        var classModel = new CSharpClassModel() { Name = type.Name };
+                        //HandleInheritance(classModel, type.NamedTypeSymbol);
 
-                        HandleInheritance(classModel, type.NamedTypeSymbol);
+                        //HandleGenerics(classModel, type.NamedTypeSymbol);
 
-                        HandleGenerics(classModel, type.NamedTypeSymbol);
+                        //var internalDependencies = dependencies
+                        //    .Where(d => !d.IsExternal)
+                        //    .Select(d => d.NamedTypeSymbol)
+                        //    .ToList();
 
-                        var internalDependencies = dependencies
-                            .Where(d => !d.IsExternal)
-                            .Select(d => d.NamedTypeSymbol)
-                            .ToList();
+                        //HandleDependencies(classModel, internalDependencies);
 
-                        HandleDependencies(classModel, internalDependencies);
+                        //var propertyNodes = syntaxTree.GetRoot().DescendantNodes().OfType<PropertyDeclarationSyntax>().ToList();
 
-                        var propertyNodes = syntaxTree.GetRoot().DescendantNodes().OfType<PropertyDeclarationSyntax>().ToList();
+                        //foreach (var propertyNode in propertyNodes)
+                        //{
+                        //    var propertySymbol = semanticModel.GetDeclaredSymbol(propertyNode) as IPropertySymbol;
 
-                        foreach (var propertyNode in propertyNodes)
-                        {
-                            var propertySymbol = semanticModel.GetDeclaredSymbol(propertyNode) as IPropertySymbol;
+                        //    var property = new CSharpPropertyModel();
 
-                            var property = new CSharpPropertyModel();
+                        //    property.Name = propertySymbol.Name;
+                        //    property.Type = _typeAnalyzer.AnalyzePropertyType(propertySymbol.Type);
 
-                            property.Name = propertySymbol.Name;
-                            property.Type = _typeAnalyzer.AnalyzePropertyType(propertySymbol.Type);
+                        //    classModel.Properties.Add(property);
+                        //}
 
-                            classModel.Properties.Add(property);
-                        }
+                        // models.Classes.Add(classModel);
 
-                        models.Classes.Add(classModel);
+                        models.Classes.Add(AnalyzeClassSymbol(type.NamedTypeSymbol));
                     }
                     else if (type.TypeKind == TypeKind.Enum)
                     {
@@ -321,7 +321,7 @@ namespace TypeSync.Core.Features.ModelAnalysis
             {
                 var propertySymbol = property as IPropertySymbol;
 
-                if (propertySymbol.Type.ContainingAssembly.Equals(classSymbol.ContainingAssembly))
+                if (propertySymbol.Type.ContainingAssembly.Name != "mscorlib")
                 {
                     dependencies.Add(propertySymbol.Type as INamedTypeSymbol);
                 }

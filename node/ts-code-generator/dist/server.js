@@ -55,7 +55,6 @@ var Server = (function () {
         // main route
         router.post('/generate/class', function (req, res, next) {
             var body = req.body;
-            console.log('Body: %j', body);
             var path = body.outputPath;
             var dataModel = body.dataModel;
             var source = new generator_1.Generator().generateClass(dataModel);
@@ -64,7 +63,6 @@ var Server = (function () {
         });
         router.post('/generate/enum', function (req, res, next) {
             var body = req.body;
-            console.log('Body: %j', body);
             var path = body.outputPath;
             var dataModel = body.dataModel;
             var source = new generator_1.Generator().generateEnum(dataModel);

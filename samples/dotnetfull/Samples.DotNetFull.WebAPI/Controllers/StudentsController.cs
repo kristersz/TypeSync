@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using Samples.DotNetFull.ViewModels;
 
@@ -23,7 +20,8 @@ namespace Samples.DotNetFull.WebAPI.Controllers
                     FirstName = "John",
                     LastName = "Wick",
                     DateOfBirth = new DateTime(1980, 1, 1),
-                    YearOfGraduation = DateTime.Now
+                    YearOfGraduation = DateTime.Now,
+                    Type = StudentType.Domestic
                 },
                 new Student()
                 {
@@ -31,7 +29,8 @@ namespace Samples.DotNetFull.WebAPI.Controllers
                     FirstName = "Molly",
                     LastName = "Wilkins",
                     DateOfBirth = new DateTime(1989, 1, 1),
-                    YearOfGraduation = DateTime.Now.AddYears(-9)
+                    YearOfGraduation = DateTime.Now.AddYears(-9),
+                    Type = StudentType.Foreign
                 }
             };
         }

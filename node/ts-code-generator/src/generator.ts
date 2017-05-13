@@ -2,20 +2,26 @@ import * as ts from 'typescript';
 
 import * as models from './models';
 import { Emitter } from './emitter';
+import { Formatter } from './formatter';
 import { Utilities } from './utilities';
+import * as transformers from './transformers';
 
 export class Generator {
     constructor() {
     }
 
     private createImport = (importModel: models.ImportModel): ts.ImportDeclaration => {
-        const importSpecifiers = importModel.names.map(name => ts.createImportSpecifier(undefined, ts.createIdentifier(name)));
+        let importClause = undefined;
 
-        const importClause = ts.createImportClause(
-            undefined, // import Address from
-            // ts.createNamespaceImport(ts.createIdentifier(name)) // import * as Address from
-            ts.createNamedImports(importSpecifiers) // import { Address } from
-        );
+        if (importModel.names.length > 0) {
+            const importSpecifiers = importModel.names.map(name => ts.createImportSpecifier(undefined, ts.createIdentifier(name)));
+
+            importClause = ts.createImportClause(
+                undefined, // import Address from
+                // ts.createNamespaceImport(ts.createIdentifier(name)) // import * as Address from
+                ts.createNamedImports(importSpecifiers) // import { Address } from
+            );
+        }
 
         return ts.createImportDeclaration([], [], importClause, ts.createLiteral(importModel.path));
     }
@@ -53,7 +59,7 @@ export class Generator {
             ts.createTypeReferenceNode(parameterModel.type, []), undefined);
     }
 
-    private createHttpErrorHandler = () => {
+    private createHttpErrorHandler = (): ts.MethodDeclaration => {
         return ts.createMethodDeclaration([], [], undefined, 'handleError', undefined, [],
             [this.createParameter({ name: 'error', type: 'any', isPrivate: false })],
             ts.createTypeReferenceNode('Promise', [ts.createTypeReferenceNode('any', [])]),
@@ -69,14 +75,41 @@ export class Generator {
         );
     }
 
-    private createHttpCallBlock = (name: string, httpMethod: models.HttpMethod): ts.Block => {
+    private createRoute = (route: string): ts.Expression => {
+        const root = '/';
+
+        if (route == null) {
+            return ts.createLiteral(root);
+        }
+
+        return ts.createAdd(ts.createLiteral(root), ts.createIdentifier('id'));
+
+        // return ts.createTemplateExpression(undefined, [ts.createTemplateSpan(ts.createIdentifier('id'), null)])
+    }
+
+    private mapHttpMethodName = (httpMethod: models.HttpMethod) => {
+        switch (httpMethod) {
+            case models.HttpMethod.Get:
+                return 'get';
+            case models.HttpMethod.Post:
+                return 'post';
+            case models.HttpMethod.Put:
+                return 'put';
+            case models.HttpMethod.Patch:
+                return 'patch';
+            case models.HttpMethod.Delete:
+                return 'delete';
+        }
+    }
+
+    private createHttpCallBlock = (name: string, httpMethod: models.HttpMethod, route: string): ts.Block => {
         const params = [];
 
         switch (httpMethod) {
             case models.HttpMethod.Get:
                 params.push(ts.createAdd(
                     ts.createPropertyAccess(ts.createThis(), 'baseUrl'),
-                    ts.createAdd(ts.createLiteral('/'), ts.createIdentifier('id'))
+                    this.createRoute(route)
                 ));
                 break;
             case models.HttpMethod.Post:
@@ -86,14 +119,14 @@ export class Generator {
             case models.HttpMethod.Put:
                 params.push(ts.createAdd(
                     ts.createPropertyAccess(ts.createThis(), 'baseUrl'),
-                    ts.createAdd(ts.createLiteral('/'), ts.createIdentifier('id'))
+                    this.createRoute(route)
                 ));
                 params.push(ts.createIdentifier('student'));
                 break;
             case models.HttpMethod.Delete:
                 params.push(ts.createAdd(
                     ts.createPropertyAccess(ts.createThis(), 'baseUrl'),
-                    ts.createAdd(ts.createLiteral('/'), ts.createIdentifier('id'))
+                    this.createRoute(route)
                 ));
                 break;
         }
@@ -108,14 +141,14 @@ export class Generator {
                                     ts.createPropertyAccess(
                                         ts.createCall(
                                             ts.createPropertyAccess(
-                                                ts.createPropertyAccess(ts.createThis(), 'http'), name
+                                                ts.createPropertyAccess(ts.createThis(), 'http'), this.mapHttpMethodName(httpMethod)
                                             ), [], params),
                                         'toPromise'
                                     ), [], []),
                                 'then'
                             ), [], [ts.createArrowFunction([], [],
                                 [this.createParameter({ name: 'response', type: 'Response', isPrivate: false })], undefined, undefined,
-                                ts.createIdentifier('response'))
+                                ts.createCall(ts.createPropertyAccess(ts.createIdentifier('response'), 'json'), [], []))
                             ]),
                         'catch'
                     ), [], [ts.createPropertyAccess(ts.createThis(), 'handleError')]
@@ -124,16 +157,14 @@ export class Generator {
         ], true);
     }
 
-    private createHttpMethod = (name: string, returnType: string, httpMethod: models.HttpMethod,
-        parameters: models.ParameterModel[]): ts.MethodDeclaration => {
+    private createHttpMethod = (httpMethodModel: models.HttpMethodModel): ts.MethodDeclaration => {
 
-        const params = parameters.map(p => this.createParameter(p));
+        const params = httpMethodModel.parameters.map(p => this.createParameter(p));
 
-        return ts.createMethodDeclaration([], [], undefined, name, undefined, [],
+        return ts.createMethodDeclaration([], [], undefined, httpMethodModel.name, undefined, [],
             params,
-            ts.createTypeReferenceNode('Promise',
-                [ts.createTypeReferenceNode(returnType, [])]),
-            this.createHttpCallBlock(name, httpMethod)
+            ts.createTypeReferenceNode('Promise', [ts.createTypeReferenceNode(httpMethodModel.returnType, [])]),
+            this.createHttpCallBlock(httpMethodModel.name, httpMethodModel.httpMethod, httpMethodModel.route)
         );
     }
 
@@ -174,16 +205,24 @@ export class Generator {
             classElements.push(this.createConstructor(classModel.constructorDef));
         }
 
-        // methods
-        for (const method of classModel.methods) {
+        let hasHttpMethod = false;
 
-            // http methods
-            if (method.isHttpService) {
-                classElements.push(this.createHttpMethod(method.name, method.returnType, method.httpMethod, method.parameters));
+        // methods
+        if (classModel.methods) {
+            for (const method of classModel.methods) {
+
+                // http methods
+                const httpMethod = method as models.HttpMethodModel
+                if (httpMethod.httpMethod >= 0) {
+                    classElements.push(this.createHttpMethod(httpMethod));
+                    hasHttpMethod = true;
+                }
             }
         }
 
-        classElements.push(this.createHttpErrorHandler());
+        if (hasHttpMethod) {
+            classElements.push(this.createHttpErrorHandler());
+        }
 
         return ts.createClassDeclaration(decoratorNodes, modifiers, classModel.name, typeParameters, heritageClauses, classElements);
     }
@@ -206,10 +245,20 @@ export class Generator {
         // class declaration
         const classNode = this.createClass(classModel);
 
-        // generate text
-        const generated = Utilities.concatNodes([...importNodes, classNode]);
+        // transform
+        const result: ts.TransformationResult<ts.Node> = ts.transform(
+            classNode, [transformers.quotemarkTransformer]
+        );
 
-        return generated;
+        const transformedClassNode: ts.Node = result.transformed[0];
+
+        // print text
+        const printed = Utilities.concatNodes([...importNodes, transformedClassNode]);
+
+        // format
+        // const formatted = new Formatter().format(generated);
+
+        return printed;
     }
 
     generateEnum = (enumModel: models.EnumModel): string => {

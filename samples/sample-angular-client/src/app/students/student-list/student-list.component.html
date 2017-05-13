@@ -1,3 +1,31 @@
-<p>
-  student-list works!
-</p>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <table class="table">
+        <thead>
+          <th>Id</th>
+          <th>First name</th>
+          <th>Last name</th>
+          <th>Date of birth</th>
+          <th>Year of graduation</th>
+          <th>Type</th>
+          <th>Actions</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let student of students; let i = index;">
+            <td>{{student.id}}</td>
+            <td>{{student.firstName}}</td>
+            <td>{{student.lastName}}</td>
+            <td>{{student.dateOfBirth | date:'dd.MM.yyyy'}}</td>
+            <td>{{student.yearOfGraduation | date:'dd.MM.yyyy'}}</td>
+            <td>{{StudentType[student.type]}}</td>
+            <td>
+              <button class="btn btn-sm btn-secondary">Edit</button>
+              <button class="btn btn-sm btn-secondary">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

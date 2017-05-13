@@ -75,8 +75,6 @@ export class Server {
         router.post('/generate/class', (req: express.Request, res: express.Response, next: express.NextFunction) => {
             const body = req.body;
 
-            console.log('Body: %j', body);
-
             const path = body.outputPath as string;
             const dataModel = body.dataModel as models.ClassModel;
 
@@ -89,8 +87,6 @@ export class Server {
 
         router.post('/generate/enum', (req: express.Request, res: express.Response, next: express.NextFunction) => {
             const body = req.body;
-
-            console.log('Body: %j', body);
 
             const path = body.outputPath as string;
             const dataModel = body.dataModel as models.EnumModel;

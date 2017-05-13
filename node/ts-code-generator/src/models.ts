@@ -20,10 +20,14 @@ export interface ConstructorModel {
     parameters: ParameterModel[];
 }
 
+export interface HttpMethodModel extends MethodModel {
+    httpMethod: HttpMethod;
+    route: string;
+}
+
 export interface MethodModel {
     name: string;
     returnType: string;
-    isHttpService: boolean;
     httpMethod: HttpMethod;
     parameters: ParameterModel[];
 }

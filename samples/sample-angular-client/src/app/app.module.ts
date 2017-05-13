@@ -8,6 +8,8 @@ import { AppComponent } from './app.component';
 import { StudentListComponent } from './students/student-list/student-list.component';
 import { StudentDetailComponent } from './students/student-detail/student-detail.component';
 
+import { StudentsService } from './shared/services/students.service';
+
 const appRoutes: Routes = [
   { path: 'student/:id', component: StudentDetailComponent },
   {
@@ -35,7 +37,7 @@ const appRoutes: Routes = [
     HttpModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [],
+  providers: [StudentsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

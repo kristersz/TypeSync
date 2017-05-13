@@ -39,6 +39,20 @@ namespace TypeSync.Output.Generators
             return string.Empty;
         }
 
+        private StringContent CreateStringContent(object value)
+        {
+            return new StringContent(
+                JsonConvert.SerializeObject(
+                    value, 
+                    new JsonSerializerSettings
+                    {
+                        ContractResolver = new CamelCasePropertyNamesContractResolver()
+                    }).ToString(), 
+                Encoding.UTF8, 
+                "application/json"
+            );
+        }
+
         public void GenerateDataModelAST(TypeScriptClassModel classModel)
         {
             var request = new ClassGenerationRequest();
@@ -47,7 +61,7 @@ namespace TypeSync.Output.Generators
 
             var typeGenerator = new TypeGenerator();
 
-            request.OutputPath = "C://Dev//Generated/temp/models/" + fileName;
+            request.OutputPath = "C:/Dev/TypeSync/samples/sample-angular-client/src/app/shared/models/" + fileName;
 
             request.DataModel = new ClassModel()
             {
@@ -69,10 +83,7 @@ namespace TypeSync.Output.Generators
                 }).ToArray(),
             };
 
-            var serializerSettings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
-            var content = new StringContent(JsonConvert.SerializeObject(request, serializerSettings).ToString(), Encoding.UTF8, "application/json");
-
-            var result = CallGenerator("/generate/class", content);
+            var result = CallGenerator("/generate/class", CreateStringContent(request));
         }
 
         public void GenerateEnumAST(TypeScriptEnumModel enumModel)
@@ -81,7 +92,7 @@ namespace TypeSync.Output.Generators
 
             string fileName = $"{NameCaseConverter.ToKebabCase(enumModel.Name)}.enum.{TypeScriptFileExtension.File}";
 
-            request.OutputPath = "C://Dev//Generated/temp/enums/" + fileName;
+            request.OutputPath = "C:/Dev/TypeSync/samples/sample-angular-client/src/app/shared/enums/" + fileName;
 
             request.DataModel = new EnumModel()
             {
@@ -93,10 +104,7 @@ namespace TypeSync.Output.Generators
                 }).ToArray()
             };
 
-            var serializerSettings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
-            var content = new StringContent(JsonConvert.SerializeObject(request, serializerSettings).ToString(), Encoding.UTF8, "application/json");
-
-            var result = CallGenerator("/generate/enum", content);
+            var result = CallGenerator("/generate/enum", CreateStringContent(request));
         }
 
         public void GenerateServiceAST(TypeScriptServiceModel serviceModel)
@@ -107,11 +115,12 @@ namespace TypeSync.Output.Generators
 
             var typeGenerator = new TypeGenerator();
 
-            request.OutputPath = "C://Dev//Generated/temp/services/" + fileName;
+            request.OutputPath = "C:/Dev/TypeSync/samples/sample-angular-client/src/app/shared/services/" + fileName;
 
             var imports = new List<ImportModel>() {
                 new ImportModel() { Names = new string[] { "Injectable" }, Path = "@angular/core" },
-                new ImportModel() { Names = new string[] { "Headers", "Http", "Response" }, Path = "@angular/http" }
+                new ImportModel() { Names = new string[] { "Http", "Headers", "Response" }, Path = "@angular/http" },
+                new ImportModel() { Names = new string[] { }, Path = "rxjs/add/operator/toPromise" }
             };
 
             var specificImports = serviceModel.Imports.Select(i => new ImportModel()
@@ -124,9 +133,9 @@ namespace TypeSync.Output.Generators
 
             request.DataModel = new ClassModel()
             {
-                Name = serviceModel.Name,
+                Name = serviceModel.Name + "Service",
                 BaseClass = null,
-                Decorators = new string[] { },
+                Decorators = new string[] { "Injectable()" },
                 TypeParameters = new string[] { },
                 Imports = imports.ToArray(),
                 Properties = new PropertyModel[]
@@ -140,12 +149,12 @@ namespace TypeSync.Output.Generators
                         new ParameterModel() { Name = "http", Type = "Http", IsPrivate = true }
                     }
                 },
-                Methods = serviceModel.Methods.Select(m => new MethodModel()
+                Methods = serviceModel.Methods.Select(m => new HttpMethodModel()
                 {
                     Name = NameCaseConverter.ToCamelCase(m.Name),
                     ReturnType = typeGenerator.GetEmittedType(m.ReturnType),
-                    IsHttpService = true,
                     HttpMethod = m.HttpMethod,
+                    Route = m.Route,
                     Parameters = m.Parameters.Select(p => new ParameterModel()
                     {
                         Name = p.Item2,
@@ -155,10 +164,7 @@ namespace TypeSync.Output.Generators
                 }).ToArray()
             };
 
-            var serializerSettings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
-            var content = new StringContent(JsonConvert.SerializeObject(request, serializerSettings).ToString(), Encoding.UTF8, "application/json");
-
-            var result = CallGenerator("/generate/class", content);
+            var result = CallGenerator("/generate/class", CreateStringContent(request));
         }
     }
 }

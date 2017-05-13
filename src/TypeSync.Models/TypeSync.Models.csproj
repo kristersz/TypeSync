@@ -63,6 +63,7 @@
     <Compile Include="CSharp\CSharpValidationAttributeModel.cs" />
     <Compile Include="TypeScriptDTO\ClassModel.cs" />
     <Compile Include="TypeScriptDTO\ConstructorModel.cs" />
+    <Compile Include="TypeScriptDTO\HttpMethodModel.cs" />
     <Compile Include="TypeScriptDTO\MethodModel.cs" />
     <Compile Include="TypeScriptDTO\ParameterModel.cs" />
     <Compile Include="TypeScriptDTO\Requests\ClassGenerationRequest.cs" />

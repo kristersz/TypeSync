@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
+import { Student } from '../../shared/models/student.model';
+import { StudentType } from '../../shared/enums/student-type.enum';
+import { StudentsService } from '../../shared/services/students.service';
+
 @Component({
   selector: 'app-student-list',
   templateUrl: './student-list.component.html',
@@ -7,9 +11,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StudentListComponent implements OnInit {
 
-  constructor() { }
+  students: Student[] = [];
+
+  StudentType = StudentType;
+
+  constructor(private studentService: StudentsService) { }
 
   ngOnInit() {
+    this.studentService.list().then(students => this.students = students);
   }
 
 }
