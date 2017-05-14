@@ -24,5 +24,8 @@ Utilities.concatNodes = function (nodes) {
     }
     return result;
 };
+Utilities.replaceQuotemarks = function (text) {
+    return text.replace(/"/g, '\'');
+};
 exports.Utilities = Utilities;
 //# sourceMappingURL=utilities.js.map

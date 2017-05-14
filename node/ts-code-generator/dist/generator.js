@@ -157,7 +157,8 @@ var Generator = (function () {
             var printed = utilities_1.Utilities.concatNodes(importNodes.concat([transformedClassNode]));
             // format
             // const formatted = new Formatter().format(generated);
-            return printed;
+            var replaced = utilities_1.Utilities.replaceQuotemarks(printed);
+            return replaced;
         };
         this.generateEnum = function (enumModel) {
             var enumNode = _this.createEnum(enumModel);

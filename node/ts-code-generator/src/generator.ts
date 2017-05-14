@@ -257,8 +257,9 @@ export class Generator {
 
         // format
         // const formatted = new Formatter().format(generated);
+        const replaced = Utilities.replaceQuotemarks(printed);
 
-        return printed;
+        return replaced;
     }
 
     generateEnum = (enumModel: models.EnumModel): string => {

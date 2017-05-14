@@ -23,4 +23,8 @@ export class Utilities {
 
         return result;
     }
+
+    static replaceQuotemarks = (text: string): string => {
+        return text.replace(/"/g, '\'');
+    }
 }
