@@ -21,7 +21,10 @@ namespace TypeSync.Models.Converters
                 Name = classModel.Name,
                 BaseClass = classModel.BaseClass,
                 IsGeneric = classModel.IsGeneric,
-                TypeParameter = classModel.TypeParameter == null ? null : new TypeScriptTypeParameterModel() { Name = classModel.TypeParameter.Name },
+                TypeParameters = classModel.TypeParameters.Select(tp => new TypeScriptTypeParameterModel()
+                {
+                    Name = tp.Name,
+                }).ToList(),
                 Imports = classModel.Dependencies.Select(d => new TypeScriptImportModel()
                 {
                     Name = d.Name,

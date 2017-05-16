@@ -72,5 +72,17 @@ namespace Samples.DotNetFull.WebAPI.Controllers
         {
             // delete from store
         }
+
+        [HttpGet]
+        [Route("types")]
+        public List<KeyValuePair<int, string>> GetStudentTypes()
+        {
+            return new List<KeyValuePair<int, string>>()
+            {
+                new KeyValuePair<int, string>((int)StudentType.Domestic, StudentType.Domestic.ToString()),
+                new KeyValuePair<int, string>((int)StudentType.Exchange, StudentType.Exchange.ToString()),
+                new KeyValuePair<int, string>((int)StudentType.Foreign, StudentType.Foreign.ToString())
+            };
+        }
     }
 }

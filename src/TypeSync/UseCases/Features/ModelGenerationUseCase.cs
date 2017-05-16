@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Linq;
-using log4net;
-using TypeSync.Common.Constants;
+﻿using log4net;
 using TypeSync.Core.Features.ModelAnalysis;
 using TypeSync.Models;
 using TypeSync.Models.Converters;
@@ -54,7 +51,7 @@ namespace TypeSync.UseCases
 
                 log.Debug($"Class {tsModel.Name} emitted");
 
-                new TsGenerator().GenerateDataModelAST(tsModel);
+                new TsGenerator().GenerateDataModelAST(tsModel, _configuration.OutputPath);
             }
 
             foreach (var tsModel in tsEnumModels)
@@ -65,7 +62,7 @@ namespace TypeSync.UseCases
 
                 log.Debug($"Enum {tsModel.Name} emitted");
 
-                new TsGenerator().GenerateEnumAST(tsModel);
+                new TsGenerator().GenerateEnumAST(tsModel, _configuration.OutputPath);
             }
 
             return Result.CreateSuccess();

@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.FindSymbols;
 using TypeSync.Core.Features.Common;
+using TypeSync.Core.Helpers;
 using TypeSync.Core.Models;
 using TypeSync.Models.Common;
 using TypeSync.Models.CSharp;
@@ -308,7 +309,7 @@ namespace TypeSync.Core.Features.ModelAnalysis
         {
             var dependencies = new List<INamedTypeSymbol>();
 
-            if (classSymbol.BaseType != null && classSymbol.BaseType.ContainingAssembly.Equals(classSymbol.ContainingAssembly))
+            if (classSymbol.BaseType != null && TypeHelper.IsSupportedType(classSymbol.BaseType))
             {
                 dependencies.Add(classSymbol.BaseType);
             }
@@ -321,7 +322,7 @@ namespace TypeSync.Core.Features.ModelAnalysis
             {
                 var propertySymbol = property as IPropertySymbol;
 
-                if (propertySymbol.Type.ContainingAssembly.Name != "mscorlib")
+                if (TypeHelper.IsSupportedType(propertySymbol.Type))
                 {
                     dependencies.Add(propertySymbol.Type as INamedTypeSymbol);
                 }
@@ -342,10 +343,12 @@ namespace TypeSync.Core.Features.ModelAnalysis
         {
             if (classSymbol.IsGenericType && !classSymbol.TypeParameters.IsDefaultOrEmpty)
             {
-                var typeParam = classSymbol.TypeParameters[0];
-
                 model.IsGeneric = true;
-                model.TypeParameter = new CSharpTypeParameterModel() { Name = typeParam.Name };
+
+                foreach (var typeParameter in classSymbol.TypeParameters)
+                {
+                    model.TypeParameters.Add(new CSharpTypeParameterModel() { Name = typeParameter.Name });
+                }               
             }
         }
 

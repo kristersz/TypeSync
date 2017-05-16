@@ -6,6 +6,7 @@ namespace TypeSync.Models.CSharp
     {
         public CSharpClassModel()
         {
+            TypeParameters = new List<CSharpTypeParameterModel>();
             Dependencies = new List<CSharpDependencyModel>();
             Properties = new List<CSharpPropertyModel>();
         }
@@ -16,7 +17,7 @@ namespace TypeSync.Models.CSharp
 
         public bool IsGeneric { get; set; }
 
-        public CSharpTypeParameterModel TypeParameter { get; set; }
+        public List<CSharpTypeParameterModel> TypeParameters { get; set; }
 
         public List<CSharpDependencyModel> Dependencies { get; set; }
 

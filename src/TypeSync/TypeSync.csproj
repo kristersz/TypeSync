@@ -186,12 +186,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Configuration.cs" />
+    <Compile Include="Models\Generator.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\JsonConfigurationProvider.cs" />
     <Compile Include="Providers\IConfigurationProvider.cs" />
+    <Compile Include="UseCases\Features\SynchronizationUseCase.cs" />
     <Compile Include="UseCases\IUseCase.cs" />
     <Compile Include="UseCases\Features\ModelGenerationUseCase.cs" />
     <Compile Include="UseCases\Features\ProjectTemplateScaffoldingUseCase.cs" />

@@ -52,7 +52,11 @@ namespace TypeSync
                     {
                         Console.WriteLine(validationResult.ErrorString());
                     }
-                }  
+                }
+                else
+                {
+                    Console.WriteLine("Unknown use case was specified");
+                }
             }
             catch (Exception ex)
             {
@@ -92,6 +96,12 @@ namespace TypeSync
                 return result;
             }
 
+            if (string.IsNullOrEmpty(options.Generator))
+            {
+                result.ErrorMessage = "Generator must be specified with the '-g' flag";
+                return result;
+            }
+
             var supportedExtensions = DotNetFileExtension.All;
             var extension = Path.GetExtension(options.InputPath);
 
@@ -112,7 +122,8 @@ namespace TypeSync
             return new Configuration()
             {
                 InputPath = options.InputPath,
-                OutputPath = options.OutputPath
+                OutputPath = options.OutputPath,
+                Generator = options.Generator
             };
         }
     }

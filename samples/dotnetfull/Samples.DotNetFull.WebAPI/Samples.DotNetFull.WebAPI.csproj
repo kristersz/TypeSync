@@ -102,6 +102,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\Samples.DotNetFull.Common\Samples.DotNetFull.Common.csproj">
+      <Project>{ee201237-a0e8-4fd5-aae9-2e5a524fbc3b}</Project>
+      <Name>Samples.DotNetFull.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Samples.DotNetFull.ViewModels\Samples.DotNetFull.ViewModels.csproj">
       <Project>{8a8e61b0-6205-4a61-a00b-2c03c42c44e7}</Project>
       <Name>Samples.DotNetFull.ViewModels</Name>

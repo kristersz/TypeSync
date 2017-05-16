@@ -12,5 +12,8 @@ namespace TypeSync
 
         [Option('o', "output")]
         public string OutputPath { get; set; }
+
+        [Option('g', "generator")]
+        public string Generator { get; set; }
     }
 }

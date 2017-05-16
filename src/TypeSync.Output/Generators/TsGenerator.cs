@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -53,7 +54,7 @@ namespace TypeSync.Output.Generators
             );
         }
 
-        public void GenerateDataModelAST(TypeScriptClassModel classModel)
+        public void GenerateDataModelAST(TypeScriptClassModel classModel, string outputPath)
         {
             var request = new ClassGenerationRequest();
 
@@ -61,14 +62,14 @@ namespace TypeSync.Output.Generators
 
             var typeGenerator = new TypeGenerator();
 
-            request.OutputPath = "C:/Dev/TypeSync/samples/sample-angular-client/src/app/shared/models/" + fileName;
+            request.OutputPath = Path.Combine(outputPath, "models", fileName);
 
             request.DataModel = new ClassModel()
             {
                 Name = classModel.Name,
                 BaseClass = classModel.BaseClass,
                 Decorators = new string[] { },
-                TypeParameters = classModel.IsGeneric ? new string[] { classModel.TypeParameter.Name } : new string[] { },
+                TypeParameters = classModel.TypeParameters.Select(i => i.Name).ToArray(),
                 Imports = classModel.Imports.Select(i => new ImportModel()
                 {
                     Names = new string[] { i.Name },
@@ -86,13 +87,13 @@ namespace TypeSync.Output.Generators
             var result = CallGenerator("/generate/class", CreateStringContent(request));
         }
 
-        public void GenerateEnumAST(TypeScriptEnumModel enumModel)
+        public void GenerateEnumAST(TypeScriptEnumModel enumModel, string outputPath)
         {
             var request = new EnumGenerationRequest();
 
             string fileName = $"{NameCaseConverter.ToKebabCase(enumModel.Name)}.enum.{TypeScriptFileExtension.File}";
 
-            request.OutputPath = "C:/Dev/TypeSync/samples/sample-angular-client/src/app/shared/enums/" + fileName;
+            request.OutputPath = Path.Combine(outputPath, "enums", fileName);
 
             request.DataModel = new EnumModel()
             {
@@ -107,7 +108,7 @@ namespace TypeSync.Output.Generators
             var result = CallGenerator("/generate/enum", CreateStringContent(request));
         }
 
-        public void GenerateServiceAST(TypeScriptServiceModel serviceModel)
+        public void GenerateServiceAST(TypeScriptServiceModel serviceModel, string outputPath)
         {
             var request = new ClassGenerationRequest();
 
@@ -115,7 +116,7 @@ namespace TypeSync.Output.Generators
 
             var typeGenerator = new TypeGenerator();
 
-            request.OutputPath = "C:/Dev/TypeSync/samples/sample-angular-client/src/app/shared/services/" + fileName;
+            request.OutputPath = Path.Combine(outputPath, "services", fileName);
 
             var imports = new List<ImportModel>() {
                 new ImportModel() { Names = new string[] { "Injectable" }, Path = "@angular/core" },

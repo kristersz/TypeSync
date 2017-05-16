@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using log4net;
 using TypeSync.Common.Utilities;
 using TypeSync.Models.Common;
@@ -43,7 +45,7 @@ namespace TypeSync.Output.Generators
             // class declaration
             sb.AppendLine("export class "
                 + classModel.Name
-                + (classModel.IsGeneric ? $"<{classModel.TypeParameter.Name}>" : "")
+                + (classModel.IsGeneric ? $"<{GenerateTypeParameters(classModel.TypeParameters)}>" : "")
                 + (string.IsNullOrEmpty(classModel.BaseClass) ? "" : " extends " + classModel.BaseClass)
                 + " {");
 
@@ -95,6 +97,11 @@ namespace TypeSync.Output.Generators
             // sb.AppendLine();
 
             return sb.ToString();
+        }
+
+        private string GenerateTypeParameters(List<TypeScriptTypeParameterModel> typeParameters)
+        {
+            return string.Join(", ", typeParameters.Select(tp => tp.Name).ToList());
         }
     }
 }

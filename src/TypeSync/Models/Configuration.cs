@@ -9,5 +9,8 @@ namespace TypeSync.Models
 
         [JsonProperty(PropertyName = "outputPath")]
         public string OutputPath { get; set; }
+
+        [JsonProperty(PropertyName = "generator")]
+        public string Generator { get; set; }
     }
 }

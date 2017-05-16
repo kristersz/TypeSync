@@ -155,10 +155,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Features\AnalysisContextBase.cs" />
+    <Compile Include="Factories\DependencyGraphFactory.cs" />
     <Compile Include="Features\Common\TypeAnalyzer.cs" />
     <Compile Include="Features\IAnalysisContext.cs" />
     <Compile Include="Features\ModelAnalysis\ModelAnalysisContext.cs" />
     <Compile Include="Features\ModelAnalysis\ModelAnalyzer.cs" />
+    <Compile Include="Features\Synchronization\SynchronizationContext.cs" />
+    <Compile Include="Features\Synchronization\Synchronizer.cs" />
     <Compile Include="Features\ValidationAnalysis\ValidationAnalysisContext.cs" />
     <Compile Include="Features\ValidationAnalysis\ValidationAnalyzer.cs" />
     <Compile Include="Features\WebApiAnalysis\WebApiAnalysisContext.cs" />
@@ -166,10 +169,12 @@
     <Compile Include="Helpers\AttributeHelper.cs" />
     <Compile Include="Helpers\ProjectHelper.cs" />
     <Compile Include="Helpers\ControllerHelper.cs" />
+    <Compile Include="Helpers\TypeHelper.cs" />
     <Compile Include="Models\AnalysisResult.cs" />
     <Compile Include="Models\DependantType.cs" />
     <Compile Include="Mappers\TypeMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SupportedDotNetTypes.cs" />
     <Compile Include="Visitors\NamedTypeSymbolFinder.cs" />
     <Compile Include="Visitors\PropertyTypeAliasRewriter.cs" />
     <Compile Include="Visitors\ClassCollector.cs" />

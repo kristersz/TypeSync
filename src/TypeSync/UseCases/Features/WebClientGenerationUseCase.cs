@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Linq;
-using log4net;
-using TypeSync.Common.Constants;
+﻿using log4net;
 using TypeSync.Core.Features.WebApiAnalysis;
 using TypeSync.Models;
 using TypeSync.Models.Converters;
@@ -54,7 +51,7 @@ namespace TypeSync.UseCases
 
                 log.Debug($"Service {tsModel.Name} emitted");
 
-                new TsGenerator().GenerateServiceAST(tsModel);
+                new TsGenerator().GenerateServiceAST(tsModel, _configuration.OutputPath);
             }
 
             return Result.CreateSuccess();

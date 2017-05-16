@@ -6,6 +6,7 @@ namespace TypeSync.Models.TypeScript
     {
         public TypeScriptClassModel()
         {
+            TypeParameters = new List<TypeScriptTypeParameterModel>();
             Imports = new List<TypeScriptImportModel>();
             Properties = new List<TypeScriptPropertyModel>();
         }
@@ -16,7 +17,7 @@ namespace TypeSync.Models.TypeScript
 
         public bool IsGeneric { get; set; }
 
-        public TypeScriptTypeParameterModel TypeParameter { get; set; }
+        public List<TypeScriptTypeParameterModel> TypeParameters { get; set; }
 
         public List<TypeScriptImportModel> Imports { get; set; }
 
