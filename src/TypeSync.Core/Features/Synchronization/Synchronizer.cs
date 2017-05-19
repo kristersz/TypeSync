@@ -2,11 +2,11 @@
 using System.Linq;
 using DataStructures.Graphs;
 using Microsoft.CodeAnalysis;
-using TypeSync.Core.Factories;
 using TypeSync.Core.Features.Common;
 using TypeSync.Core.Features.ModelAnalysis;
 using TypeSync.Core.Helpers;
 using TypeSync.Core.Models;
+using TypeSync.Core.Services;
 using TypeSync.Models.CSharp;
 
 namespace TypeSync.Core.Features.Synchronization
@@ -28,20 +28,25 @@ namespace TypeSync.Core.Features.Synchronization
 
             var typesForGeneration = new List<ITypeSymbol>();
 
-            var classSymbols = ControllerHelper.GetControllers(_context.Project, _context.Compilation);
+            // get all controller classes
+            var controllers = ControllerHelper.GetControllers(_context.Project, _context.Compilation);
 
-            foreach (var classSymbol in classSymbols)
+            // process controllers
+            foreach (var controller in controllers)
             {
-                var publicMethodSymbols = ControllerHelper.GetPublicMethods(classSymbol);
+                // get all controller methods that are exposed via HTTP
+                var httpMethods = ControllerHelper.GetPublicMethods(controller);
 
-                foreach (var methodSymbol in publicMethodSymbols)
+                foreach (var httpMethod in httpMethods)
                 {
-                    if (!typesForGeneration.Exists(t => t.Equals(methodSymbol.ReturnType)))
+                    // collect unique return types
+                    if (!typesForGeneration.Exists(t => t.Equals(httpMethod.ReturnType)))
                     {
-                        typesForGeneration.Add(methodSymbol.ReturnType);
+                        typesForGeneration.Add(httpMethod.ReturnType);
                     }
 
-                    foreach (var parameter in methodSymbol.Parameters)
+                    // collect unique parameter types
+                    foreach (var parameter in httpMethod.Parameters)
                     {
                         if (!typesForGeneration.Exists(t => t.Equals(parameter.Type)))
                         {
@@ -53,6 +58,7 @@ namespace TypeSync.Core.Features.Synchronization
 
             var namedTypes = new List<INamedTypeSymbol>();
 
+            // process collected types
             foreach (var type in typesForGeneration)
             {
                 var namedType = type as INamedTypeSymbol;
@@ -82,7 +88,7 @@ namespace TypeSync.Core.Features.Synchronization
 
             foreach (var namedType in namedTypes)
             {
-                var depGraphFactory = new DependencyGraphFactory();
+                var depGraphFactory = new DependencyGraphService();
 
                 var graph = depGraphFactory.BuildForNamedTypeSymbol(namedType);
 
@@ -91,7 +97,7 @@ namespace TypeSync.Core.Features.Synchronization
                 depGraphs.Add(graph);
             }
 
-            var nodes = depGraphs.SelectMany(g => g.Vertices).Distinct();
+            var nodes = depGraphs.SelectMany(g => g.Vertices).Distinct().ToList();
 
             var modelAnalyzer = new ModelAnalyzer(_context);
 

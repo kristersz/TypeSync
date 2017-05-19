@@ -1,38 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.Http;
 using Samples.DotNetFull.ViewModels;
+using Samples.DotNetFull.WebAPI.Services;
 
 namespace Samples.DotNetFull.WebAPI.Controllers
 {
     [RoutePrefix("api/students")]
     public class StudentsController : ApiController
     {
+        private readonly IStudentService _studentService;
+
+        public StudentsController(IStudentService studentService)
+        {
+            _studentService = studentService;
+        }
+
         // GET: api/students
         [HttpGet]
         public IEnumerable<Student> List()
         {
-            return new List<Student>()
-            {
-                new Student()
-                {
-                    Id = 1,
-                    FirstName = "John",
-                    LastName = "Wick",
-                    DateOfBirth = new DateTime(1980, 1, 1),
-                    YearOfGraduation = DateTime.Now,
-                    Type = StudentType.Domestic
-                },
-                new Student()
-                {
-                    Id = 2,
-                    FirstName = "Molly",
-                    LastName = "Wilkins",
-                    DateOfBirth = new DateTime(1989, 1, 1),
-                    YearOfGraduation = DateTime.Now.AddYears(-9),
-                    Type = StudentType.Foreign
-                }
-            };
+            return _studentService.GetStudents();
         }
 
         // GET api/students/5
@@ -40,14 +27,7 @@ namespace Samples.DotNetFull.WebAPI.Controllers
         [Route("{id}")]
         public Student Get(long id)
         {
-            return new Student()
-            {
-                Id = 1,
-                FirstName = "John",
-                LastName = "Wick",
-                DateOfBirth = new DateTime(1980, 1, 1),
-                YearOfGraduation = DateTime.Now
-            };
+            return _studentService.GetStudent(id);
         }
 
         // POST api/students
@@ -83,6 +63,13 @@ namespace Samples.DotNetFull.WebAPI.Controllers
                 new KeyValuePair<int, string>((int)StudentType.Exchange, StudentType.Exchange.ToString()),
                 new KeyValuePair<int, string>((int)StudentType.Foreign, StudentType.Foreign.ToString())
             };
+        }
+
+        [HttpGet]
+        [Route("summary")]
+        public IHttpActionResult Summary()
+        {
+            return Ok();
         }
     }
 }

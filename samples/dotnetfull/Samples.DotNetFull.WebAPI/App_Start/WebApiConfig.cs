@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Web.Http;
+using Microsoft.Practices.Unity;
+using Samples.DotNetFull.WebAPI.IoC;
+using Samples.DotNetFull.WebAPI.Services;
 
 namespace Samples.DotNetFull.WebAPI
 {
@@ -11,6 +11,11 @@ namespace Samples.DotNetFull.WebAPI
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
+            var container = new UnityContainer();
+
+            container.RegisterType<IStudentService, StudentService>(new HierarchicalLifetimeManager());
+
+            config.DependencyResolver = new UnityResolver(container);
 
             // Web API routes
             config.MapHttpAttributeRoutes();

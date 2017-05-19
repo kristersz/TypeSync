@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis;
+using TypeSync.Core.Helpers;
 using TypeSync.Core.Mappers;
 using TypeSync.Models.CSharp;
 
@@ -60,7 +61,7 @@ namespace TypeSync.Core.Features.Common
 
         private void HandleNamedType(INamedTypeSymbol namedTypeSymbol, CSharpTypeModel typeModel)
         {
-            if (namedTypeSymbol.ConstructedFrom.SpecialType == SpecialType.System_Nullable_T)
+            if (TypeHelper.IsNullable(namedTypeSymbol))
             {
                 // nullable types
                 typeModel.IsNullable = true;

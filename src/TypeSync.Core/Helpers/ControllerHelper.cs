@@ -64,9 +64,11 @@ namespace TypeSync.Core.Helpers
                 .Cast<IMethodSymbol>()
                 .ToList();
 
-            return methodSymbols
-                .Where(m => m.DeclaredAccessibility == Accessibility.Public)
+            var publicMethods = methodSymbols
+                .Where(m => m.DeclaredAccessibility == Accessibility.Public && m.MethodKind == MethodKind.Ordinary)
                 .ToList();
+
+            return publicMethods;
         }
     }
 }

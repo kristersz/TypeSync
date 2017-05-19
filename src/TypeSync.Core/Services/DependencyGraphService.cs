@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using DataStructures.Graphs;
 using Microsoft.CodeAnalysis;
 using TypeSync.Core.Helpers;
 
-namespace TypeSync.Core.Factories
+namespace TypeSync.Core.Services
 {
     public class DependencyNode : IComparable<DependencyNode>
     {
@@ -23,11 +22,11 @@ namespace TypeSync.Core.Factories
         }
     }
 
-    public class DependencyGraphFactory
+    public class DependencyGraphService
     {
         public DirectedSparseGraph<DependencyNode> Graph { get; private set; }
 
-        public DependencyGraphFactory()
+        public DependencyGraphService()
         {
             Graph = new DirectedSparseGraph<DependencyNode>();
         }
@@ -41,8 +40,13 @@ namespace TypeSync.Core.Factories
 
         private void GetDependenciesRecursive(INamedTypeSymbol classSymbol, DependencyNode parent)
         {
-            var node = new DependencyNode() { NamedTypeSymbol = classSymbol };
-            var existingNode = Graph.Vertices.FirstOrDefault(v => v.NamedTypeSymbol.Name == classSymbol.Name);
+            var node = new DependencyNode()
+            {
+                NamedTypeSymbol = classSymbol
+            };
+
+            var existingNode = Graph.Vertices
+                .FirstOrDefault(v => v.NamedTypeSymbol.Name == classSymbol.Name);
 
             if (existingNode != null)
             {
@@ -58,38 +62,14 @@ namespace TypeSync.Core.Factories
                 Graph.AddEdge(parent, node);
             }
 
-            var dependencies = GetDependencies(classSymbol);
+            var depService = new DependencyService();
+
+            var dependencies = depService.GetTypeDependencies(classSymbol);
 
             foreach (var dep in dependencies)
             {
                 GetDependenciesRecursive(dep, node);
             }
-        }
-
-        private List<INamedTypeSymbol> GetDependencies(INamedTypeSymbol classSymbol)
-        {
-            var dependencies = new List<INamedTypeSymbol>();
-
-            if (classSymbol.BaseType != null && TypeHelper.IsSupportedType(classSymbol.BaseType))
-            {
-                dependencies.Add(classSymbol.BaseType);
-            }
-
-            var members = classSymbol.GetMembers().ToList();
-
-            var properties = members.Where(m => m.Kind == SymbolKind.Property).ToList();
-
-            foreach (var property in properties)
-            {
-                var propertySymbol = property as IPropertySymbol;
-
-                if (TypeHelper.IsSupportedType(propertySymbol.Type))
-                {
-                    dependencies.Add(propertySymbol.Type as INamedTypeSymbol);
-                }
-            }
-
-            return dependencies;
         }
     }
 }

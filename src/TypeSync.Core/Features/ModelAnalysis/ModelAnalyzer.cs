@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis.FindSymbols;
 using TypeSync.Core.Features.Common;
 using TypeSync.Core.Helpers;
 using TypeSync.Core.Models;
+using TypeSync.Core.Services;
 using TypeSync.Models.Common;
 using TypeSync.Models.CSharp;
 
@@ -119,15 +120,11 @@ namespace TypeSync.Core.Features.ModelAnalysis
         {
             var classModel = new CSharpClassModel() { Name = classSymbol.Name };
 
-            HandleInheritance(classModel, classSymbol);
-
-            HandleGenerics(classModel, classSymbol);
-
             var members = classSymbol.GetMembers().ToList();
 
-            var dependencies = GetDependencies(classSymbol);
-
-            HandleDependencies(classModel, dependencies);
+            HandleInheritance(classModel, classSymbol);
+            HandleGenerics(classModel, classSymbol);
+            HandleDependencies(classModel, classSymbol);
 
             var properties = members.Where(m => m.Kind == SymbolKind.Property).ToList();
 
@@ -305,32 +302,6 @@ namespace TypeSync.Core.Features.ModelAnalysis
             return graph;
         }
 
-        private List<INamedTypeSymbol> GetDependencies(INamedTypeSymbol classSymbol)
-        {
-            var dependencies = new List<INamedTypeSymbol>();
-
-            if (classSymbol.BaseType != null && TypeHelper.IsSupportedType(classSymbol.BaseType))
-            {
-                dependencies.Add(classSymbol.BaseType);
-            }
-
-            var members = classSymbol.GetMembers().ToList();
-
-            var properties = members.Where(m => m.Kind == SymbolKind.Property).ToList();
-
-            foreach (var property in properties)
-            {
-                var propertySymbol = property as IPropertySymbol;
-
-                if (TypeHelper.IsSupportedType(propertySymbol.Type))
-                {
-                    dependencies.Add(propertySymbol.Type as INamedTypeSymbol);
-                }
-            }
-
-            return dependencies;
-        }
-
         private void HandleInheritance(CSharpClassModel model, INamedTypeSymbol classSymbol)
         {
             if (classSymbol.BaseType != null && classSymbol.BaseType.ContainingAssembly.Name != "mscorlib")
@@ -352,8 +323,11 @@ namespace TypeSync.Core.Features.ModelAnalysis
             }
         }
 
-        private void HandleDependencies(CSharpClassModel model, List<INamedTypeSymbol> dependencies)
+        private void HandleDependencies(CSharpClassModel model, INamedTypeSymbol classSymbol)
         {
+            var depService = new DependencyService();
+            var dependencies = depService.GetTypeDependencies(classSymbol);
+
             foreach (var dep in dependencies)
             {
                 model.Dependencies.Add(new CSharpDependencyModel()

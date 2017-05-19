@@ -6,7 +6,9 @@ namespace TypeSync.Core.Helpers
     {
         public static bool IsSupportedType(ITypeSymbol typeSymbol)
         {
-            if (typeSymbol.ContainingAssembly.Name == "mscorlib")
+            var assemblyName = typeSymbol.ContainingAssembly.Name;
+
+            if (assemblyName == "mscorlib" || assemblyName.StartsWith("System"))
             {
                 if (typeSymbol.MetadataName == SupportedDotNetTypes.KeyValuePair)
                 {
@@ -19,6 +21,11 @@ namespace TypeSync.Core.Helpers
             }
 
             return true;
+        }
+
+        public static bool IsNullable(INamedTypeSymbol namedTypeSymbol)
+        {
+            return namedTypeSymbol.ConstructedFrom.SpecialType == SpecialType.System_Nullable_T;
         }
     }
 }
