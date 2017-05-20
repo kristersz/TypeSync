@@ -32,9 +32,16 @@ namespace Samples.DotNetFull.WebAPI.Controllers
 
         // POST api/students
         [HttpPost]
-        public void Post([FromBody]Student student)
+        public long Post([FromBody]Student student)
         {
-            // persist
+            if (ModelState.IsValid)
+            {
+                return 3;
+            }
+            else
+            {
+                return 0;
+            }            
         }
 
         // PUT api/students/5

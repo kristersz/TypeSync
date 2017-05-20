@@ -39,7 +39,8 @@ namespace Samples.DotNetFull.WebAPI.Services
                 FirstName = "John",
                 LastName = "Wick",
                 DateOfBirth = new DateTime(1980, 1, 1),
-                YearOfGraduation = DateTime.Now
+                YearOfGraduation = DateTime.Now,
+                Type = StudentType.Domestic
             };
         }
     }

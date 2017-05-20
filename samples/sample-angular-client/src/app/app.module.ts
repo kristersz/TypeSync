@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -11,6 +11,7 @@ import { StudentDetailComponent } from './students/student-detail/student-detail
 import { StudentsService } from './shared/services/students.service';
 
 const appRoutes: Routes = [
+  { path: 'student', component: StudentDetailComponent },
   { path: 'student/:id', component: StudentDetailComponent },
   {
     path: 'students',
@@ -33,7 +34,7 @@ const appRoutes: Routes = [
   ],
   imports: [
     BrowserModule,
-    FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     RouterModule.forRoot(appRoutes)
   ],

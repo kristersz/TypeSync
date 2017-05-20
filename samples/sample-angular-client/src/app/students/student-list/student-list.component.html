@@ -20,7 +20,7 @@
             <td>{{student.yearOfGraduation | date:'dd.MM.yyyy'}}</td>
             <td>{{StudentType[student.type]}}</td>
             <td>
-              <button class="btn btn-sm btn-secondary">Edit</button>
+              <button class="btn btn-sm btn-secondary" (click)="editStudent(student.id)">Edit</button>
               <button class="btn btn-sm btn-secondary">Delete</button>
             </td>
           </tr>

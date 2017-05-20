@@ -1,3 +1,36 @@
-<p>
-  student-detail works!
-</p>
+<div class="container">
+  <div class="row">
+    <div class="col-md-8">
+      <h1 class="display-4">Student</h1>
+      <form [formGroup]="studentForm" *ngIf="student" (ngSubmit)="createNew()">
+        <div class="form-group">
+          <label for="firstName">First name</label>
+          <input type="text" class="form-control" id="firstName" name="firstName" formControlName="firstName">
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last name</label>
+          <input type="text" class="form-control" id="lastName" name="lastName" formControlName="lastName">
+        </div>
+        <div class="form-group">
+          <label for="dateOfBirth">Date of birth</label>
+          <input type="text" class="form-control" id="dateOfBirth" name="dateOfBirth">
+        </div>
+        <div class="form-group">
+          <label for="yearOfGraduation">Graduation</label>
+          <input type="text" class="form-control" id="yearOfGraduation" name="yearOfGraduation">
+        </div>
+        <div class="form-group">
+          <label for="gender">Gender</label>
+          <select class="form-control" id="gender" name="gender">
+            <option [ngValue]="1">Male</option>
+            <option [ngValue]="2">Female</option>
+          </select>
+        </div>
+        <div *ngIf="formErrors.firstName" class="alert alert-danger">
+          {{ formErrors.firstName }}
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>

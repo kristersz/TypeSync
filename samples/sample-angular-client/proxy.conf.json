@@ -1,6 +1,6 @@
 {
   "/api/*": {
-    "target": "http://localhost:8087/Samples.DotNetFull.WebAPI",
+    "target": "http://localhost:12118",
     "secure": false,
     "changeOrigin": true
   }

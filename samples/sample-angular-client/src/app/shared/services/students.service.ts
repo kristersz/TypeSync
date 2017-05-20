@@ -13,7 +13,7 @@ export class StudentsService {
     get(id: number): Promise<Student> {
         return this.http.get(this.baseUrl + ('/' + id)).toPromise().then((response: Response) => response.json()).catch(this.handleError);
     }
-    post(student: Student): Promise<void> {
+    post(student: Student): Promise<number> {
         return this.http.post(this.baseUrl, student).toPromise().then((response: Response) => response.json()).catch(this.handleError);
     }
     put(id: number, student: Student): Promise<void> {
