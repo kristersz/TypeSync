@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using TypeSync.Common.Constants;
 using TypeSync.Common.Utilities;
+using TypeSync.Models.Angular;
 using TypeSync.Models.Common;
 using TypeSync.Models.TypeScript;
 using TypeSync.Models.TypeScriptDTO;
@@ -73,7 +74,9 @@ namespace TypeSync.Output.Generators
                 Imports = classModel.Imports.Select(i => new ImportModel()
                 {
                     Names = new string[] { i.Name },
-                    Path = i.DependencyKind == DependencyKind.Model ? $"./{NameCaseConverter.ToKebabCase(i.Name)}.model" : $"../enums/{NameCaseConverter.ToKebabCase(i.Name)}.enum"
+                    Path = i.DependencyKind == DependencyKind.Model 
+                        ? $"./{NameCaseConverter.ToKebabCase(i.Name)}.model" 
+                        : $"../enums/{NameCaseConverter.ToKebabCase(i.Name)}.enum"
                 }).ToArray(),
                 Properties = classModel.Properties.Select(p => new PropertyModel()
                 {
@@ -127,7 +130,9 @@ namespace TypeSync.Output.Generators
             var specificImports = serviceModel.Imports.Select(i => new ImportModel()
             {
                 Names = new string[] { i.Name },
-                Path = i.DependencyKind == DependencyKind.Model ? $"../models/{NameCaseConverter.ToKebabCase(i.Name)}.model" : $"../enums/{NameCaseConverter.ToKebabCase(i.Name)}.enum"
+                Path = i.DependencyKind == DependencyKind.Model 
+                    ? $"../models/{NameCaseConverter.ToKebabCase(i.Name)}.model" 
+                    : $"../enums/{NameCaseConverter.ToKebabCase(i.Name)}.enum"
             }).ToList();
 
             imports.AddRange(specificImports);
@@ -163,6 +168,60 @@ namespace TypeSync.Output.Generators
                         IsPrivate = false
                     }).ToArray()
                 }).ToArray()
+            };
+
+            var result = CallGenerator("/generate/class", CreateStringContent(request));
+        }
+
+        public void GenerateValidatorAST(AngularFormValidatorModel validatorModel, string outputPath)
+        {
+            var request = new ClassGenerationRequest();
+
+            string fileName = $"{NameCaseConverter.ToKebabCase(validatorModel.Name)}.validator.{TypeScriptFileExtension.File}";
+
+            var typeGenerator = new TypeGenerator();
+
+            request.OutputPath = Path.Combine(outputPath, "validators", fileName);
+
+            var imports = new List<ImportModel>() {
+                new ImportModel() { Names = new string[] { "FormGroup, FormBuilder, Validators" }, Path = "@angular/forms" }
+            };
+
+            var specificImports = validatorModel.Imports.Select(i => new ImportModel()
+            {
+                Names = new string[] { i.Name },
+                Path = i.DependencyKind == DependencyKind.Model
+                    ? $"../models/{NameCaseConverter.ToKebabCase(i.Name)}.model"
+                    : $"../enums/{NameCaseConverter.ToKebabCase(i.Name)}.enum"
+            }).ToList();
+
+            imports.AddRange(specificImports);
+
+            request.DataModel = new ClassModel()
+            {
+                Name = validatorModel.Name + "Validator",
+                BaseClass = null,
+                Decorators = new string[] { },
+                TypeParameters = new string[] { },
+                Imports = imports.ToArray(),
+                Properties = new PropertyModel[]
+                {
+                    new PropertyModel() { Name = "validationMessages", Type = null, IsPrivate = false, InitialValue = "" }
+                },
+                ConstructorDef = new ConstructorModel()
+                {
+                    Parameters = new ParameterModel[]
+                    {
+                        new ParameterModel() { Name = "fb", Type = "FormBuilder", IsPrivate = false }
+                    }
+                },
+                Methods = new MethodModel[]
+                {
+                    new ValidatorBuilderMethodModel()
+                    {
+
+                    }
+                }
             };
 
             var result = CallGenerator("/generate/class", CreateStringContent(request));

@@ -2,7 +2,11 @@
 {
     public class CSharpValidationAttributeModel
     {
-        public string Name { get; set; }
+        public CSharpValidationAttribute ValidationAttribute { get; set; }
+
+        public string PropertyName { get; set; }
+
+        public string ErrorMessage { get; set; }
 
         public object Argument { get; set; }
     }

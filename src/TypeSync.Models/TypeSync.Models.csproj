@@ -43,9 +43,11 @@
     <Compile Include="Angular\AngularFormFieldModel.cs" />
     <Compile Include="Angular\AngularFormGroupModel.cs" />
     <Compile Include="Angular\AngularFormValidatorModel.cs" />
+    <Compile Include="Angular\AngularFormValidator.cs" />
     <Compile Include="Common\DependencyKind.cs" />
     <Compile Include="Converters\ModelConverter.cs" />
     <Compile Include="Converters\TypeConverter.cs" />
+    <Compile Include="Converters\ValidationConverter.cs" />
     <Compile Include="Converters\WebApiConverter.cs" />
     <Compile Include="CSharp\CSharpClassModel.cs" />
     <Compile Include="CSharp\CSharpControllerMethodModel.cs" />
@@ -60,6 +62,7 @@
     <Compile Include="CSharp\CSharpSpecialType.cs" />
     <Compile Include="CSharp\CSharpTypeKind.cs" />
     <Compile Include="CSharp\CSharpTypeParameterModel.cs" />
+    <Compile Include="CSharp\CSharpValidationAttribute.cs" />
     <Compile Include="CSharp\CSharpValidationAttributeModel.cs" />
     <Compile Include="TypeScriptDTO\ClassModel.cs" />
     <Compile Include="TypeScriptDTO\ConstructorModel.cs" />
@@ -72,6 +75,7 @@
     <Compile Include="TypeScriptDTO\EnumModel.cs" />
     <Compile Include="TypeScriptDTO\ImportModel.cs" />
     <Compile Include="TypeScriptDTO\PropertyModel.cs" />
+    <Compile Include="TypeScriptDTO\ValidatorBuilderMethodModel.cs" />
     <Compile Include="TypeScript\TypeScriptBasicType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TypeScript\TypeScriptClassModel.cs" />

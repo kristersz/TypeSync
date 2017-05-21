@@ -24,23 +24,7 @@ namespace TypeSync.Output.Generators
             var typeGenerator = new TypeGenerator();
 
             // imports
-            if (classModel.Imports.Count > 0)
-            {
-                foreach (var import in classModel.Imports)
-                {
-                    import.FilePath = NameCaseConverter.ToKebabCase(import.Name);
-
-                    sb.AppendLine("import { "
-                        + import.Name
-                        + " } from '"
-                        + (import.DependencyKind == DependencyKind.Model ? "./" : "../enums/") 
-                        + import.FilePath
-                        + (import.DependencyKind == DependencyKind.Model ? ".model" : ".enum")
-                        + "';");
-                }
-
-                sb.AppendLine();
-            }           
+            GenerateImportDeclarations(classModel.Imports, sb);         
 
             // class declaration
             sb.AppendLine("export class "
@@ -97,11 +81,6 @@ namespace TypeSync.Output.Generators
             // sb.AppendLine();
 
             return sb.ToString();
-        }
-
-        private string GenerateTypeParameters(List<TypeScriptTypeParameterModel> typeParameters)
-        {
-            return string.Join(", ", typeParameters.Select(tp => tp.Name).ToList());
         }
     }
 }

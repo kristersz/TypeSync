@@ -31,7 +31,8 @@ namespace TypeSync.UseCases
             var tsGenerator = new TsGenerator();
             var emitter = new TypeScriptEmitter();
 
-            if (!Enum.TryParse(_configuration.Generator, true, out Generator generatorEnum))
+            Generator generatorEnum;
+            if (!Enum.TryParse(_configuration.Generator, true, out generatorEnum))
             {
                 return Result.CreateError("Unknown generator was specified");
             }

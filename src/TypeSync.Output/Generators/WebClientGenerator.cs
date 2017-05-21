@@ -26,6 +26,7 @@ namespace TypeSync.Output.Generators
             sb.AppendLine();
 
             // dependencies
+            GenerateImportDeclarations(serviceModel.Imports, sb);
             sb.AppendLine();
 
             // mark for dependency injection
@@ -48,7 +49,7 @@ namespace TypeSync.Output.Generators
                 sb.AppendLine("\t" + NameCaseConverter.ToCamelCase(method.Name) + "(): Promise<Response> {");
                 sb.AppendLine("\t\t" + $"return this.http.{MapHttpMethod(method.HttpMethod)}(this.baseUrl)");
                 sb.AppendLine("\t\t\t" + ".toPromise()");
-                sb.AppendLine("\t\t\t" + ".then(response => response)");
+                sb.AppendLine("\t\t\t" + ".then(response => response,json())");
                 sb.AppendLine("\t\t\t" + ".catch(this.handleError);");
                 sb.AppendLine("\t" + "}");
 

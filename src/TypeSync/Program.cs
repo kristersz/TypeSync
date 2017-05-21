@@ -42,7 +42,8 @@ namespace TypeSync
 
                 var configuration = MapConfiguration(options);
 
-                if (Enum.TryParse(options.UseCase, true, out UseCase useCaseEnum))
+                UseCase useCaseEnum;
+                if (Enum.TryParse(options.UseCase, true, out useCaseEnum))
                 {
                     var useCase = UseCaseFactory.Create(useCaseEnum, configuration);
 

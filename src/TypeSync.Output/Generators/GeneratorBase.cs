@@ -1,4 +1,9 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using TypeSync.Common.Utilities;
+using TypeSync.Models.Common;
+using TypeSync.Models.TypeScript;
 
 namespace TypeSync.Output.Generators
 {
@@ -30,6 +35,33 @@ namespace TypeSync.Output.Generators
             sb.AppendLine();
 
             return sb.ToString();
+        }
+
+
+        protected string GenerateTypeParameters(List<TypeScriptTypeParameterModel> typeParameters)
+        {
+            return string.Join(", ", typeParameters.Select(tp => tp.Name).ToList());
+        }
+
+        protected void GenerateImportDeclarations(List<TypeScriptImportModel> imports, StringBuilder sb)
+        {
+            if (imports.Count > 0)
+            {
+                foreach (var import in imports)
+                {
+                    import.FilePath = NameCaseConverter.ToKebabCase(import.Name);
+
+                    sb.AppendLine("import { "
+                        + import.Name
+                        + " } from '"
+                        + (import.DependencyKind == DependencyKind.Model ? "./" : "../enums/")
+                        + import.FilePath
+                        + (import.DependencyKind == DependencyKind.Model ? ".model" : ".enum")
+                        + "';");
+                }
+
+                sb.AppendLine();
+            }
         }
     }
 }
