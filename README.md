@@ -29,6 +29,19 @@ Primarily meant to be used for Angular front-end solutions.
 	* Validation attributes (built-in and custom).
 	* Fluent validation (<https://github.com/JeremySkinner/FluentValidation>).
 
+## Usage
+Once the project has been built, you can use the CLI which has various parameters:
+* [-u] [--usecase] - (_ModelGeneration_, _WebClientGeneration_, _ValidatatorGeneration_, _ProjectTemplateScaffolding_, _Synchronization_).
+* [-i] [--input] - path to input solution, project, file;
+* [-o] [--output] - path to output directory.
+* [-g] [--generator] - (_Template_/_Compiler_).
+
+Example usage:
+
+`TypeSync.exe -usecase ModelGeneration -input Samples.DotNetFull.ViewModels.csproj -output ..\..\Generated -generator Template`
+
+`TypeSync.exe -u Synchronization -i Samples.DotNetFull.WebAPI.csproj -o ..\..\Generated -g Compiler`
+
 ## System requirements
 TypeSync uses MSBuildWorkspace to open and build .NET solutions and projects.
 MSBuildWorkspace directly or indirectly depends on being able to find the location of MSBuild binaries, settings, and targets in the registry. This was fine for MSBuild 14.0, but no such information is available for 15.0 (by design).
