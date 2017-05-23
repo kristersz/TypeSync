@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using log4net;
 using TypeSync.Common.Utilities;
-using TypeSync.Models.Common;
 using TypeSync.Models.TypeScript;
 
 namespace TypeSync.Output.Generators

@@ -16,7 +16,7 @@ namespace TypeSync.Core.Features.Common
             _context = context;
         }
 
-        public CSharpTypeModel AnalyzePropertyType(ITypeSymbol typeSymbol)
+        public CSharpTypeModel AnalyzeType(ITypeSymbol typeSymbol)
         {
             var typeModel = new CSharpTypeModel();
 
@@ -70,7 +70,7 @@ namespace TypeSync.Core.Features.Common
                 {
                     var typeArgument = namedTypeSymbol.TypeArguments[0];
 
-                    typeModel.TypeArguments = new List<CSharpTypeModel>() { CreateTypeModel(typeArgument) };
+                    typeModel.TypeArguments.Add(CreateTypeModel(typeArgument));
                 }
             }
 
@@ -87,8 +87,12 @@ namespace TypeSync.Core.Features.Common
                 {
                     var typeArgument = namedTypeSymbol.TypeArguments[0];
 
-                    typeModel.TypeArguments = new List<CSharpTypeModel>() { CreateTypeModel(typeArgument) };
+                    typeModel.TypeArguments.Add(CreateTypeModel(typeArgument));
                 }
+            }
+            else if (!namedTypeSymbol.TypeArguments.IsDefaultOrEmpty)
+            {
+
             }
         }
 

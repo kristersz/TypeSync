@@ -6,7 +6,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.FindSymbols;
 using TypeSync.Core.Features.Common;
-using TypeSync.Core.Helpers;
 using TypeSync.Core.Models;
 using TypeSync.Core.Services;
 using TypeSync.Models.Common;
@@ -27,9 +26,9 @@ namespace TypeSync.Core.Features.ModelAnalysis
             _typeAnalyzer = new TypeAnalyzer(_context);
         }
 
-        public AnalysisResult<CSharpModels> Analyze(string path)
+        public AnalysisResult<CSharpDataModels> Analyze(string path)
         {
-            var models = new CSharpModels();
+            var models = new CSharpDataModels();
 
             _context.Init(path);
 
@@ -107,7 +106,7 @@ namespace TypeSync.Core.Features.ModelAnalysis
                 }
             }
 
-            return new AnalysisResult<CSharpModels>()
+            return new AnalysisResult<CSharpDataModels>()
             {
                 Value = models,
                 Success = true
@@ -141,7 +140,7 @@ namespace TypeSync.Core.Features.ModelAnalysis
                 var propertyModel = new CSharpPropertyModel()
                 {
                     Name = propertySymbol.Name,
-                    Type = _typeAnalyzer.AnalyzePropertyType(propertySymbol.Type)
+                    Type = _typeAnalyzer.AnalyzeType(propertySymbol.Type)
                 };
 
                 classModel.Properties.Add(propertyModel);

@@ -4,6 +4,7 @@ using DataStructures.Graphs;
 using Microsoft.CodeAnalysis;
 using TypeSync.Core.Features.Common;
 using TypeSync.Core.Features.ModelAnalysis;
+using TypeSync.Core.Features.WebApiAnalysis;
 using TypeSync.Core.Helpers;
 using TypeSync.Core.Models;
 using TypeSync.Core.Services;
@@ -22,7 +23,7 @@ namespace TypeSync.Core.Features.Synchronization
             _typeAnalyzer = new TypeAnalyzer(_context);
         }
 
-        public AnalysisResult<CSharpModels> Synchronize(string path)
+        public AnalysisResult<CSharpSyncModels> Synchronize(string path)
         {
             _context.Init(path);
 
@@ -122,13 +123,26 @@ namespace TypeSync.Core.Features.Synchronization
                 }
             }
 
-            return new AnalysisResult<CSharpModels>()
+            var webApiAnalyzer = new WebApiAnalyzer(_context);
+
+            var controllerModels = new List<CSharpControllerModel>();
+
+            foreach (var controller in controllers)
+            {
+                controllerModels.Add(webApiAnalyzer.AnalyzeController(controller, false));
+            }
+
+            return new AnalysisResult<CSharpSyncModels>()
             {
                 Success = true,
-                Value = new CSharpModels()
+                Value = new CSharpSyncModels()
                 {
-                    Classes = classModels,
-                    Enums = enumModels
+                    DataModels = new CSharpDataModels()
+                    {
+                        Classes = classModels,
+                        Enums = enumModels
+                    },
+                    Controllers = controllerModels
                 }
             };
         }

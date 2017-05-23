@@ -22,6 +22,13 @@ namespace TypeSync.Models.Converters
             {
                 tsTypeModel = CreateTypeModel(csTypeModel.TypeArguments.First());
             }
+            else
+            {
+                foreach (var typeArg in csTypeModel.TypeArguments)
+                {
+                    tsTypeModel.TypeArguments.Add(ConvertType(typeArg));
+                }
+            }           
 
             return tsTypeModel;
         }
@@ -33,7 +40,7 @@ namespace TypeSync.Models.Converters
             {
                 Name = csTypeModel.Name,
                 IsNamedType = csTypeModel.SpecialType == CSharpSpecialType.None,
-                PredefinedType = TypeConverter.MapCSharpTypeToTypeScript(csTypeModel.SpecialType)
+                PredefinedType = MapCSharpTypeToTypeScript(csTypeModel.SpecialType)
             };
         }
 

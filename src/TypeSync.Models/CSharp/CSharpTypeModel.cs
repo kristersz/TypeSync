@@ -4,6 +4,11 @@ namespace TypeSync.Models.CSharp
 {
     public class CSharpTypeModel
     {
+        public CSharpTypeModel()
+        {
+            TypeArguments = new List<CSharpTypeModel>();
+        }
+
         public string Name { get; set; }
 
         public bool IsArray { get; set; }

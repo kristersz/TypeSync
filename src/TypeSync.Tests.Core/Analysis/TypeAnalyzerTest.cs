@@ -31,7 +31,7 @@ public class Test
             var context = new TestAnalysisContext(compilation);
             var analyzer = new TypeAnalyzer(context);
 
-            var csTypeModel = analyzer.AnalyzePropertyType(typeSymbol);
+            var csTypeModel = analyzer.AnalyzeType(typeSymbol);
 
             // assert
             var expected = new CSharpTypeModel()

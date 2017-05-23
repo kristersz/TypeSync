@@ -2,9 +2,9 @@
 
 namespace TypeSync.Models.CSharp
 {
-    public class CSharpModels
+    public class CSharpDataModels
     {
-        public CSharpModels()
+        public CSharpDataModels()
         {
             Classes = new List<CSharpClassModel>();
             Enums = new List<CSharpEnumModel>();

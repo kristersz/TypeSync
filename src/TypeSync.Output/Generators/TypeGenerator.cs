@@ -1,4 +1,5 @@
-﻿using TypeSync.Models.TypeScript;
+﻿using System.Linq;
+using TypeSync.Models.TypeScript;
 using TypeSync.Output.Converters;
 using TypeSync.Output.Emitters;
 
@@ -12,19 +13,30 @@ namespace TypeSync.Output.Generators
 
             if (typeModel.ElementType == null)
             {
-                emittedType = typeModel.IsNamedType
-                    ? typeModel.Name
-                    : TypeMapper.MapTypeScriptTypeToLiteral(typeModel.PredefinedType);
+                if (typeModel.TypeArguments.Any())
+                {
+                    emittedType = $"{GetTypeLiteral(typeModel)}<{GetTypeLiteral(typeModel.TypeArguments.First())}>";
+                }
+                else
+                {
+                    emittedType = GetTypeLiteral(typeModel);
+                }
+                
             }
             else
             {
-                emittedType = typeModel.ElementType.IsNamedType
-                    ? typeModel.ElementType.Name
-                    : TypeMapper.MapTypeScriptTypeToLiteral(typeModel.ElementType.PredefinedType);
+                emittedType = GetTypeLiteral(typeModel.ElementType);
                 emittedType += EmittedTypeName.Array;
             }
 
             return emittedType;
+        }
+
+        private string GetTypeLiteral(TypeScriptTypeModel typeModel)
+        {
+            return typeModel.IsNamedType
+                    ? typeModel.Name
+                    : TypeMapper.MapTypeScriptTypeToLiteral(typeModel.PredefinedType);
         }
     }
 }

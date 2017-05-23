@@ -26,9 +26,14 @@ namespace TypeSync.UseCases
         public Result Handle()
         {
             var syncer = new Synchronizer();
-            var converter = new ModelConverter();
-            var generator = new ModelGenerator();
+
+            var modelConverter = new ModelConverter();
+            var webApiConverter = new WebApiConverter();
+
+            var modelGenerator = new ModelGenerator();
+            var webClientGenerator = new WebClientGenerator();
             var tsGenerator = new TsGenerator();
+
             var emitter = new TypeScriptEmitter();
 
             Generator generatorEnum;
@@ -46,8 +51,9 @@ namespace TypeSync.UseCases
 
             log.Debug("Source analyzed");
 
-            var tsClassModels = converter.ConvertClasses(analysisResult.Value.Classes);
-            var tsEnumModels = converter.ConvertEnums(analysisResult.Value.Enums);
+            var tsClassModels = modelConverter.ConvertClasses(analysisResult.Value.DataModels.Classes);
+            var tsEnumModels = modelConverter.ConvertEnums(analysisResult.Value.DataModels.Enums);
+            var serviceModels = webApiConverter.ConvertControllers(analysisResult.Value.Controllers);
 
             log.Debug("Models converted");
 
@@ -55,12 +61,12 @@ namespace TypeSync.UseCases
             {
                 if (generatorEnum == Generator.Template)
                 {
-                    var contents = generator.GenerateClass(tsModel);
+                    var contents = modelGenerator.GenerateClass(tsModel);
                     emitter.Emit(_configuration.OutputPath, tsModel.Name, EmittedFileType.Model, contents);
                 }
                 else if (generatorEnum == Generator.Compiler)
                 {
-                    new TsGenerator().GenerateDataModelAST(tsModel, _configuration.OutputPath);
+                    tsGenerator.GenerateDataModelAST(tsModel, _configuration.OutputPath);
                 }
                 
                 log.Debug($"Class {tsModel.Name} emitted");
@@ -70,15 +76,30 @@ namespace TypeSync.UseCases
             {
                 if (generatorEnum == Generator.Template)
                 {
-                    var contents = generator.GenerateEnum(tsModel);
+                    var contents = modelGenerator.GenerateEnum(tsModel);
                     emitter.Emit(_configuration.OutputPath, tsModel.Name, EmittedFileType.Enum, contents);
                 }
                 else if (generatorEnum == Generator.Compiler)
                 {
-                    new TsGenerator().GenerateEnumAST(tsModel, _configuration.OutputPath);
+                    tsGenerator.GenerateEnumAST(tsModel, _configuration.OutputPath);
                 }
 
                 log.Debug($"Enum {tsModel.Name} emitted");
+            }
+
+            foreach (var tsModel in serviceModels)
+            {
+                if (generatorEnum == Generator.Template)
+                {
+                    var contents = webClientGenerator.GenerateService(tsModel);
+                    emitter.Emit(_configuration.OutputPath, tsModel.Name, EmittedFileType.Service, contents);
+                }
+                else if (generatorEnum == Generator.Compiler)
+                {
+                    tsGenerator.GenerateServiceAST(tsModel, _configuration.OutputPath);
+                }                
+
+                log.Debug($"Service {tsModel.Name} emitted");
             }
 
             return Result.CreateSuccess();

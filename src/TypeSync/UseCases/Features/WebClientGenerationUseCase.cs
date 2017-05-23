@@ -24,7 +24,7 @@ namespace TypeSync.UseCases
 
         public Result Handle()
         {
-            var analyzer = new WebApiAnalyzer();
+            var analyzer = new WebApiAnalyzer(new WebApiAnalysisContext());
 
             var analysisResult = analyzer.Analyze(_configuration.InputPath);
 
