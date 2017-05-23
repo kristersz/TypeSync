@@ -132,6 +132,12 @@ namespace TypeSync.Core.Features.ModelAnalysis
             {
                 var propertySymbol = property as IPropertySymbol;
 
+                // for generic types we want to generate the interface instead of the specific, substituted property types
+                if (!propertySymbol.OriginalDefinition.Equals(propertySymbol))
+                {
+                    propertySymbol = propertySymbol.OriginalDefinition;
+                }
+
                 var propertyModel = new CSharpPropertyModel()
                 {
                     Name = propertySymbol.Name,

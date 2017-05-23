@@ -17,9 +17,15 @@ namespace Samples.DotNetFull.WebAPI.Controllers
 
         // GET: api/students
         [HttpGet]
-        public IEnumerable<Student> List()
+        public PagedDataResponse<Student> List()
         {
-            return _studentService.GetStudents();
+            var students = _studentService.GetStudents();
+
+            return new PagedDataResponse<Student>()
+            {
+                Rows = students,
+                TotalCount = students.Count
+            };
         }
 
         // GET api/students/5
@@ -77,6 +83,21 @@ namespace Samples.DotNetFull.WebAPI.Controllers
         public IHttpActionResult Summary()
         {
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("{id}/address")]
+        public Address GetAddress(long id)
+        {
+            return new Address()
+            {
+                Id = 1,
+                Country = "United States of America",
+                City = "Seattle",
+                PostalCode = "98101",
+                Street = "Microsoft Way",
+                HouseNumber = "1"
+            };
         }
     }
 }

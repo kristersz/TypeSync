@@ -98,13 +98,17 @@ namespace TypeSync.Core.Features.Synchronization
             }
 
             var nodes = depGraphs.SelectMany(g => g.Vertices).Distinct().ToList();
+            var uniqueNodes = nodes
+                .GroupBy(n => n.NamedTypeSymbol.ContainingNamespace + "." + n.NamedTypeSymbol.Name)
+                .Select(n => n.First())
+                .ToList();
 
             var modelAnalyzer = new ModelAnalyzer(_context);
 
             var classModels = new List<CSharpClassModel>();
             var enumModels = new List<CSharpEnumModel>();
 
-            foreach (var node in nodes)
+            foreach (var node in uniqueNodes)
             {
                 var symbol = node.NamedTypeSymbol;
 
